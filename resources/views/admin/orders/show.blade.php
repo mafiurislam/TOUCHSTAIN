@@ -51,6 +51,12 @@
                 <a href="{{ url('/admin/delivery') }}" class="btn-action" style="background:#E6F4EA;color:#01684B;border:1px solid #01684B">
                     🚚 Shiprocket Hub
                 </a>
+                <form action="{{ route('admin.orders.delete', $order->id) }}" method="POST" style="margin:0" onsubmit="return confirm('Are you sure you want to permanently delete Order #{{ $order->id }}?')">
+                    @csrf
+                    <button type="submit" class="btn-action" style="background:#FEF2F2;border:1px solid #FCA5A5;color:#DC2626">
+                        🗑️ Delete Order
+                    </button>
+                </form>
             </div>
         </div>
 

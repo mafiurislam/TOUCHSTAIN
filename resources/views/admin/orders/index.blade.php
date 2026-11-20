@@ -145,9 +145,15 @@
                                     @endif
                                 </td>
                                 <td style="text-align:right">
-                                    <div style="display:inline-flex;gap:6px">
+                                    <div style="display:inline-flex;gap:6px;align-items:center">
                                         <a href="{{ route('admin.orders.show', $ord->id) }}" class="btn-secondary" style="padding:5px 10px;font-size:11.5px">Manage</a>
                                         <a href="{{ route('admin.orders.invoice', $ord->id) }}" target="_blank" class="btn-secondary" style="padding:5px 10px;font-size:11.5px" title="Print Invoice">🖨️</a>
+                                        <form action="{{ route('admin.orders.delete', $ord->id) }}" method="POST" style="margin:0" onsubmit="return confirm('Are you sure you want to delete Order #{{ $ord->id }}? This action cannot be undone.')">
+                                            @csrf
+                                            <button type="submit" class="btn-secondary" style="padding:5px 9px;font-size:11.5px;color:#DC2626;border-color:#FCA5A5;background:#FEF2F2" title="Delete Order">
+                                                🗑️ Delete
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>

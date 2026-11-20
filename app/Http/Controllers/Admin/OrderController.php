@@ -157,4 +157,50 @@ class OrderController extends Controller
 
         return back()->with('success', "Successfully updated " . count($orderIds) . " orders to {$newStatus}!");
     }
+
+    /**
+     * Delete an order and its associated shipment and tracking data
+     */
+    public function destroy(Request $request, $id)
+    {
+        $order = Order::with(['items', 'shipment.trackingEvents', 'bankTransfer'])->findOrFail($id);
+
+        // If shipment exists on Shiprocket, attempt cancellation gracefully
+        if ($order->shipment && !empty($order->shipment->shiprocket_order_id)) {
+            try {
+                $deliveryManager = app(\App\Services\Delivery\DeliveryManager::class);
+                $deliveryManager->driver()->cancelShipment($order->shipment);
+            } catch (\Throwable $e) {
+                // Ignore Shiprocket cancellation error and proceed with deletion
+            }
+        }
+
+        // Delete associated tracking events and shipment
+        if ($order->shipment) {
+            $order->shipment->trackingEvents()->delete();
+            $order->shipment->delete();
+        }
+
+        // Delete order items
+        $order->items()->delete();
+
+        // Delete bank transfer if any
+        if ($order->bankTransfer) {
+            $order->bankTransfer->delete();
+        }
+
+        $orderId = $order->id;
+        $order->delete();
+
+        AuditLog::record('Orders', 'Delete Order', "Order #{$orderId} deleted by admin");
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'status' => true,
+                'message' => "Order #{$orderId} deleted successfully.",
+            ]);
+        }
+
+        return redirect()->route('admin.orders')->with('success', "Order #{$orderId} deleted successfully!");
+    }
 }

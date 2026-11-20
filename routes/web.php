@@ -142,6 +142,8 @@ Route::prefix('admin')->middleware([AdminAuthMiddleware::class])->group(function
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('admin.orders.show');
     Route::post('/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('admin.orders.status');
     Route::get('/orders/{id}/invoice', [OrderController::class, 'invoice'])->name('admin.orders.invoice');
+    Route::post('/orders/{id}/delete', [OrderController::class, 'destroy'])->name('admin.orders.delete');
+    Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
     Route::post('/orders/bulk-status/apply', [OrderController::class, 'bulkStatus'])->name('admin.orders.bulk-status');
 
     // Customer Management
@@ -279,3 +281,4 @@ Route::get('/videos/{filename}', function ($filename) {
     }
     abort(404);
 })->where('filename', '[A-Za-z0-9._-]+');
+
