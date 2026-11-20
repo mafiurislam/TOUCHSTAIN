@@ -122,13 +122,26 @@
                                 <td>
                                     @if($ord->shipment)
                                         <div style="font-size:11.5px">
-                                            <span style="font-weight:700;color:#047857">🚚 {{ $ord->shipment->courier_name ?: 'Shiprocket' }}</span>
-                                            <div style="font-family:monospace;font-weight:600;color:#334155">{{ $ord->shipment->awb_number ?: 'Pending AWB' }}</div>
+                                            @if($ord->shipment->awb_number)
+                                                <span style="font-weight:700;color:#047857">🚚 {{ $ord->shipment->courier_name ?: 'Shiprocket' }}</span>
+                                                <div style="font-family:monospace;font-weight:600;color:#334155">{{ $ord->shipment->awb_number }}</div>
+                                            @else
+                                                <span style="font-weight:700;color:#2563EB">📦 Shiprocket #{{ $ord->shipment->shiprocket_order_id }}</span>
+                                                <form action="{{ route('admin.delivery.shipments.generate-awb', $ord->shipment->id) }}" method="POST" style="margin-top:3px">
+                                                    @csrf
+                                                    <button type="submit" class="btn-theme" style="padding:2px 8px;font-size:10.5px;background:#2563EB" title="Book Courier & Schedule Pickup">
+                                                        🚀 Ship Now
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </div>
                                     @else
-                                        <a href="{{ url('/admin/delivery?search=' . $ord->id) }}" class="btn-secondary" style="padding:3px 8px;font-size:11px;border-color:var(--primary);color:var(--primary)">
-                                            + Dispatch
-                                        </a>
+                                        <form action="{{ route('admin.delivery.orders.create-shipment', $ord->id) }}" method="POST" style="margin:0">
+                                            @csrf
+                                            <button type="submit" class="btn-secondary" style="padding:3px 8px;font-size:11px;border-color:#01684B;color:#01684B;font-weight:600" title="Send to Shiprocket">
+                                                🚚 To Shiprocket
+                                            </button>
+                                        </form>
                                     @endif
                                 </td>
                                 <td style="text-align:right">

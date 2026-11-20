@@ -314,7 +314,20 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <div style="display:flex;gap:6px;flex-wrap:wrap">
+                                    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+                                        @if(!$s->awb_number)
+                                            <!-- 🚀 Ship Now Action Button -->
+                                            <form action="{{ route('admin.delivery.shipments.generate-awb', $s->id) }}" method="POST" style="margin:0">
+                                                @csrf
+                                                <button type="submit" class="delivery-btn-sm" style="background:#2563EB;color:#fff;font-weight:700" title="Assign Courier & Generate AWB on Shiprocket">
+                                                    🚀 Ship Now
+                                                </button>
+                                            </form>
+                                            <a href="https://app.shiprocket.in/seller/orders" target="_blank" class="delivery-btn-sm" style="background:#EDE9FE;color:#6D28D9" title="Manage directly in Shiprocket">
+                                                Shiprocket ↗
+                                            </a>
+                                        @endif
+
                                         @if($s->awb_number)
                                             <!-- Print Label -->
                                             <a href="{{ route('admin.delivery.shipments.print-label', $s->id) }}" target="_blank" class="delivery-btn-sm" style="background:#F3F4F6;color:#1E232C;border-color:#D1D5DB" title="Print Shipping Label">

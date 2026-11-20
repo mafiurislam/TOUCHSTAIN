@@ -113,21 +113,16 @@ class OrderController extends Controller
 
         $msg = "Order #{$id} updated to " . str_replace('_', ' ', $newStatus) . "!";
 
-        // Automated Shiprocket dispatch on order confirmation
-        if ($newStatus === 'confirmed') {
+        // Automatically send order to Shiprocket when confirmed or processing
+        if (in_array($newStatus, ['confirmed', 'processing'])) {
             try {
-                $settings = DeliverySetting::getOrCreate();
-                if ($settings->auto_shipment_on_confirm) {
-                    $deliveryManager = app(DeliveryManager::class);
-                    $res = $deliveryManager->processFullShipment($order);
-                    if (!empty($res['success']) && !empty($res['shipment'])) {
-                        $courier = $res['shipment']->courier_name ?? 'Courier';
-                        $awb = $res['shipment']->awb_number ?? 'Assigned';
-                        $msg .= " 🚚 Shipment auto-booked with {$courier} (AWB: {$awb})";
-                    }
+                $deliveryManager = app(\App\Services\Delivery\DeliveryManager::class);
+                $res = $deliveryManager->driver()->createShipment($order);
+                if (!empty($res['success'])) {
+                    $msg .= " 🚚 Order sent to Shiprocket & added to Delivery Hub!";
                 }
             } catch (\Throwable $e) {
-                // Log and gracefully continue
+                \Illuminate\Support\Facades\Log::warning('Shiprocket create shipment on status update notice: ' . $e->getMessage());
             }
         }
 
