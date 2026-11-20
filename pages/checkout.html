@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - TOUCHSTAINS</title>
+  <link rel="icon" type="image/png" href="../favicon.png?v=2.3">
+  <link rel="stylesheet" href="../css/style.css?v=2.3">
+  <link rel="stylesheet" href="../css/laravel-app.css?v=2.3">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+
+<body>
+  <div id="app-header"></div>
+
+  <main class="gf-container container" style="max-width:1100px;width:100%;margin:0 auto;padding:24px 24px 56px;box-sizing:border-box;">
+    <div class="breadcrumb">
+      <a href="../index.html">Home</a> &gt; <span>Checkout</span>
+    </div>
+
+    <div class="cart-page-grid" id="checkoutMainContainer"></div>
+  </main>
+
+  <!-- Order Success Modal -->
+  <div class="modal-backdrop" id="orderSuccessModal">
+    <div class="modal-card" style="text-align:center;padding:34px 26px;">
+      <img src="../storage/restaurant/touchstains-logo.png?v=2.3" alt="TOUCHSTAINS" style="height:56px;margin:0 auto 12px;object-fit:contain;">
+      <img src="../assets/image/order_placed.png" alt="Order Placed" style="width:84px;margin:0 auto 14px;">
+      <h2 style="font-size:22px;font-weight:800;color:var(--primary);margin-bottom:8px;">Order Confirmed Successfully!</h2>
+      <p style="font-size:13.5px;color:var(--text-medium);margin-bottom:12px;">
+        Your order <strong id="placedOrderIdText">#100255</strong> has been confirmed at our <strong>Mumbai Head Office</strong>.
+      </p>
+      <div
+        style="background:#F0FDF4;border:1px solid #BBF7D0;padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;color:#166534;font-weight:600;margin-bottom:14px;"
+        id="placedPaymentBadge">
+        ✓ Payment &amp; Order Confirmed
+      </div>
+      <div style="display:flex;gap:12px;margin-top:16px;">
+        <a href="orders.html" id="trackPlacedOrderBtn" class="btn btn-primary" style="flex:1;">📍 Track Order Details</a>
+        <a href="orders.html" class="btn btn-outline" style="flex:1;">My Orders</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    const STATIC_RAZORPAY_KEY = 'rzp_test_U1cQQReArMfXP9';
+    let checkoutDeliveryType = localStorage.getItem('getgozo_delivery_mode') || 'delivery';
+    let checkoutPayment = 'razorpay';
+
+    function getRegisteredCustomerData() {
+      try {
+        const raw = localStorage.getItem('touchstains_registered_customer');
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        return (parsed && parsed.registered && parsed.phone && parsed.address) ? parsed : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', renderCheckoutView);
+
+    function renderCheckoutView() {
+      const G = window.Getgozo;
+      const cart = G.getCart();
+      const wrap = document.getElementById('checkoutMainContainer');
+      const bannerWrap = document.getElementById('checkoutRegistrationBanner');
+      if (!wrap) return;
+
+      const regCustomer = getRegisteredCustomerData();
+
+      if (cart.length === 0) {
+        wrap.innerHTML = `
+          <div class="surface-card" style="grid-column:1/-1;text-align:center;padding:60px 20px;">
+            <img src="../assets/image/empty_order_image.png" alt="" style="width:130px;margin:0 auto 14px;">
+            <h3>Your Shopping Bag is Empty</h3>
+            <p style="color:var(--text-light);margin:8px 0 18px;">Add items to your shopping bag before checking out.</p>
+            <a href="shop.html" class="btn btn-primary">Browse Products</a>
+          </div>
+        `;
+        return;
+      }
+
+      const appliedCoupon = JSON.parse(localStorage.getItem('getgozo_applied_coupon') || 'null');
+      const couponAmt = appliedCoupon ? Number(appliedCoupon.discount || 0) : 0;
+      const totals = G.getCartTotals(checkoutDeliveryType, couponAmt);
+
+      const addrType = regCustomer ? (regCustomer.address_type || 'Home') : 'Home';
+      const personName = regCustomer ? (regCustomer.contact_person_name || regCustomer.name || '') : '';
+      const personPhone = regCustomer ? (regCustomer.phone || '') : '';
+      let fullAddr = regCustomer ? (regCustomer.address || '') : '';
+      if (regCustomer && regCustomer.pincode && fullAddr && !fullAddr.includes(regCustomer.pincode)) {
+        fullAddr += ' - ' + regCustomer.pincode;
+      }
+      const roadVal = regCustomer ? (regCustomer.road || '') : '';
+      const houseVal = regCustomer ? (regCustomer.house || '') : '';
+
+      wrap.innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <!-- 2. Delivery Address (Exact Input Form Design) -->
+          <div class="surface-card checkout-section">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
+              <h3 style="font-size:16.5px;font-weight:700;margin:0;border:none;padding:0;">🏠 2. Delivery Address</h3>
+              ${regCustomer ? `
+                <span style="font-size:12px;font-weight:700;color:#01684B;background:#EDF4F2;padding:4px 12px;border-radius:99px;border:1px solid #A7F3D0;">
+                  ✓ Auto-filled from Registration
+                </span>
+              ` : ''}
+            </div>
+
+            <div style="border-top:1px solid var(--border-color);padding-top:16px;">
+              <h4 style="font-size:16px;font-weight:800;color:var(--text-dark);margin:0 0 16px;">+ Add New Delivery Address</h4>
+
+              <div class="form-row" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:14px;margin-bottom:14px;">
+                <div class="form-group" style="margin:0;">
+                  <label class="form-label" style="font-size:13px;font-weight:600;margin-bottom:6px;display:block;">Address Label</label>
+                  <select id="coAddressType" class="form-control">
+                    <option value="Home" ${addrType === 'Home' ? 'selected' : ''}>🏠 Home</option>
+                    <option value="Workplace" ${addrType === 'Workplace' ? 'selected' : ''}>🏢 Workplace / Shop</option>
+                    <option value="Other" ${addrType === 'Other' ? 'selected' : ''}>📍 Other</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin:0;">
+                  <label class="form-label" style="font-size:13px;font-weight:600;margin-bottom:6px;display:block;">Contact Person Name</label>
+                  <input type="text" id="coPersonName" class="form-control" value="${G.escapeHtml(personName)}" placeholder="Enter customer full name" required>
+                </div>
+              </div>
+
+              <div class="form-row" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:14px;margin-bottom:14px;">
+                <div class="form-group" style="margin:0;">
+                  <label class="form-label" style="font-size:13px;font-weight:600;margin-bottom:6px;display:block;">Phone Number</label>
+                  <input type="tel" id="coPersonPhone" class="form-control" value="${G.escapeHtml(personPhone)}" placeholder="e.g. +91 9876543210" required>
+                </div>
+                <div class="form-group" style="margin:0;">
+                  <label class="form-label" style="font-size:13px;font-weight:600;margin-bottom:6px;display:block;">Street / City / Pin Code (Full Delivery Address)</label>
+                  <input type="text" id="coFullAddress" class="form-control" value="${G.escapeHtml(fullAddr)}" placeholder="e.g. Flat/Room No, Building Name, Road, City, State - PIN" required>
+                </div>
+              </div>
+
+              <div class="form-row" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:14px;margin-bottom:16px;">
+                <div class="form-group" style="margin:0;">
+                  <label class="form-label" style="font-size:13px;font-weight:600;margin-bottom:6px;display:block;">Landmark / Road</label>
+                  <input type="text" id="coRoad" class="form-control" value="${G.escapeHtml(roadVal)}" placeholder="Near NH-34 / Mosque / Market">
+                </div>
+                <div class="form-group" style="margin:0;">
+                  <label class="form-label" style="font-size:13px;font-weight:600;margin-bottom:6px;display:block;">House / Flat No.</label>
+                  <input type="text" id="coHouse" class="form-control" value="${G.escapeHtml(houseVal)}" placeholder="House #12">
+                </div>
+              </div>
+
+              <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                <button type="button" class="btn btn-primary" onclick="saveStaticCheckoutAddress()" style="background:#01684B;border-color:#01684B;padding:11px 20px;font-size:13.5px;font-weight:700;">
+                  Save Address to Account
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Method (ONLY Razorpay & Cash on Delivery) -->
+          <div class="surface-card">
+            <h3 style="font-size:16.5px;font-weight:700;margin-bottom:14px;">💳 Select Payment Method</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;margin-bottom:16px;">
+              <label style="padding:14px;border:1.5px solid ${checkoutPayment === 'razorpay' ? '#1D4ED8' : 'var(--border-color)'};background:${checkoutPayment === 'razorpay' ? '#EFF6FF' : 'transparent'};border-radius:var(--radius-sm);cursor:pointer;display:flex;align-items:center;gap:10px;">
+                <input type="radio" name="coPay" value="razorpay" ${checkoutPayment === 'razorpay' ? 'checked' : ''} onchange="checkoutPayment='razorpay';renderCheckoutView();">
+                <div style="width:36px;height:36px;font-size:18px;background:linear-gradient(135deg, #02042B, #2B84EA);color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;">⚡</div>
+                <div>
+                  <strong style="font-size:13.5px;display:block;">Pay Online with Razorpay</strong>
+                  <small style="font-size:11px;color:var(--text-light);">UPI (GPay, PhonePe, Paytm), Cards, NetBanking</small>
+                </div>
+              </label>
+
+              <label style="padding:14px;border:1.5px solid ${checkoutPayment === 'cod' ? 'var(--primary)' : 'var(--border-color)'};background:${checkoutPayment === 'cod' ? 'var(--primary-light)' : 'transparent'};border-radius:var(--radius-sm);cursor:pointer;display:flex;align-items:center;gap:10px;">
+                <input type="radio" name="coPay" value="cod" ${checkoutPayment === 'cod' ? 'checked' : ''} onchange="checkoutPayment='cod';renderCheckoutView();">
+                <img src="../assets/image/cash_on_delivery.png" alt="COD" style="width:28px;">
+                <div>
+                  <strong style="font-size:13.5px;display:block;">Cash on Delivery (COD)</strong>
+                  <small style="font-size:11px;color:var(--text-light);">Pay cash upon receiving items</small>
+                </div>
+              </label>
+            </div>
+
+            ${checkoutPayment === 'razorpay' ? `
+              <div style="margin-bottom:16px;background:linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%);border:1.5px solid #BFDBFE;border-radius:12px;padding:18px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <span style="background:#02042B;color:#fff;padding:6px 12px;border-radius:6px;font-weight:800;font-size:13px;">◆ Razorpay</span>
+                    <strong style="font-size:13.5px;color:#0F172A;">100% Secure Online Payment Gateway</strong>
+                  </div>
+                  <span style="background:#DCFCE7;color:#166534;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:800;">🔒 PCI-DSS Verified</span>
+                </div>
+                <p style="font-size:12.5px;color:#475569;margin:0;">
+                  Pay <strong>₹${totals.total}</strong> instantly via UPI (Google Pay, PhonePe, Paytm, BHIM), Credit/Debit Cards, NetBanking, or Wallets.
+                </p>
+              </div>
+            ` : `
+              <div style="margin-bottom:16px;background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:12px;padding:16px;">
+                <strong style="color:#065F46;font-size:13.5px;display:block;">🚚 Cash on Delivery (Pay at Doorstep)</strong>
+                <span style="font-size:12.5px;color:#166534;">Pay <strong>₹${totals.total}</strong> in cash when your order is delivered to your address.</span>
+              </div>
+            `}
+
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label">Additional Order Note (Optional)</label>
+              <input type="text" id="coOrderNote" class="form-control" placeholder="Any special delivery instruction...">
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Order Summary -->
+        <div>
+          <div class="surface-card" style="position:sticky;top:90px;">
+            <h3 style="font-size:17px;font-weight:700;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border-color);">Order Summary</h3>
+            <div style="max-height:240px;overflow-y:auto;margin-bottom:14px;padding-right:4px;">
+              ${cart.map(item => `
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px dashed var(--border-color);font-size:13px;">
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${G.escapeHtml(item.name)}</div>
+                    <small style="color:var(--text-light);">₹${item.price} × ${item.qty}</small>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+                    <div class="card-qty-stepper" style="height:28px;padding:0 2px;flex-shrink:0;">
+                      <button type="button" style="width:24px;height:26px;font-size:14px;${item.qty <= 1 ? 'opacity:0.45;cursor:not-allowed;' : ''}" ${item.qty <= 1 ? 'disabled' : ''} onclick="window.Getgozo.changeQty(${item.id}, -1);renderCheckoutView();">−</button>
+                      <span style="min-width:22px;font-size:12.5px;">${item.qty}</span>
+                      <button type="button" style="width:24px;height:26px;font-size:14px;" onclick="window.Getgozo.changeQty(${item.id}, 1);renderCheckoutView();">+</button>
+                    </div>
+                    <button type="button" onclick="window.Getgozo.removeFromCart(${item.id}, event);renderCheckoutView();" title="Remove item" style="width:26px;height:26px;border-radius:50%;border:1px solid #FECACA;background:#FEF2F2;color:#DC2626;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">✕</button>
+                  </div>
+                  <strong style="min-width:58px;text-align:right;color:var(--primary);">₹${Math.round(item.price * item.qty * 100) / 100}</strong>
+                </div>
+              `).join('')}
+            </div>
+
+            <div style="display:grid;gap:8px;font-size:13.5px;color:var(--text-medium);padding-bottom:12px;border-bottom:1px solid var(--border-color);margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;">
+                <span>Subtotal</span>
+                <span>₹${totals.itemsPrice}</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;">
+                <span>Delivery Fee</span>
+                <span>${totals.deliveryFee === 0 ? '<strong style="color:var(--primary);">FREE</strong>' : '₹' + totals.deliveryFee}</span>
+              </div>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+              <span style="font-size:16px;font-weight:700;">Total Payable</span>
+              <span style="font-size:23px;font-weight:800;color:var(--primary);">₹${totals.total}</span>
+            </div>
+
+            <label style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-medium);margin-bottom:16px;cursor:pointer;">
+              <input type="checkbox" id="coAgreeTerms" checked style="margin-top:3px;accent-color:var(--primary);">
+              <span>I have read and agree to the <a href="terms.html" style="color:var(--primary);font-weight:600;">Terms & Conditions</a>, <a href="privacy-policy.html" style="color:var(--primary);font-weight:600;">Privacy Policy</a> and <a href="return-policy.html" style="color:var(--primary);font-weight:600;">Return Policy</a>.</span>
+            </label>
+
+            <button type="button" class="btn btn-primary" id="coConfirmOrderBtn" style="width:100%;padding:14px;font-size:15px;background:${checkoutPayment === 'razorpay' ? '#01684B' : '#2563EB'};border-color:${checkoutPayment === 'razorpay' ? '#01684B' : '#2563EB'};" onclick="placeFinalOrder()">
+              ${checkoutPayment === 'razorpay' ? `⚡ Pay Now via Razorpay (₹${totals.total})` : `✓ Confirm Order - COD (₹${totals.total})`}
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function saveStaticCheckoutAddress() {
+      const G = window.Getgozo;
+      const addressType = document.getElementById('coAddressType')?.value || 'Home';
+      const name = document.getElementById('coPersonName')?.value.trim() || '';
+      const phone = document.getElementById('coPersonPhone')?.value.trim() || '';
+      const addr = document.getElementById('coFullAddress')?.value.trim() || '';
+      const road = document.getElementById('coRoad')?.value.trim() || '';
+      const house = document.getElementById('coHouse')?.value.trim() || '';
+
+      if (!name || !phone || !addr) {
+        G.showToast('Please fill in Contact Person Name, Phone Number, and Full Delivery Address.', 'error');
+        return;
+      }
+
+      const existing = getRegisteredCustomerData() || {};
+      const updated = {
+        ...existing,
+        registered: true,
+        name: name,
+        contact_person_name: name,
+        phone: phone,
+        address_type: addressType,
+        address: addr,
+        road: road,
+        house: house,
+        updated_at: new Date().toISOString()
+      };
+      localStorage.setItem('touchstains_registered_customer', JSON.stringify(updated));
+      G.setUser({
+        name: name,
+        f_name: existing.f_name || name.split(' ')[0] || 'Customer',
+        l_name: existing.l_name || name.split(' ').slice(1).join(' ') || '',
+        email: existing.email || 'customer@touchstains.com',
+        phone: phone
+      });
+      G.showToast('✓ Delivery address saved to your account!', 'success');
+      renderCheckoutView();
+    }
+
+    function finalizeStaticOrder(paymentMode, rzpPaymentId = null) {
+      const G = window.Getgozo;
+      const addressType = document.getElementById('coAddressType')?.value || 'Home';
+      const name = document.getElementById('coPersonName')?.value.trim() || 'Customer';
+      const phone = document.getElementById('coPersonPhone')?.value.trim() || '';
+      const addr = document.getElementById('coFullAddress')?.value.trim() || '';
+      const road = document.getElementById('coRoad')?.value.trim() || '';
+      const house = document.getElementById('coHouse')?.value.trim() || '';
+
+      let formattedAddr = addr;
+      if (house) formattedAddr = house + ', ' + formattedAddr;
+      if (road) formattedAddr += ' (Landmark/Road: ' + road + ')';
+
+      const appliedCoupon = JSON.parse(localStorage.getItem('getgozo_applied_coupon') || 'null');
+      const couponAmt = appliedCoupon ? Number(appliedCoupon.discount || 0) : 0;
+      const totals = G.getCartTotals(checkoutDeliveryType, couponAmt);
+
+      const newOrderId = 100250 + Math.floor(Math.random() * 700);
+      const now = new Date();
+      const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+      const newOrder = {
+        id: newOrderId,
+        date: dateStr,
+        status: 'confirmed',
+        paymentMethod: paymentMode === 'razorpay' ? 'Razorpay Online Payment' : 'Cash on Delivery',
+        paymentStatus: paymentMode === 'razorpay' ? 'paid' : 'unpaid',
+        razorpayPaymentId: rzpPaymentId,
+        utrNumber: rzpPaymentId || '',
+        deliveryType: checkoutDeliveryType === 'self_pickup' ? 'Self Pickup (Mumbai Main Hub)' : 'Home Delivery',
+        address: `[${addressType}] ${name} (${phone}) — ${formattedAddr}`,
+        timeSlot: 'Express Delivery',
+        note: document.getElementById('coOrderNote')?.value || '',
+        subtotal: totals.itemsPrice,
+        discount: totals.productDiscount + totals.couponDiscount,
+        deliveryCharge: totals.deliveryFee,
+        total: totals.total,
+        items: [...G.getCart()]
+      };
+
+      const orders = G.getOrders();
+      orders.unshift(newOrder);
+      G.saveOrders(orders);
+
+      G.clearCart();
+      localStorage.removeItem('getgozo_applied_coupon');
+
+      document.getElementById('placedOrderIdText').textContent = '#' + newOrderId;
+      const badge = document.getElementById('placedPaymentBadge');
+      if (badge) {
+        badge.innerHTML = paymentMode === 'razorpay'
+          ? `✅ Paid via Razorpay (Payment ID: <code>${G.escapeHtml(rzpPaymentId)}</code>)`
+          : `🚚 Cash on Delivery Confirmed (Pay ₹${totals.total} on delivery)`;
+      }
+      document.getElementById('trackPlacedOrderBtn').href = `order-details.html?id=${newOrderId}`;
+      G.openModal('orderSuccessModal');
+    }
+
+    function placeFinalOrder() {
+      const G = window.Getgozo;
+
+      // 1. MANDATORY CUSTOMER REGISTRATION CHECK BEFORE PLACING ORDER
+      const regCustomer = getRegisteredCustomerData();
+      if (!regCustomer) {
+        G.showToast('⚠️ অর্ডার করার আগে অনুগ্রহ করে কাস্টমার রেজিস্ট্রেশন সম্পন্ন করুন! Redirecting to Customer Registration...', 'error');
+        setTimeout(() => {
+          window.location.href = 'register.html?redirect=checkout';
+        }, 900);
+        return;
+      }
+
+      if (!document.getElementById('coAgreeTerms')?.checked) {
+        G.showToast('Please agree to the Terms & Conditions', 'error');
+        return;
+      }
+
+      const name = document.getElementById('coPersonName')?.value.trim();
+      const phone = document.getElementById('coPersonPhone')?.value.trim();
+      const email = regCustomer.email || 'customer@touchstains.com';
+      const addr = document.getElementById('coFullAddress')?.value.trim();
+
+      if (!name || !phone || !addr) {
+        G.showToast('Please fill in Contact Person Name, Phone Number, and Full Delivery Address.', 'error');
+        return;
+      }
+
+      if (checkoutPayment === 'cod') {
+        finalizeStaticOrder('cod');
+        return;
+      }
+
+      // Razorpay Checkout
+      const appliedCoupon = JSON.parse(localStorage.getItem('getgozo_applied_coupon') || 'null');
+      const couponAmt = appliedCoupon ? Number(appliedCoupon.discount || 0) : 0;
+      const totals = G.getCartTotals(checkoutDeliveryType, couponAmt);
+      const amountInPaise = Math.round(totals.total * 100);
+
+      if (typeof Razorpay === 'undefined') {
+        G.showToast('Razorpay SDK is loading. Please check your internet connection.', 'error');
+        return;
+      }
+
+      const cleanContactDigits = phone.split('/')[0].replace(/\D/g, '').slice(-10);
+      const formattedContact = cleanContactDigits.length === 10 ? ('+91' + cleanContactDigits) : phone.replace(/[^0-9+]/g, '');
+
+      const options = {
+        key: STATIC_RAZORPAY_KEY,
+        amount: amountInPaise,
+        currency: 'INR',
+        name: 'TOUCHSTAINS™',
+        description: 'Fabric Stain & Rust Remover Order',
+        image: 'https://mafiurislam.github.io/TOUCHSTAIN/storage/restaurant/touchstains-logo.png',
+        prefill: {
+          name: name,
+          email: email,
+          contact: formattedContact
+        },
+        theme: {
+          color: '#01684B'
+        },
+        handler: function (response) {
+          finalizeStaticOrder('razorpay', response.razorpay_payment_id);
+        }
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.on('payment.failed', function (response) {
+        G.showToast('⚠️ ' + (response?.error?.description || 'Payment failed'), 'error');
+      });
+      rzp.open();
+    }
+  </script>
+</body>
+
+</html>

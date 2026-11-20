@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <script>window.location.replace('../index.html');</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coupons & Offers - Getgozo</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="padding-top:24px;padding-bottom:48px;">
+    <h1 style="font-size:24px;font-weight:700;margin-bottom:6px;">🎟️ Coupons & Promo Offers</h1>
+    <p style="font-size:13.5px;color:var(--text-medium);margin-bottom:22px;">Copy any coupon code below and apply it in
+      your Shopping Bag</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;">
+      <div class="surface-card"
+        style="display:flex;align-items:center;justify-content:space-between;gap:16px;border-left:5px solid var(--primary);">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <img src="../assets/image/coupon_apply.png" alt="Coupon" style="width:48px;height:48px;object-fit:contain;">
+          <div>
+            <h3 style="font-size:18px;font-weight:800;color:var(--primary);">GETGOZO10</h3>
+            <p style="font-size:13px;color:var(--text-medium);">Flat ₹10 OFF on orders above ₹69</p>
+            <small style="font-size:11px;color:var(--text-light);">Valid across all categories</small>
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" onclick="copyCouponCode('GETGOZO10')">Copy Code</button>
+      </div>
+
+      <div class="surface-card"
+        style="display:flex;align-items:center;justify-content:space-between;gap:16px;border-left:5px solid #FF6B35;">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <img src="../assets/image/percentage.png" alt="Coupon" style="width:48px;height:48px;object-fit:contain;">
+          <div>
+            <h3 style="font-size:18px;font-weight:800;color:#FF6B35;">WELCOME20</h3>
+            <p style="font-size:13px;color:var(--text-medium);">Flat ₹20 OFF on orders above ₹199</p>
+            <small style="font-size:11px;color:var(--text-light);">Special welcome discount</small>
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" onclick="copyCouponCode('WELCOME20')">Copy Code</button>
+      </div>
+
+      <div class="surface-card"
+        style="display:flex;align-items:center;justify-content:space-between;gap:16px;border-left:5px solid var(--primary);">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <img src="../assets/image/loyal.png" alt="Coupon" style="width:48px;height:48px;object-fit:contain;">
+          <div>
+            <h3 style="font-size:18px;font-weight:800;color:var(--primary);">TOUCH20</h3>
+            <p style="font-size:13px;color:var(--text-medium);">Flat ₹20 OFF on orders above ₹149</p>
+            <small style="font-size:11px;color:var(--text-light);">Valid on all orders</small>
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" onclick="copyCouponCode('TOUCH20')">Copy Code</button>
+      </div>
+    </div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    function copyCouponCode(code) {
+      if (navigator.clipboard) navigator.clipboard.writeText(code);
+      window.Getgozo.showToast(`Coupon code "${code}" copied!`, 'success');
+    }
+  </script>
+</body>
+
+</html>

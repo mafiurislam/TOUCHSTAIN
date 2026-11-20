@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Registration - TOUCHSTAINS</title>
+  <link rel="icon" type="image/png" href="../favicon.png?v=2.3">
+  <link rel="stylesheet" href="../css/style.css?v=2.3">
+</head>
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="max-width:720px;padding-top:32px;padding-bottom:56px;margin:0 auto;">
+    <div class="surface-card" style="padding:34px 28px;">
+      <div style="text-align:center;margin-bottom:24px;">
+        <img src="../storage/restaurant/touchstains-logo.png?v=2.3" alt="TOUCHSTAINS" style="height:64px;margin:0 auto 10px;object-fit:contain;" onerror="this.src='../assets/image/touchstains-logo.png'">
+        <h1 style="font-size:23px;font-weight:800;">Customer Registration &amp; Delivery Details</h1>
+        <p style="font-size:13px;color:var(--text-medium);margin-top:4px;">Register your account and delivery address once — it will automatically fill in on Checkout!</p>
+      </div>
+
+      <div id="checkoutRedirectNotice" style="display:none;background:#EFF6FF;border:1.5px solid #93C5FD;color:#1E3A8A;padding:12px 16px;border-radius:10px;font-size:13px;font-weight:600;margin-bottom:20px;align-items:center;gap:10px;">
+        <span style="font-size:20px;">🛒</span>
+        <span>Please complete your Customer Registration below to proceed with your order on Checkout.</span>
+      </div>
+
+      <form onsubmit="handleSignupSubmit(event)">
+        <!-- 1. Personal & Account Information -->
+        <div style="margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border-color);">
+          <h3 style="font-size:15.5px;font-weight:800;color:var(--primary);margin-bottom:14px;">👤 1. Personal &amp; Account Information</h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:12px;">
+            <div class="form-group">
+              <label class="form-label">First Name *</label>
+              <input type="text" id="regFirst" class="form-control" required placeholder="First Name" oninput="autoFillStaticContactName()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name *</label>
+              <input type="text" id="regLast" class="form-control" required placeholder="Last Name" oninput="autoFillStaticContactName()">
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:12px;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label">Phone / Mobile Number *</label>
+              <input type="tel" id="regPhone" class="form-control" required placeholder="+91 9876543210">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label">Email Address (Optional)</label>
+              <input type="email" id="regEmail" class="form-control" placeholder="you@example.com (Optional)">
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Delivery Address Details -->
+        <div style="margin-bottom:20px;">
+          <h3 style="font-size:15.5px;font-weight:800;color:var(--primary);margin-bottom:6px;">🏠 2. Delivery Address Details (Auto-filled at Checkout)</h3>
+          <p style="font-size:12px;color:var(--text-light);margin-bottom:14px;">This address will be saved to your account and automatically added on the Checkout page.</p>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:12px;">
+            <div class="form-group">
+              <label class="form-label">Address Label *</label>
+              <select id="regAddrType" class="form-control">
+                <option value="Home">🏠 Home</option>
+                <option value="Workplace">🏢 Workplace / Shop</option>
+                <option value="Other">📍 Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contact Person Name *</label>
+              <input type="text" id="regContactName" class="form-control" required placeholder="Recipient Full Name">
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:12px;">
+            <div class="form-group">
+              <label class="form-label">Street / City / Pin Code (Full Delivery Address) *</label>
+              <input type="text" id="regFullAddr" class="form-control" required placeholder="e.g. Flat/Room No, Building Name, Road, City, State - PIN">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Pin Code *</label>
+              <input type="text" id="regPincode" class="form-control" required maxlength="6" placeholder="e.g. 400022">
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:12px;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label">Landmark / Road</label>
+              <input type="text" id="regRoad" class="form-control" placeholder="Near NH-34 / Mosque / Market">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label">House / Flat No.</label>
+              <input type="text" id="regHouse" class="form-control" placeholder="House #12">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%;padding:14px;font-size:15px;font-weight:700;">✓ Complete Registration &amp; Save Delivery Address →</button>
+      </form>
+
+      <p style="text-align:center;margin-top:18px;font-size:13px;color:var(--text-medium);">
+        Already have an account? <a href="login.html" id="loginLinkEl" style="color:var(--primary);font-weight:700;">Login</a>
+      </p>
+    </div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectTarget = urlParams.get('redirect');
+    if (redirectTarget === 'checkout') {
+      const notice = document.getElementById('checkoutRedirectNotice');
+      if (notice) notice.style.display = 'flex';
+      const loginLink = document.getElementById('loginLinkEl');
+      if (loginLink) loginLink.href = 'login.html?redirect=checkout';
+    }
+
+    function autoFillStaticContactName() {
+      const fn = document.getElementById('regFirst')?.value.trim() || '';
+      const ln = document.getElementById('regLast')?.value.trim() || '';
+      const cp = document.getElementById('regContactName');
+      if (cp && !cp.dataset.edited) {
+        cp.value = (fn + ' ' + ln).trim();
+      }
+    }
+    document.getElementById('regContactName')?.addEventListener('input', function() {
+      this.dataset.edited = 'true';
+    });
+
+    function handleSignupSubmit(e) {
+      e.preventDefault();
+      const fn = document.getElementById('regFirst').value.trim();
+      const ln = document.getElementById('regLast').value.trim();
+      const contactName = document.getElementById('regContactName').value.trim() || `${fn} ${ln}`.trim();
+      const phone = document.getElementById('regPhone').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const addrType = document.getElementById('regAddrType').value || 'Home';
+      const fullAddr = document.getElementById('regFullAddr').value.trim();
+      const pincode = document.getElementById('regPincode').value.trim();
+      const road = document.getElementById('regRoad').value.trim();
+      const house = document.getElementById('regHouse').value.trim();
+
+      const fullAddressCombined = pincode && !fullAddr.includes(pincode) ? `${fullAddr} - ${pincode}` : fullAddr;
+
+      const customerData = {
+        registered: true,
+        f_name: fn,
+        l_name: ln,
+        name: contactName,
+        phone: phone,
+        email: email,
+        address_type: addrType,
+        contact_person_name: contactName,
+        contact_person_number: phone,
+        address: fullAddressCombined,
+        pincode: pincode,
+        road: road,
+        house: house
+      };
+
+      localStorage.setItem('touchstains_registered_customer', JSON.stringify(customerData));
+      window.Getgozo.setUser({ name: contactName, email, phone });
+
+      const addrs = window.Getgozo.getAddresses();
+      addrs.unshift({
+        id: Date.now(),
+        type: addrType,
+        name: contactName,
+        phone: phone,
+        address: fullAddressCombined,
+        road: road,
+        house: house,
+        pincode: pincode
+      });
+      window.Getgozo.saveAddresses(addrs);
+
+      window.Getgozo.showToast('✓ Registration successful! Delivery address saved.', 'success');
+      const cart = window.Getgozo.getCart();
+      setTimeout(() => {
+        if (redirectTarget === 'checkout' || (cart && cart.length > 0)) {
+          window.location.href = 'checkout.html';
+        } else {
+          window.location.href = '../index.html';
+        }
+      }, 600);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        const raw = localStorage.getItem('touchstains_registered_customer');
+        if (!raw) return;
+        const c = JSON.parse(raw);
+        if (!c) return;
+        const setIfEmpty = (id, val) => {
+          const el = document.getElementById(id);
+          if (el && !el.value.trim() && val) el.value = val;
+        };
+        setIfEmpty('regFirst', c.f_name || '');
+        setIfEmpty('regLast', c.l_name || '');
+        setIfEmpty('regPhone', c.phone || '');
+        setIfEmpty('regEmail', c.email || '');
+        setIfEmpty('regContactName', c.contact_person_name || c.name || '');
+        setIfEmpty('regFullAddr', c.address || '');
+        setIfEmpty('regPincode', c.pincode || '');
+        setIfEmpty('regRoad', c.road || '');
+        setIfEmpty('regHouse', c.house || '');
+        const typeEl = document.getElementById('regAddrType');
+        if (typeEl && c.address_type) typeEl.value = c.address_type;
+      } catch (e) {}
+    });
+  </script>
+</body>
+</html>

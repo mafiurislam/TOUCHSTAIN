@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Special Discount Deals - Getgozo</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="padding-top:24px;padding-bottom:48px;">
+    <div
+      style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <img src="../assets/image/flash_deal.png" alt="Deals" style="width:42px;height:42px;object-fit:contain;">
+        <div>
+          <h1 style="font-size:24px;font-weight:800;">⚡ Special Discount Offers</h1>
+          <p style="font-size:13px;color:var(--text-medium);" id="dealsCountSub">Grab the highest discounts on Getgozo
+            products</p>
+        </div>
+      </div>
+      <a href="shop.html" class="view-all-link">Browse All 240 Items →</a>
+    </div>
+
+    <div class="products-grid" id="discountDealsGrid"></div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const G = window.Getgozo;
+      const discounted = G.ALL_PRODUCTS.filter(p => Number(p.discount) > 0);
+      const sub = document.getElementById('dealsCountSub');
+      if (sub) sub.textContent = `${discounted.length} discounted products available now!`;
+      const grid = document.getElementById('discountDealsGrid');
+      if (grid) {
+        grid.innerHTML = discounted.map(p => G.renderProductCard(p)).join('');
+      }
+    });
+  </script>
+</body>
+
+</html>

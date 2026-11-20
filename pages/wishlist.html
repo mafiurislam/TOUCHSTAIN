@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Favourite List - Getgozo</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="padding-top:24px;padding-bottom:48px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <h1 style="font-size:24px;font-weight:700;">❤️ Favourite List</h1>
+        <p style="font-size:13px;color:var(--text-medium);" id="wishCountSub">Your saved favourite grocery items</p>
+      </div>
+      <button type="button" class="btn btn-primary btn-sm" id="addAllWishBtn" onclick="addAllWishToCart()" style="display:none;">
+        🛒 Add All to Shopping Bag
+      </button>
+    </div>
+
+    <div id="wishlistGridWrap"></div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    window.onGetgozoWishlistUpdated = function () {
+      renderWishlistPage();
+    };
+
+    document.addEventListener('DOMContentLoaded', renderWishlistPage);
+
+    function renderWishlistPage() {
+      const G = window.Getgozo;
+      const wishIds = G.getWishlist();
+      const wrap = document.getElementById('wishlistGridWrap');
+      const addAllBtn = document.getElementById('addAllWishBtn');
+      const subEl = document.getElementById('wishCountSub');
+      if (!wrap) return;
+
+      const products = wishIds.map(id => G.findProduct(id)).filter(Boolean);
+      if (subEl) subEl.textContent = `${products.length} item(s) saved in your Favourite List`;
+
+      if (products.length === 0) {
+        if (addAllBtn) addAllBtn.style.display = 'none';
+        wrap.innerHTML = `
+          <div class="surface-card" style="text-align:center;padding:70px 20px;">
+            <img src="../assets/image/favourite_no_data.png" alt="No Favourites" style="width:130px;margin:0 auto 16px;">
+            <h2 style="font-size:20px;font-weight:700;margin-bottom:8px;">No Favourite Items Yet</h2>
+            <p style="color:var(--text-light);margin-bottom:20px;">Tap the heart icon ❤️ on any product to save it here for quick shopping.</p>
+            <a href="shop.html" class="btn btn-primary">Explore Products →</a>
+          </div>
+        `;
+        return;
+      }
+
+      if (addAllBtn) addAllBtn.style.display = 'inline-flex';
+      wrap.innerHTML = `<div class="products-grid">${products.map(p => G.renderProductCard(p)).join('')}</div>`;
+    }
+
+    function addAllWishToCart() {
+      const G = window.Getgozo;
+      const wishIds = G.getWishlist();
+      let added = 0;
+      wishIds.forEach(id => {
+        const p = G.findProduct(id);
+        if (p && Number(p.total_stock) > 0) {
+          G.addToCart(p.id, 1);
+          added++;
+        }
+      });
+      if (added > 0) {
+        G.showToast(`Added ${added} item(s) to Shopping Bag!`, 'success');
+      }
+    }
+  </script>
+</body>
+</html>
+

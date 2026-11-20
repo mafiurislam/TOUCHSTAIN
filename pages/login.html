@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - TOUCHSTAINS</title>
+  <link rel="icon" type="image/png" href="../favicon.png?v=2.3">
+  <link rel="stylesheet" href="../css/style.css?v=2.3">
+</head>
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="padding-top:36px;padding-bottom:56px;">
+    <div class="surface-card" style="max-width:440px;margin:0 auto;padding:32px 26px;">
+      <div style="text-align:center;margin-bottom:22px;">
+        <img src="../storage/restaurant/touchstains-logo.png?v=2.3" alt="TOUCHSTAINS" style="height:64px;margin:0 auto 12px;object-fit:contain;" onerror="this.src='../assets/image/touchstains-logo.png'">
+        <h1 style="font-size:22px;font-weight:700;">Welcome Back</h1>
+        <p style="font-size:13px;color:var(--text-medium);">Sign in with your registered phone number or email</p>
+      </div>
+
+      <form onsubmit="handleLoginSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">Mobile Number *</label>
+          <input type="tel" id="loginPhone" class="form-control" required placeholder="e.g. +91 9876543210">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address (Optional)</label>
+          <input type="email" id="loginEmail" class="form-control" placeholder="you@example.com (Optional)">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;padding:12px;">Login →</button>
+      </form>
+
+      <p style="text-align:center;margin-top:20px;font-size:13.5px;color:var(--text-medium);">
+        New Customer? <a href="register.html?redirect=checkout" style="color:var(--primary);font-weight:700;">Register Customer Account</a>
+      </p>
+    </div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const phone = document.getElementById('loginPhone').value.trim();
+      const email = document.getElementById('loginEmail').value.trim();
+      const existingReg = JSON.parse(localStorage.getItem('touchstains_registered_customer') || 'null');
+      if (!existingReg || !existingReg.registered) {
+        window.Getgozo.showToast('Please register your customer account & delivery address first!', 'info');
+        setTimeout(() => window.location.href = 'register.html?redirect=checkout', 600);
+        return;
+      }
+      window.Getgozo.setUser({ name: existingReg.name || 'Customer', email: existingReg.email || email, phone: existingReg.phone || phone });
+      window.Getgozo.showToast('Logged in successfully!', 'success');
+      const params = new URLSearchParams(window.location.search);
+      setTimeout(() => {
+        window.location.href = params.get('redirect') === 'checkout' ? 'checkout.html' : '../index.html';
+      }, 600);
+    }
+  </script>
+</body>
+</html>

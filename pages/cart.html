@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Bag - Getgozo</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="padding-top:24px;padding-bottom:48px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <h1 style="font-size:24px;font-weight:700;">🛍️ Shopping Bag</h1>
+      <a href="shop.html" class="view-all-link">← Continue Shopping</a>
+    </div>
+
+    <div id="cartPageContent"></div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    let selectedDeliveryMode = localStorage.getItem('getgozo_delivery_mode') || 'delivery';
+    let appliedCoupon = JSON.parse(localStorage.getItem('getgozo_applied_coupon') || 'null');
+
+    window.onGetgozoCartUpdated = function () {
+      renderFullCartPage();
+    };
+
+    document.addEventListener('DOMContentLoaded', renderFullCartPage);
+
+    function renderFullCartPage() {
+      const G = window.Getgozo;
+      const cart = G.getCart();
+      const wrap = document.getElementById('cartPageContent');
+      if (!wrap) return;
+
+      if (cart.length === 0) {
+        wrap.innerHTML = `
+          <div class="surface-card" style="text-align:center;padding:70px 20px;">
+            <img src="../assets/image/empty_order_image.png" alt="Empty Shopping Bag" style="width:150px;margin:0 auto 18px;">
+            <h2 style="font-size:21px;font-weight:700;margin-bottom:8px;">Empty Shopping Bag</h2>
+            <p style="color:var(--text-light);margin-bottom:22px;">Look like you haven't added any item yet.</p>
+            <a href="shop.html" class="btn btn-primary">Let's Shop →</a>
+          </div>
+        `;
+        return;
+      }
+
+      const couponAmt = appliedCoupon ? Number(appliedCoupon.discount || 0) : 0;
+      const totals = G.getCartTotals(selectedDeliveryMode, couponAmt);
+
+      wrap.innerHTML = `
+        <div class="cart-page-grid">
+          <!-- Left Items List -->
+          <div class="surface-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid var(--border-color);margin-bottom:10px;">
+              <h3 style="font-size:16px;font-weight:700;">Cart Items (${cart.reduce((s, i) => s + i.qty, 0)})</h3>
+              <button type="button" onclick="window.Getgozo.clearCart()" style="color:var(--danger);font-size:12.5px;font-weight:600;">Clear All</button>
+            </div>
+
+            <div>
+              ${cart.map(item => {
+                const imgUrl = G.getProductImageUrl(item.image);
+                const liveUrl = `https://getgozo.in/app/storage/app/public/product/${item.image}`;
+                return `
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--border-color);flex-wrap:wrap;">
+                    <div style="display:flex;align-items:center;gap:14px;flex:1;min-width:220px;">
+                      <a href="product.html?id=${item.id}">
+                        <img src="${imgUrl}" alt="${G.escapeHtml(item.name)}" onerror="this.src='${liveUrl}'" style="width:72px;height:72px;object-fit:contain;border:1px solid var(--border-color);border-radius:10px;padding:6px;background:#fff;">
+                      </a>
+                      <div>
+                        <a href="product.html?id=${item.id}" style="font-size:15px;font-weight:600;color:var(--text-dark);">${G.escapeHtml(item.name)}</a>
+                        <div style="font-size:12px;color:var(--text-light);margin:2px 0;">Unit: ${G.escapeHtml(item.unit)}</div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                          <span style="font-size:15px;font-weight:700;color:var(--primary);">₹${item.price}</span>
+                          ${item.oldPrice > item.price ? `<span style="font-size:12px;color:var(--text-light);text-decoration:line-through;">₹${item.oldPrice}</span>` : ''}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style="display:flex;align-items:center;gap:18px;">
+                      <div class="card-qty-stepper">
+                        <button type="button" onclick="window.Getgozo.changeQty(${item.id}, -1)">−</button>
+                        <span>${item.qty}</span>
+                        <button type="button" onclick="window.Getgozo.changeQty(${item.id}, 1)">+</button>
+                      </div>
+                      <div style="min-width:75px;text-align:right;font-size:16px;font-weight:700;color:var(--text-dark);">
+                        ₹${Math.round(item.price * item.qty * 100) / 100}
+                      </div>
+                      <button type="button" onclick="window.Getgozo.removeFromCart(${item.id})" style="color:var(--danger);font-size:18px;" title="Remove">🗑️</button>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+
+          <!-- Right Summary & Promo Box -->
+          <div style="display:flex;flex-direction:column;gap:18px;">
+            <!-- Delivery Option & Summary Card -->
+            <div class="surface-card">
+              <h4 style="font-size:15px;font-weight:700;margin-bottom:12px;">Delivery Option</h4>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;">
+                <label style="padding:10px 12px;border:1.5px solid ${selectedDeliveryMode === 'delivery' ? 'var(--primary)' : 'var(--border-color)'};background:${selectedDeliveryMode === 'delivery' ? 'var(--primary-light)' : 'transparent'};border-radius:var(--radius-sm);cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;">
+                  <input type="radio" name="delMode" value="delivery" ${selectedDeliveryMode === 'delivery' ? 'checked' : ''} onchange="setDeliveryMode('delivery')">
+                  🚚 Home Delivery
+                </label>
+                <label style="padding:10px 12px;border:1.5px solid ${selectedDeliveryMode === 'self_pickup' ? 'var(--primary)' : 'var(--border-color)'};background:${selectedDeliveryMode === 'self_pickup' ? 'var(--primary-light)' : 'transparent'};border-radius:var(--radius-sm);cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;">
+                  <input type="radio" name="delMode" value="self_pickup" ${selectedDeliveryMode === 'self_pickup' ? 'checked' : ''} onchange="setDeliveryMode('self_pickup')">
+                  🏪 Self Pickup
+                </label>
+              </div>
+
+              <h4 style="font-size:15px;font-weight:700;margin-bottom:12px;">Order Summary</h4>
+              <div style="display:grid;gap:10px;font-size:13.5px;color:var(--text-medium);border-bottom:1px solid var(--border-color);padding-bottom:14px;margin-bottom:14px;">
+                <div style="display:flex;justify-content:space-between;">
+                  <span>Items Price (MRP)</span>
+                  <span>₹${totals.oldItemsPrice}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;color:var(--primary);">
+                  <span>Product Discount</span>
+                  <span>− ₹${totals.productDiscount}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;">
+                  <span>Subtotal</span>
+                  <strong>₹${totals.itemsPrice}</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;">
+                  <span>Delivery Fee</span>
+                  <span>${totals.deliveryFee === 0 ? '<strong style="color:var(--primary);">FREE</strong>' : '₹' + totals.deliveryFee}</span>
+                </div>
+              </div>
+
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                <span style="font-size:16px;font-weight:700;color:var(--text-dark);">Total Amount</span>
+                <span style="font-size:22px;font-weight:800;color:var(--primary);">₹${totals.total}</span>
+              </div>
+
+              ${totals.itemsPrice < totals.minOrder ? `
+                <div style="background:#FFF2F0;border:1px solid #FFCCC7;color:#CF1322;padding:10px 12px;border-radius:var(--radius-xs);font-size:12.5px;margin-bottom:12px;">
+                  ⚠️ Minimum order amount is ₹${totals.minOrder}. Add ₹${Math.ceil(totals.minOrder - totals.itemsPrice)} more to checkout!
+                </div>
+              ` : ''}
+
+              <button type="button" class="btn btn-primary" style="width:100%;padding:13px;" onclick="proceedFromCart(${totals.itemsPrice}, ${totals.minOrder})">
+                Proceed to Checkout →
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function setDeliveryMode(mode) {
+      selectedDeliveryMode = mode;
+      localStorage.setItem('getgozo_delivery_mode', mode);
+      renderFullCartPage();
+    }
+
+    function applyCartCoupon(e) {
+      e.preventDefault();
+      const code = (document.getElementById('promoCodeInput')?.value || '').trim().toUpperCase();
+      if (!code) return;
+      if (code === 'GETGOZO10' || code === 'WELCOME20' || code === 'MALDA20') {
+        const disc = code === 'GETGOZO10' ? 10 : 20;
+        appliedCoupon = { code, discount: disc };
+        localStorage.setItem('getgozo_applied_coupon', JSON.stringify(appliedCoupon));
+        window.Getgozo.showToast(`Coupon ${code} applied! Saved ₹${disc}`, 'success');
+        renderFullCartPage();
+      } else {
+        window.Getgozo.showToast('Invalid or expired coupon code', 'error');
+      }
+    }
+
+    function removeCoupon() {
+      appliedCoupon = null;
+      localStorage.removeItem('getgozo_applied_coupon');
+      renderFullCartPage();
+    }
+
+    function proceedFromCart(itemsPrice, minOrder) {
+      if (itemsPrice < minOrder) {
+        window.Getgozo.showToast(`Minimum order value is ₹${minOrder}`, 'error');
+        return;
+      }
+      window.location.href = 'checkout.html';
+    }
+  </script>
+</body>
+</html>
+

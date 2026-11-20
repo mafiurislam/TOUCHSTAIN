@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script>window.location.replace('contact.html');</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - Getgozo</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="padding-top:24px;padding-bottom:48px;">
+    <div class="surface-card" style="max-width:920px;margin:0 auto;padding:34px 28px;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border-color);">
+        <img src="../storage/restaurant/touchstains-logo.png?v=2.3" alt="TOUCHSTAINS" style="height:56px;object-fit:contain;" onerror="this.src='../assets/image/touchstains-logo.png'">
+        <div>
+          <h1 style="font-size:24px;font-weight:800;">About Us</h1>
+          <p style="font-size:13px;color:var(--text-medium);">TOUCHSTAINS Fabric Stain &amp; Rust Remover — Shop No. 3 & 4, Tower B, Braumonte, Road No. 28-A, Sion Koliwada, Sion, Mumbai, Maharashtra - 400022</p>
+        </div>
+      </div>
+      <div id="aboutUsContent" style="font-size:14.5px;line-height:1.8;color:var(--text-dark);"></div>
+    </div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const cfg = window.Getgozo.CONFIG;
+      const el = document.getElementById('aboutUsContent');
+      if (el && cfg.about_us) {
+        el.innerHTML = cfg.about_us;
+      }
+    });
+  </script>
+</body>
+</html>
+

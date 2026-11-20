@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script>window.location.replace('account.html');</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loyalty Points & Wallet - Getgozo</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="padding-top:24px;padding-bottom:48px;">
+    <h1 style="font-size:24px;font-weight:700;margin-bottom:18px;">🪙 Loyalty Points & My Wallet</h1>
+
+    <!-- Real Loyalty Banner -->
+    <div class="main-banner-card" style="margin-bottom:24px;">
+      <img src="../storage/banner/touchstains-hero-banner-1.jpg" alt="TOUCHSTAINS Rewards">
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;">
+      <!-- Loyalty Points Card -->
+      <div class="surface-card" style="background:linear-gradient(135deg,#01684B 0%,#028a64 100%);color:#ffffff;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <div>
+            <small style="opacity:0.9;font-size:13px;">Available Loyalty Points</small>
+            <h2 id="loyaltyPointsVal" style="font-size:38px;font-weight:800;line-height:1.1;margin-top:4px;">35</h2>
+          </div>
+          <img src="../assets/image/loyal.png" alt="Loyalty" style="width:60px;height:60px;object-fit:contain;">
+        </div>
+        <p style="font-size:13px;opacity:0.95;margin-bottom:18px;">
+          • 1 Loyalty Point = ₹1<br>
+          • Minimum 20 Points required to convert into ₹20 Wallet Money<br>
+          • Earn up to 5% Loyalty Points on every order!
+        </p>
+        <button type="button" class="btn" style="background:#ffffff;color:var(--primary);width:100%;font-weight:700;" onclick="convertPointsToWallet()">
+          🔄 Convert Points to Wallet Money
+        </button>
+      </div>
+
+      <!-- Wallet Balance Card -->
+      <div class="surface-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <div>
+            <small style="color:var(--text-medium);font-size:13px;">My Wallet Balance</small>
+            <h2 id="walletBalanceVal" style="font-size:38px;font-weight:800;color:var(--primary);line-height:1.1;margin-top:4px;">₹120</h2>
+          </div>
+          <img src="../assets/image/converted.png" alt="Wallet" style="width:56px;height:56px;object-fit:contain;">
+        </div>
+        <p style="font-size:13px;color:var(--text-medium);margin-bottom:18px;">
+          Use your Getgozo Wallet balance directly during Checkout to pay for fresh vegetables, fruits, rice, dal, and daily groceries!
+        </p>
+        <a href="shop.html" class="btn btn-primary" style="width:100%;">🛒 Use Wallet Balance Now</a>
+      </div>
+    </div>
+
+    <!-- Transaction History -->
+    <div class="surface-card" style="margin-top:24px;">
+      <h3 style="font-size:17px;font-weight:700;margin-bottom:14px;">Recent Point & Wallet Transactions</h3>
+      <div id="walletHistoryList" style="display:grid;gap:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--bg-muted);border-radius:var(--radius-sm);">
+          <div>
+            <strong style="font-size:14px;">Order #100248 Loyalty Reward (5%)</strong>
+            <div style="font-size:12px;color:var(--text-light);">Credited on order delivery</div>
+          </div>
+          <span style="color:var(--primary);font-weight:700;font-size:15px;">+15 Points</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--bg-muted);border-radius:var(--radius-sm);">
+          <div>
+            <strong style="font-size:14px;">Welcome Bonus Points</strong>
+            <div style="font-size:12px;color:var(--text-light);">Getgozo Loyalty Program</div>
+          </div>
+          <span style="color:var(--primary);font-weight:700;font-size:15px;">+20 Points</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', refreshWalletPageUI);
+
+    function refreshWalletPageUI() {
+      const G = window.Getgozo;
+      document.getElementById('loyaltyPointsVal').textContent = G.getLoyaltyPoints();
+      document.getElementById('walletBalanceVal').textContent = '₹' + G.getWalletBalance();
+    }
+
+    function convertPointsToWallet() {
+      const G = window.Getgozo;
+      const pts = G.getLoyaltyPoints();
+      if (pts < 20) {
+        G.showToast('Minimum 20 Loyalty Points required to convert to ₹20!', 'error');
+        return;
+      }
+      const newBal = Math.round((G.getWalletBalance() + pts) * 100) / 100;
+      G.setLoyaltyPoints(0);
+      G.setWalletBalance(newBal);
+      refreshWalletPageUI();
+
+      const hist = document.getElementById('walletHistoryList');
+      if (hist) {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--primary-light);border-radius:var(--radius-sm);';
+        row.innerHTML = `
+          <div>
+            <strong style="font-size:14px;color:var(--primary);">Converted ${pts} Loyalty Points to Wallet</strong>
+            <div style="font-size:12px;color:var(--text-medium);">1 Point = ₹1 • Instant Conversion</div>
+          </div>
+          <span style="color:var(--primary);font-weight:800;font-size:15px;">+₹${pts}</span>
+        `;
+        hist.prepend(row);
+      }
+      G.showToast(`Successfully converted ${pts} points into ₹${pts} Wallet Money! 🎉`, 'success');
+    }
+  </script>
+</body>
+</html>
+

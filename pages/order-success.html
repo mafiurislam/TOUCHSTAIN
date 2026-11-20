@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Placed Successfully - Getgozo</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="padding-top:36px;padding-bottom:56px;">
+    <div class="surface-card" style="max-width:560px;margin:0 auto;text-align:center;padding:40px 28px;">
+      <img src="../storage/restaurant/touchstains-logo.png?v=2.3" alt="TOUCHSTAINS" style="height:62px;margin:0 auto 14px;object-fit:contain;" onerror="this.src='../assets/image/touchstains-logo.png'">
+      <img src="../assets/image/giftbox.gif" alt="Order Success" style="width:100px;margin:0 auto 14px;" onerror="this.src='../assets/image/order_placed.png'">
+      <h1 style="font-size:25px;font-weight:800;color:var(--primary);margin-bottom:8px;">Your Order Has Placed Successfully!</h1>
+      <p style="font-size:14px;color:var(--text-medium);margin-bottom:24px;">
+        Order ID: <strong id="succOrderId">#100248</strong> • Dispatch Branch: <strong>Mumbai Main Hub</strong>
+      </p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="track-order.html" id="succTrackLink" class="btn btn-primary">📍 Track Order</a>
+        <a href="order-details.html" id="succDetailsLink" class="btn btn-outline">🧾 View Order Details</a>
+        <a href="../index.html" class="btn btn-outline">🏠 Back to Home</a>
+      </div>
+    </div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const orders = window.Getgozo.getOrders();
+      const id = params.get('id') || (orders[0] && orders[0].id) || 100248;
+      document.getElementById('succOrderId').textContent = '#' + id;
+      document.getElementById('succTrackLink').href = `track-order.html?id=${id}`;
+      document.getElementById('succDetailsLink').href = `order-details.html?id=${id}`;
+    });
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Return, Refund & Cancellation Policy - Getgozo</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="padding-top:24px;padding-bottom:48px;">
+    <div style="max-width:920px;margin:0 auto;display:grid;gap:24px;">
+      <div class="surface-card" style="padding:30px 28px;">
+        <h1 style="font-size:22px;font-weight:800;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border-color);color:var(--primary);">🔄 Return Policy</h1>
+        <div id="returnPolicyBox" style="font-size:14.5px;line-height:1.8;"></div>
+      </div>
+
+      <div class="surface-card" style="padding:30px 28px;">
+        <h2 style="font-size:22px;font-weight:800;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border-color);color:var(--primary);">💰 Refund Policy</h2>
+        <div id="refundPolicyBox" style="font-size:14.5px;line-height:1.8;"></div>
+      </div>
+
+      <div class="surface-card" style="padding:30px 28px;">
+        <h2 style="font-size:22px;font-weight:800;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border-color);color:var(--primary);">❌ Cancellation Policy</h2>
+        <div id="cancelPolicyBox" style="font-size:14.5px;line-height:1.8;"></div>
+      </div>
+    </div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const cfg = window.Getgozo.CONFIG;
+      document.getElementById('returnPolicyBox').innerHTML = cfg.return_policy || '';
+      document.getElementById('refundPolicyBox').innerHTML = cfg.refund_policy || '';
+      document.getElementById('cancelPolicyBox').innerHTML = cfg.cancellation_policy || '';
+    });
+  </script>
+</body>
+</html>
+

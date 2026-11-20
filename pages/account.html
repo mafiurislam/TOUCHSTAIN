@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile & Account - Getgozo</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="padding-top:24px;padding-bottom:48px;">
+    <div class="account-page-grid">
+      <!-- Left Menu -->
+      <aside class="surface-card" style="height:fit-content;padding:16px;">
+        <div
+          style="text-align:center;padding:14px 10px 20px;border-bottom:1px solid var(--border-color);margin-bottom:12px;">
+          <img src="../assets/image/profile.png" alt="Profile"
+            style="width:72px;height:72px;margin:0 auto 10px;border-radius:50%;border:2px solid var(--primary);padding:3px;">
+          <h3 id="accProfileName" style="font-size:16px;font-weight:700;">Getgozo Shopper</h3>
+          <p id="accProfilePhone" style="font-size:12.5px;color:var(--text-medium);">+91 7679416294 / 7039214465</p>
+        </div>
+        <nav style="display:grid;gap:4px;">
+          <a href="account.html" class="drawer-menu-link active"><img src="../assets/image/profile.png" alt="">
+            <span>Edit Profile</span></a>
+          <a href="orders.html" class="drawer-menu-link"><img src="../assets/image/order.png" alt=""> <span>My
+              Orders</span></a>
+          <a href="wishlist.html" class="drawer-menu-link"><img src="../assets/image/favourite_icon.png" alt="">
+            <span>Favourite List</span></a>
+          <a href="address.html" class="drawer-menu-link"><img src="../assets/image/location.png" alt=""> <span>Saved
+              Addresses</span></a>
+          <a href="chat.html" class="drawer-menu-link"><img src="../assets/image/chat.png" alt=""> <span>Customer
+              Support</span></a>
+          <a href="login.html" class="drawer-menu-link" style="color:var(--danger);"><img
+              src="../assets/image/close_lock.png" alt=""> <span>Login / Switch Account</span></a>
+        </nav>
+      </aside>
+
+      <!-- Right Profile Edit & Quick Stats -->
+      <section style="display:flex;flex-direction:column;gap:20px;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;">
+          <a href="orders.html" class="surface-card" style="display:flex;align-items:center;gap:14px;">
+            <img src="../assets/image/order_bag.png" alt="" style="width:42px;">
+            <div>
+              <h4 id="statOrdersCount" style="font-size:20px;font-weight:800;color:var(--primary);">1</h4>
+              <small style="color:var(--text-medium);">Total Orders</small>
+            </div>
+          </a>
+          <a href="wishlist.html" class="surface-card" style="display:flex;align-items:center;gap:14px;">
+            <img src="../assets/image/favourite_icon.png" alt="" style="width:42px;">
+            <div>
+              <h4 id="statWishCount" style="font-size:20px;font-weight:800;color:var(--primary);">0</h4>
+              <small style="color:var(--text-medium);">Favourite Items</small>
+            </div>
+          </a>
+        </div>
+
+        <div class="surface-card">
+          <h2 style="font-size:19px;font-weight:700;margin-bottom:16px;">👤 Profile Information</h2>
+          <form onsubmit="saveUserProfile(event)">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+              <div class="form-group">
+                <label class="form-label">First Name</label>
+                <input type="text" id="profFirstName" class="form-control" value="Getgozo" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Last Name</label>
+                <input type="text" id="profLastName" class="form-control" value="Customer" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" id="profEmail" class="form-control" value="touchstains@gmail.com" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Mobile Number</label>
+                <input type="tel" id="profPhone" class="form-control" value="+91 7679416294 / 7039214465" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top:8px;">Update Profile</button>
+          </form>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const G = window.Getgozo;
+      document.getElementById('statOrdersCount').textContent = G.getOrders().length;
+      document.getElementById('statWishCount').textContent = G.getWishlist().length;
+      const u = G.getUser();
+      if (u) {
+        document.getElementById('accProfileName').textContent = u.name;
+        document.getElementById('accProfilePhone').textContent = u.phone;
+        const parts = (u.name || '').split(' ');
+        document.getElementById('profFirstName').value = parts[0] || '';
+        document.getElementById('profLastName').value = parts.slice(1).join(' ') || '';
+        document.getElementById('profEmail').value = u.email || '';
+        document.getElementById('profPhone').value = u.phone || '';
+      }
+    });
+
+    function saveUserProfile(e) {
+      e.preventDefault();
+      const G = window.Getgozo;
+      const fn = document.getElementById('profFirstName').value.trim();
+      const ln = document.getElementById('profLastName').value.trim();
+      const email = document.getElementById('profEmail').value.trim();
+      const phone = document.getElementById('profPhone').value.trim();
+      const fullName = `${fn} ${ln}`.trim();
+      G.setUser({ name: fullName, email, phone });
+      document.getElementById('accProfileName').textContent = fullName;
+      document.getElementById('accProfilePhone').textContent = phone;
+      G.showToast('Profile updated successfully!', 'success');
+    }
+  </script>
+</body>
+
+</html>

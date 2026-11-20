@@ -1,0 +1,3817 @@
+﻿{
+    "config": {
+        "ecommerce_name": "TOUCHSTAINS",
+        "ecommerce_logo": "touchstains-logo.png",
+        "ecommerce_address": "Salepur jadupur kaliachak malda",
+        "ecommerce_phone": "+919332080266",
+        "ecommerce_email": "hello@getgozo.in",
+        "ecommerce_location_coverage": {
+            "longitude": "88.04068702273109",
+            "latitude": "24.878860727271434",
+            "coverage": 2
+        },
+        "minimum_order_value": 69,
+        "self_pickup": 0,
+        "base_urls": {
+            "product_image_url": "https://getgozo.in/app/storage/app/public/product",
+            "customer_image_url": "https://getgozo.in/app/storage/app/public/profile",
+            "banner_image_url": "https://getgozo.in/app/storage/app/public/banner",
+            "category_image_url": "https://getgozo.in/app/storage/app/public/category",
+            "review_image_url": "https://getgozo.in/app/storage/app/public/review",
+            "notification_image_url": "https://getgozo.in/app/storage/app/public/notification",
+            "ecommerce_image_url": "https://getgozo.in/app/storage/app/public/restaurant",
+            "delivery_man_image_url": "https://getgozo.in/app/storage/app/public/delivery-man",
+            "chat_image_url": "https://getgozo.in/app/storage/app/public/conversation",
+            "flash_sale_image_url": "https://getgozo.in/app/storage/app/public/offer",
+            "gateway_image_url": "https://getgozo.in/app/storage/app/public/payment_modules/gateway_image",
+            "payment_image_url": "https://getgozo.in/app/public/assets/admin/img/payment",
+            "order_image_url": "https://getgozo.in/app/storage/app/public/order"
+        },
+        "currency_symbol": "₹",
+        "delivery_charge": 100,
+        "delivery_management": {
+            "status": 0,
+            "min_shipping_charge": 0,
+            "shipping_per_km": 0
+        },
+        "branches": [
+            {
+                "id": 1,
+                "name": "Jadupr",
+                "email": "hello@getgozo.in",
+                "longitude": "88.04068702273109",
+                "latitude": "24.878860727271434",
+                "address": "Salepur.Jadupur. kaliachak ,malda pin 732201",
+                "coverage": 2,
+                "status": 1
+            }
+        ],
+        "terms_and_conditions": "<p>Welcome to Getgozo. By accessing or using our website or app, you agree to comply with these Terms &amp; Conditions.</p><p><br></p><p>Getgozo provides grocery, vegetables, fruits, and daily essentials delivery services.</p><p><br></p><p>All orders are subject to product availability and confirmation.</p><p><br></p><p>Prices, offers, and discounts may change without prior notice.</p><p><br></p><p>Users must provide accurate information during registration and ordering.</p><p><br></p><p>Orders can be cancelled by users before the order is confirmed.</p><p><br></p><p>Delivery times are estimated and may vary due to operational conditions.</p><p><br></p><p>Refunds and returns are processed according to our Refund and Return Policy.</p><p><br></p><p>Any misuse, fraudulent activity, or abuse of offers may result in account suspension.</p><p><br></p><p>Getgozo reserves the right to update or modify these terms at any time.</p><p><br></p><p>By continuing to use Getgozo’s website or app, you acknowledge and accept these Terms &amp; Conditions.</p><p><br></p><p>Last Updated: 29 June 2026</p>",
+        "privacy_policy": "<p>Effective Date: 29 June 2026</p><p><br></p><p>Welcome to GetGozo We respect your privacy and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, and protect your information when you use the GetGozo mobile application and website.</p><p><br></p><p>1. Information We Collect</p><p>We may collect:</p><p>Full Name</p><p>Mobile Number</p><p>Email Address (if provided)</p><p>Delivery Address</p><p>Device Information</p><p>Order History</p><p>GPS Location (only with your permission)</p><p><br></p><p>2. How We Use Your Information</p><p>Your information is used to:</p><p>Create and manage your account</p><p>Verify your mobile number using OTP</p><p>Process and deliver your orders</p><p>Provide customer support</p><p>Send order updates and notifications</p><p>Improve our services</p><p>Prevent fraud and misuse</p><p>Comply with legal requirements</p><p><br></p><p><br></p><p><br></p><p>3. Location Permission</p><p>With your permission, GetGozo may access your device location to:</p><p>Show nearby service availability</p><p>Calculate delivery location</p><p>Improve delivery accuracy</p><p>You can disable location access anytime from your device settings.</p><p><br></p><p>4. Payment Information</p><p>Currently, GetGozo supports Cash on Delivery (COD) only.</p><p>If online payment options are introduced in the future, this Privacy Policy will be updated accordingly.</p><p><br></p><p>5. Third-Party Services</p><p>We may use trusted third-party services including:</p><p>Firebase Authentication (OTP verification)</p><p>Google Maps Platform</p><p>Cloud Hosting Services</p><p>Delivery Partners</p><p>These services may process limited information required to provide our services.</p><p><br></p><p>6. Information Sharing</p><p>We do not sell or rent your personal information.</p><p>We may share limited information only with:</p><p>Delivery partners</p><p>Technology service providers</p><p>Government authorities when required by law</p><p><br></p><p>7. Data Security</p><p>We use reasonable security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.</p><p><br></p><p>8. Data Retention</p><p>We retain your information only for as long as necessary to provide our services and comply with legal obligations.</p><p><br></p><p>9. Your Rights</p><p>You may request to:</p><p>Access your personal information</p><p>Correct inaccurate information</p><p>Delete your account and personal data (subject to applicable laws)</p><p><br></p><p>10. Children's Privacy</p><p>GetGozo is not intended for children under the age of 13, and we do not knowingly collect personal information from children.</p><p><br></p><p>11. Changes to This Privacy Policy</p><p>We may update this Privacy Policy from time to time. The updated version will be published on our website and app.</p><p><br></p><p>12. Contact Us</p><p>GetGozo</p><p>Email: www.mrbsb25@gmail.com</p><p>Last Updated: 29 June 2026</p>",
+        "about_us": "<p><b>TOUCHSTAINS</b> is your trusted fabric care & stain removal specialist. We bring professional-strength fabric stain and rust removal formulas right to your doorstep.</p><p>From stubborn turmeric and oil marks to rust, ink, paan, and grease, TOUCHSTAINS restores your clothes to fresh, spotless perfection in seconds.</p>",
+        "faq": "<p><strong>1. What is Getgozo?</strong></p><p>Getgozo is an online platform for ordering groceries, vegetables, fruits, and daily essentials.</p><p><br></p><p><strong>2. How do I place an order?</strong></p><p>Open the app or website, select products, add them to cart, and complete checkout.</p><p><br></p><p><strong>3. What payment methods are available?</strong></p><p>We support UPI, debit/credit cards, wallets, net banking, and Cash on Delivery (if available).</p><p><br></p><p><strong>4. Can I cancel my order?</strong></p><p>Yes, you can cancel your order before it is confirmed.</p><p><br></p><p><strong>5. How long does delivery take?</strong></p><p>Delivery time is estimated and may vary depending on location and order volume.</p><p><br></p><p><strong>6. Do you offer refunds?</strong></p><p>Yes, refunds are available for eligible cases such as damaged, wrong, or missing items.</p><p><br></p><p><strong>7. Is delivery available in all areas?</strong></p><p>No, delivery service is available only in selected service areas.</p><p><br></p><p><strong>8. How can I contact customer support?</strong></p><p>You can contact support through the Getgozo app or official communication channels.</p><p><br></p><p><strong>9. Are there any offers or discounts?</strong></p><p>Yes, Getgozo may provide offers, discounts, cashback, and reward programs from time to time.</p><p><br></p><p><strong>10. Is my personal information safe?</strong></p><p>Yes, we use reasonable security measures to protect your personal information.</p>",
+        "email_verification": false,
+        "phone_verification": false,
+        "currency_symbol_position": "left",
+        "country": "IN",
+        "play_store_config": {
+            "status": false,
+            "link": "https://play.google.com/store/apps/details?id=com.getgozo.user",
+            "min_version": "123"
+        },
+        "app_store_config": {
+            "status": false,
+            "link": null,
+            "min_version": "1"
+        },
+        "social_media_link": [],
+        "software_version": "7.7",
+        "footer_text": "Getgozo @ 2026",
+        "decimal_point_settings": "2",
+        "time_format": "12",
+        "social_login": {
+            "google": 1,
+            "facebook": 1
+        },
+        "wallet_status": 1,
+        "loyalty_point_status": 1,
+        "ref_earning_status": 0,
+        "loyalty_point_exchange_rate": 0,
+        "ref_earning_exchange_rate": 0,
+        "loyalty_point_item_purchase_point": 0,
+        "loyalty_point_minimum_point": 20,
+        "free_delivery_over_amount": 69,
+        "maximum_amount_for_cod_order": 2000,
+        "cookies_management": {
+            "status": 0,
+            "text": "Allow Cookies for this site"
+        },
+        "product_vat_tax_status": "excluded",
+        "maximum_amount_for_cod_order_status": 1,
+        "free_delivery_over_amount_status": 1,
+        "cancellation_policy": "<p>Welcome to Getgozo. This Cancellation Policy explains the rules for cancelling orders placed through our website or app.</p><p><br></p><p>Users can cancel an order before the order is confirmed.</p><p><br></p><p>Once an order is confirmed, packed, or dispatched, cancellation may not be possible.</p><p><br></p><p>Getgozo reserves the right to cancel any order due to:</p><p>Product unavailability</p><p>Payment failure</p><p>Technical issues</p><p>Suspicious or fraudulent activity</p><p><br></p><p>If a prepaid order is cancelled successfully, the refund will be processed according to our Refund Policy.</p><p><br></p><p>Refund processing time may vary depending on the payment method.</p><p><br></p><p>Getgozo reserves the right to update this Cancellation Policy at any time.</p><p><br></p><p>Last Updated: 29 June 2026</p>",
+        "refund_policy": "<p>Welcome to Getgozo. This Refund Policy explains how refunds are processed for orders placed through our website or app.</p><p>Refunds may be provided in eligible cases such as:</p><p>Wrong item delivered</p><p>Damaged product received</p><p>Missing item</p><p>Payment deducted but order not confirmed</p><p>Refund requests must be raised within a reasonable time after delivery or payment failure.</p><p>Once the issue is verified, the refund will be processed.</p><p>Refunds will be credited to the original payment method or other approved refund method.</p><p>Refund processing time may vary depending on the payment provider or bank.</p><p>Getgozo reserves the right to approve or reject refund requests after verification.</p><p>Last Updated: 29 June 2026</p>",
+        "return_policy": "<p>Welcome to Getgozo. This Return Policy explains the conditions for returning products purchased through our website or app.</p><p>Returns are accepted only in eligible cases such as:</p><p>Wrong item delivered</p><p>Damaged product received</p><p>Expired product delivered</p><p>Poor quality product</p><p>Return requests should be raised within 1 hour after delivery.</p><p>Returned products may be subject to verification before approval.</p><p>Products that are opened, used, or damaged after delivery may not be eligible for return.</p><p>Perishable items such as fresh vegetables, fruits, and groceries may not be returnable unless there is a quality issue.</p><p>Getgozo reserves the right to approve or reject return requests after verification.</p><p>Last Updated: 29 June 2026</p>",
+        "cancellation_policy_status": 1,
+        "refund_policy_status": 1,
+        "return_policy_status": 1,
+        "whatsapp": {
+            "status": 1,
+            "number": "+919332080266"
+        },
+        "telegram": {
+            "status": 0,
+            "user_name": null
+        },
+        "messenger": {
+            "status": 0,
+            "user_name": "https://play.google.com/store/apps/details?id=com.getgozo.user"
+        },
+        "featured_product_status": 1,
+        "trending_product_status": 1,
+        "most_reviewed_product_status": 1,
+        "recommended_product_status": 1,
+        "flash_deal_product_status": 0,
+        "toggle_dm_registration": 0,
+        "otp_resend_time": 60,
+        "digital_payment_info": {
+            "digital_payment": "false",
+            "plugin_payment_gateways": "false",
+            "default_payment_gateways": "true"
+        },
+        "digital_payment_status": 0,
+        "active_payment_method_list": [],
+        "cash_on_delivery": "true",
+        "digital_payment": "false",
+        "offline_payment": "false",
+        "guest_checkout": 0,
+        "partial_payment": 1,
+        "partial_payment_combine_with": "all",
+        "add_fund_to_wallet": 0,
+        "apple_login": {
+            "login_medium": "apple",
+            "status": 0,
+            "client_id": ""
+        },
+        "firebase_otp_verification_status": 0,
+        "order_image_status": 0,
+        "order_image_label_name": "",
+        "customer_verification": {
+            "status": 1,
+            "phone": 1,
+            "email": 0,
+            "firebase": 0
+        },
+        "customer_login": {
+            "login_option": {
+                "manual_login": 0,
+                "otp_login": 1,
+                "social_media_login": 0
+            },
+            "social_media_login_options": {
+                "google": 1,
+                "facebook": 0,
+                "apple": 0
+            }
+        },
+        "maintenance_mode": false,
+        "advance_maintenance_mode": {
+            "maintenance_status": 0,
+            "selected_maintenance_system": {
+                "branch_panel": 0,
+                "customer_app": 1,
+                "web_app": 1,
+                "deliveryman_app": 0
+            },
+            "maintenance_messages": {
+                "business_number": 1,
+                "business_email": 1,
+                "maintenance_message": "dgdzsgbzd",
+                "message_body": "dgsdgd"
+            },
+            "maintenance_type_and_duration": {
+                "maintenance_duration": "until_change",
+                "start_date": null,
+                "end_date": null
+            }
+        },
+        "google_map_status": 1,
+        "forgot_password": {
+            "firebase": 0,
+            "phone": 1,
+            "email": 0
+        }
+    },
+    "banners": [
+        {
+            "id": 1,
+            "title": "TOUCHSTAINS Fabric Stain Remover - Special Cleaner For All Clothes",
+            "image": "touchstains-hero-banner-1.jpg",
+            "product_id": 1,
+            "category_id": 1,
+            "status": 1
+        },
+        {
+            "id": 2,
+            "title": "Before & After Rust & Stain Removal - 100% Effective Formula",
+            "image": "touchstains-hero-banner-2.jpg",
+            "product_id": 2,
+            "category_id": 2,
+            "status": 1
+        },
+        {
+            "id": 3,
+            "title": "Trusted Fabric Care For Your Family - Biodegradable Enzyme Formula",
+            "image": "touchstains-hero-banner-3.jpg",
+            "product_id": 8,
+            "category_id": 6,
+            "status": 1
+        }
+    ],
+    "categories": [
+        {
+            "id": 1,
+            "name": "Stain Remover Kits",
+            "parent_id": 0,
+            "position": 0,
+            "status": 1,
+            "image": "cat-stain-remover-kit.jpg",
+            "priority": 1,
+            "translations": []
+        },
+        {
+            "id": 2,
+            "name": "Rust Stain Removers",
+            "parent_id": 0,
+            "position": 0,
+            "status": 1,
+            "image": "cat-rust-remover.jpg",
+            "priority": 2,
+            "translations": []
+        },
+        {
+            "id": 3,
+            "name": "Stain Remover Sprays",
+            "parent_id": 0,
+            "position": 0,
+            "status": 1,
+            "image": "cat-stain-sprays.jpg",
+            "priority": 3,
+            "translations": []
+        },
+        {
+            "id": 4,
+            "name": "2 Litre Jumbo Packs",
+            "parent_id": 0,
+            "position": 0,
+            "status": 1,
+            "image": "cat-2liter-jumbo.jpg",
+            "priority": 4,
+            "translations": []
+        },
+        {
+            "id": 5,
+            "name": "School Uniform Care",
+            "parent_id": 0,
+            "position": 0,
+            "status": 1,
+            "image": "cat-school-uniform.jpg",
+            "priority": 5,
+            "translations": []
+        },
+        {
+            "id": 6,
+            "name": "Active Enzyme Cleaners",
+            "parent_id": 0,
+            "position": 0,
+            "status": 1,
+            "image": "cat-enzyme-cleaner.jpg",
+            "priority": 6,
+            "translations": []
+        }
+    ],
+    "catDetails": {
+        "1": {
+            "id": 1,
+            "name": "Stain Remover Kits",
+            "parent_id": 0,
+            "position": 0,
+            "status": 1,
+            "image": "cat-stain-remover-kit.jpg",
+            "priority": 1,
+            "translations": [],
+            "childes": [],
+            "products": [
+                {
+                    "id": 1,
+                    "name": "TOUCHSTAINS Fabric Stain Remover - Twin Bottle Kit (No. 1 & No. 2)",
+                    "description": "<p><b>TOUCHSTAINS Fabric Stain Remover</b> is a powerful, professional-grade cleaner formulated for all types of fabrics and washable clothes.</p><p>Effectively removes stubborn stains such as <b>Ball Pen Ink, Oil, Paan, Turmeric (Haldi), Tea, Coffee, Gutka, Nail Polish, Chewing Gum, Ice-Cream, Grease, and Food Stains</b> without damaging fabric texture or fading colors.</p><p><b>Certified ISO 9001:2015 Trusted Quality</b>. Includes Bottle No. 1 and Bottle No. 2 with detailed usage guide.</p>",
+                    "image": [
+                        "touchstains-box-bottles-demo.jpg",
+                        "touchstains-stain-remover-packshot.jpg"
+                    ],
+                    "price": 199,
+                    "variations": [
+                        {
+                            "type": "1 Kit (2x50ml)",
+                            "price": 199,
+                            "stock": 50
+                        },
+                        {
+                            "type": "2 Kits (Combo)",
+                            "price": 369,
+                            "stock": 30
+                        }
+                    ],
+                    "tax": 0,
+                    "status": 1,
+                    "created_at": "2026-11-01T10:00:00.000000Z",
+                    "updated_at": "2026-11-16T10:00:00.000000Z",
+                    "attributes": [
+                        "23"
+                    ],
+                    "category_ids": [
+                        {
+                            "id": "1",
+                            "position": 1
+                        }
+                    ],
+                    "choice_options": [
+                        {
+                            "name": "choice_23",
+                            "title": "Pack Size",
+                            "options": [
+                                "1 Kit (2x50ml)",
+                                "2 Kits (Combo)"
+                            ]
+                        }
+                    ],
+                    "discount": 100,
+                    "discount_type": "amount",
+                    "tax_type": "percent",
+                    "unit": "kit",
+                    "total_stock": 80,
+                    "capacity": 1,
+                    "daily_needs": 1,
+                    "popularity_count": 190,
+                    "is_featured": 1,
+                    "view_count": 890,
+                    "maximum_order_quantity": 10,
+                    "weight": 200,
+                    "wishlist_count": 14,
+                    "category_discount": null,
+                    "rating": [
+                        {
+                            "average": "5.0",
+                            "product_id": 1
+                        }
+                    ],
+                    "active_reviews": [
+                        {
+                            "id": 1,
+                            "product_id": 1,
+                            "user_id": 101,
+                            "comment": "Amazing stain remover! Removed old ball pen ink and tea stain from my white shirt in 2 minutes.",
+                            "rating": 5,
+                            "created_at": "2026-11-10T12:00:00Z"
+                        },
+                        {
+                            "id": 2,
+                            "product_id": 1,
+                            "user_id": 102,
+                            "comment": "Turmeric curry stain completely disappeared. Very happy with the result!",
+                            "rating": 5,
+                            "created_at": "2026-11-12T15:30:00Z"
+                        }
+                    ]
+                },
+                {
+                    "id": 9,
+                    "name": "TOUCHSTAINS Professional Ink & Tough Spot Remover (Dual Bottle Set)",
+                    "description": "<p><b>TOUCHSTAINS Professional Ink & Tough Spot Remover</b> dual bottle set. Formulated for heavy ballpen leaks, printer ink stains, marker pens, and stubborn spots.</p><p>Works within seconds on cotton, polyester, linen, and blends.</p>",
+                    "image": [
+                        "touchstains-ink-stain-dual-pack.jpg"
+                    ],
+                    "price": 199,
+                    "variations": [
+                        {
+                            "type": "1 Set (2 Bottles)",
+                            "price": 199,
+                            "stock": 50
+                        }
+                    ],
+                    "tax": 0,
+                    "status": 1,
+                    "created_at": "2026-11-09T10:00:00.000000Z",
+                    "updated_at": "2026-11-16T10:00:00.000000Z",
+                    "attributes": [
+                        "23"
+                    ],
+                    "category_ids": [
+                        {
+                            "id": "1",
+                            "position": 1
+                        }
+                    ],
+                    "choice_options": [
+                        {
+                            "name": "choice_23",
+                            "title": "Pack",
+                            "options": [
+                                "1 Set (2 Bottles)"
+                            ]
+                        }
+                    ],
+                    "discount": 100,
+                    "discount_type": "amount",
+                    "tax_type": "percent",
+                    "unit": "set",
+                    "total_stock": 50,
+                    "capacity": 100,
+                    "daily_needs": 0,
+                    "popularity_count": 150,
+                    "is_featured": 1,
+                    "view_count": 670,
+                    "maximum_order_quantity": 10,
+                    "weight": 180,
+                    "wishlist_count": 11,
+                    "category_discount": null,
+                    "rating": [
+                        {
+                            "average": "4.9",
+                            "product_id": 9
+                        }
+                    ],
+                    "active_reviews": [
+                        {
+                            "id": 10,
+                            "product_id": 9,
+                            "user_id": 110,
+                            "comment": "Removed printer ink leak from my favourite shirt! Saved a 2000 rupee garment.",
+                            "rating": 5,
+                            "created_at": "2026-11-15T18:00:00Z"
+                        }
+                    ]
+                },
+                {
+                    "id": 10,
+                    "name": "TOUCHSTAINS Multi-Purpose Fabric Stain Cleaner Box Pack",
+                    "description": "<p><b>TOUCHSTAINS Multi-Purpose Fabric Stain Cleaner Box Pack</b>. Certified ISO 9001:2015 Trusted Quality.</p><p>Special cleaner for all types of clothes: Ball Pen, Ink, Oil, Paan, Turmeric, Tea, Gutka, Nail Polish, Chewing Gum, Ice-Cream, Grease, etc.</p>",
+                    "image": [
+                        "touchstains-stain-remover-packshot.jpg",
+                        "touchstains-box-bottles-demo.jpg"
+                    ],
+                    "price": 169,
+                    "variations": [
+                        {
+                            "type": "Standard Box Pack",
+                            "price": 169,
+                            "stock": 70
+                        }
+                    ],
+                    "tax": 0,
+                    "status": 1,
+                    "created_at": "2026-11-10T10:00:00.000000Z",
+                    "updated_at": "2026-11-16T10:00:00.000000Z",
+                    "attributes": [
+                        "23"
+                    ],
+                    "category_ids": [
+                        {
+                            "id": "1",
+                            "position": 1
+                        }
+                    ],
+                    "choice_options": [
+                        {
+                            "name": "choice_23",
+                            "title": "Pack",
+                            "options": [
+                                "Standard Box Pack"
+                            ]
+                        }
+                    ],
+                    "discount": 71,
+                    "discount_type": "amount",
+                    "tax_type": "percent",
+                    "unit": "pack",
+                    "total_stock": 70,
+                    "capacity": 1,
+                    "daily_needs": 1,
+                    "popularity_count": 185,
+                    "is_featured": 1,
+                    "view_count": 850,
+                    "maximum_order_quantity": 10,
+                    "weight": 190,
+                    "wishlist_count": 20,
+                    "category_discount": null,
+                    "rating": [
+                        {
+                            "average": "5.0",
+                            "product_id": 10
+                        }
+                    ],
+                    "active_reviews": [
+                        {
+                            "id": 11,
+                            "product_id": 10,
+                            "user_id": 111,
+                            "comment": "Very effective and reliable. Everyone should keep one at home.",
+                            "rating": 5,
+                            "created_at": "2026-11-16T08:30:00Z"
+                        }
+                    ]
+                }
+            ]
+        },
+        "2": {
+            "id": 2,
+            "name": "Rust Stain Removers",
+            "parent_id": 0,
+            "position": 0,
+            "status": 1,
+            "image": "cat-rust-remover.jpg",
+            "priority": 2,
+            "translations": [],
+            "childes": [],
+            "products": [
+                {
+                    "id": 2,
+                    "name": "TOUCHSTAINS Fabric Rust Stain Remover (Nozzle Dropper Bottle)",
+                    "description": "<p><b>TOUCHSTAINS Fabric Rust Stain Remover</b> is an ultra-fast acting formula specially engineered to dissolve iron rust, oxidation marks, and metallic stains from clothes.</p><p><b>How to use:</b> Use 2 drops on dry clothes to remove the rust in seconds, then wash cloth normally. Safe on white clothes, linen, and delicate cottons.</p>",
+                    "image": [
+                        "touchstains-rust-remover-dropper.jpg"
+                    ],
+                    "price": 149,
+                    "variations": [
+                        {
+                            "type": "100ml",
+                            "price": 149,
+                            "stock": 40
+                        },
+                        {
+                            "type": "200ml",
+                            "price": 269,
+                            "stock": 25
+                        }
+                    ],
+                    "tax": 0,
+                    "status": 1,
+                    "created_at": "2026-11-02T10:00:00.000000Z",
+                    "updated_at": "2026-11-16T10:00:00.000000Z",
+                    "attributes": [
+                        "23"
+                    ],
+                    "category_ids": [
+                        {
+                            "id": "2",
+                            "position": 1
+                        }
+                    ],
+                    "choice_options": [
+                        {
+                            "name": "choice_23",
+                            "title": "Volume",
+                            "options": [
+                                "100ml",
+                                "200ml"
+                            ]
+                        }
+                    ],
+                    "discount": 71,
+                    "discount_type": "amount",
+                    "tax_type": "percent",
+                    "unit": "bottle",
+                    "total_stock": 65,
+                    "capacity": 100,
+                    "daily_needs": 1,
+                    "popularity_count": 175,
+                    "is_featured": 1,
+                    "view_count": 750,
+                    "maximum_order_quantity": 10,
+                    "weight": 120,
+                    "wishlist_count": 12,
+                    "category_discount": null,
+                    "rating": [
+                        {
+                            "average": "4.9",
+                            "product_id": 2
+                        }
+                    ],
+                    "active_reviews": [
+                        {
+                            "id": 3,
+                            "product_id": 2,
+                            "user_id": 103,
+                            "comment": "Cleaned rust stains from wet umbrella and metal hanger effortlessly.",
+                            "rating": 5,
+                            "created_at": "2026-11-11T09:15:00Z"
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "name": "TOUCHSTAINS Instant Fabric Rust Stain Remover Spray (200ml)",
+                    "description": "<p><b>TOUCHSTAINS Instant Fabric Rust Stain Remover Spray</b> delivers fast, targeted spraying on tough rust patches. Proven Before & After performance on white shirts, trousers, and uniforms.</p><p>Instant penetration dissolves rust molecules in under 30 seconds.</p>",
+                    "image": [
+                        "touchstains-spray-rust-before-after.jpg"
+                    ],
+                    "price": 189,
+                    "variations": [
+                        {
+                            "type": "200ml Spray",
+                            "price": 189,
+                            "stock": 35
+                        }
+                    ],
+                    "tax": 0,
+                    "status": 1,
+                    "created_at": "2026-11-03T10:00:00.000000Z",
+                    "updated_at": "2026-11-16T10:00:00.000000Z",
+                    "attributes": [
+                        "23"
+                    ],
+                    "category_ids": [
+                        {
+                            "id": "2",
+                            "position": 1
+                        }
+                    ],
+                    "choice_options": [
+                        {
+                            "name": "choice_23",
+                            "title": "Volume",
+                            "options": [
+                                "200ml Spray"
+                            ]
+                        }
+                    ],
+                    "discount": 91,
+                    "discount_type": "amount",
+                    "tax_type": "percent",
+                    "unit": "bottle",
+                    "total_stock": 35,
+                    "capacity": 200,
+                    "daily_needs": 0,
+                    "popularity_count": 140,
+                    "is_featured": 1,
+                    "view_count": 620,
+                    "maximum_order_quantity": 8,
+                    "weight": 220,
+                    "wishlist_count": 9,
+                    "category_discount": null,
+                    "rating": [
+                        {
+                            "average": "5.0",
+                            "product_id": 3
+                        }
+                    ],
+                    "active_reviews": [
+                        {
+                            "id": 4,
+                            "product_id": 3,
+                            "user_id": 104,
+                            "comment": "The spray design makes it so easy to treat spots without making a mess.",
+                            "rating": 5,
+                            "created_at": "2026-11-13T14:20:00Z"
+                        }
+                    ]
+                },
+                {
+                    "id": 6,
+                    "name": "TOUCHSTAINS White Uniform Rust & Iron Stain Remover (250ml)",
+                    "description": "<p><b>TOUCHSTAINS White Uniform Rust & Iron Stain Remover</b>. Removes ugly brownish rust marks left by rusted metal clips, buttons, water tanks, or clothes drying lines.</p><p>Quick 2-drop formula restores shirts and blouses back to pristine bright white.</p>",
+                    "image": [
+                        "touchstains-rust-stain-school-shirt.jpg"
+                    ],
+                    "price": 179,
+                    "variations": [
+                        {
+                            "type": "250ml Bottle",
+                            "price": 179,
+                            "stock": 45
+                        }
+                    ],
+                    "tax": 0,
+                    "status": 1,
+                    "created_at": "2026-11-06T10:00:00.000000Z",
+                    "updated_at": "2026-11-16T10:00:00.000000Z",
+                    "attributes": [
+                        "23"
+                    ],
+                    "category_ids": [
+                        {
+                            "id": "5",
+                            "position": 1
+                        },
+                        {
+                            "id": "2",
+                            "position": 2
+                        }
+                    ],
+                    "choice_options": [
+                        {
+                            "name": "choice_23",
+                            "title": "Volume",
+                            "options": [
+                                "250ml Bottle"
+                            ]
+                        }
+                    ],
+                    "discount": 80,
+                    "discount_type": "amount",
+                    "tax_type": "percent",
+                    "unit": "bottle",
+                    "total_stock": 45,
+                    "capacity": 250,
+                    "daily_needs": 0,
+                    "popularity_count": 130,
+                    "is_featured": 0,
+                    "view_count": 530,
+                    "maximum_order_quantity": 6,
+                    "weight": 270,
+                    "wishlist_count": 8,
+                    "category_discount": null,
+                    "rating": [
+                        {
+                            "average": "4.9",
+                            "product_id": 6
+                        }
+                    ],
+                    "active_reviews": [
+                        {
+                            "id": 7,
+                            "product_id": 6,
+                            "user_id": 107,
+                            "comment": "Worked like a charm on rusted button spots on white shirt.",
+                            "rating": 5,
+                            "created_at": "2026-11-15T08:00:00Z"
+                        }
+                    ]
+                },
+                {
+                    "id": 7,
+                    "name": "TOUCHSTAINS All-Fabric Rust & Tough Stain Remover Trigger Spray (350ml)",
+                    "description": "<p><b>TOUCHSTAINS All-Fabric Rust & Tough Stain Remover Trigger Spray</b>. Features a heavy-duty mist-and-stream spray nozzle for effortless coverage on collars, cuffs, and large garments.</p><p>Use 2 drops or light spray in dry clothes to remove rust in seconds, then wash cloth normally. Flipkart Assured standard quality.</p>",
+                    "image": [
+                        "touchstains-rust-stain-remover-spray.jpg"
+                    ],
+                    "price": 229,
+                    "variations": [
+                        {
+                            "type": "350ml Trigger Spray",
+                            "price": 229,
+                            "stock": 55
+                        }
+                    ],
+                    "tax": 0,
+                    "status": 1,
+                    "created_at": "2026-11-07T10:00:00.000000Z",
+                    "updated_at": "2026-11-16T10:00:00.000000Z",
+                    "attributes": [
+                        "23"
+                    ],
+                    "category_ids": [
+                        {
+                            "id": "3",
+                            "position": 1
+                        },
+                        {
+                            "id": "2",
+                            "position": 2
+                        }
+                    ],
+                    "choice_options": [
+                        {
+                            "name": "choice_23",
+                            "title": "Volume",
+                            "options": [
+                                "350ml Trigger Spray"
+                            ]
+                        }
+                    ],
+                    "discount": 120,
+                    "discount_type": "amount",
+                    "tax_type": "percent",
+                    "unit": "bottle",
+                    "total_stock": 55,
+                    "capacity": 350,
+                    "daily_needs": 1,
+                    "popularity_count": 170,
+                    "is_featured": 1,
+                    "view_count": 760,
+                    "maximum_order_quantity": 6,
+                    "weight": 380,
+                    "wishlist_count": 16,
+                    "category_discount": null,
+                    "rating": [
+                        {
+                            "average": "5.0",
+                            "product_id": 7
+                        }
+                    ],
+                    "active_reviews": [
+                        {
+                            "id": 8,
+                            "product_id": 7,
+                            "user_id": 108,
+                            "comment": "Excellent quality trigger bottle and immediate results. Very happy.",
+                            "rating": 5,
+                            "created_at": "2026-11-15T12:00:00Z"
+                        }
+                    ]
+                }
+            ]
+        },
+        "3": {
+            "id": 3,
+            "name": "Stain Remover Sprays",
+            "parent_id": 0,
+            "position": 0,
+            "status": 1,
+            "image": "cat-stain-sprays.jpg",
+            "priority": 3,
+            "translations": [],
+            "childes": [],
+            "products": [
+                {
+                    "id": 7,
+                    "name": "TOUCHSTAINS All-Fabric Rust & Tough Stain Remover Trigger Spray (350ml)",
+                    "description": "<p><b>TOUCHSTAINS All-Fabric Rust & Tough Stain Remover Trigger Spray</b>. Features a heavy-duty mist-and-stream spray nozzle for effortless coverage on collars, cuffs, and large garments.</p><p>Use 2 drops or light spray in dry clothes to remove rust in seconds, then wash cloth normally. Flipkart Assured standard quality.</p>",
+                    "image": [
+                        "touchstains-rust-stain-remover-spray.jpg"
+                    ],
+                    "price": 229,
+                    "variations": [
+                        {
+                            "type": "350ml Trigger Spray",
+                            "price": 229,
+                            "stock": 55
+                        }
+                    ],
+                    "tax": 0,
+                    "status": 1,
+                    "created_at": "2026-11-07T10:00:00.000000Z",
+                    "updated_at": "2026-11-16T10:00:00.000000Z",
+                    "attributes": [
+                        "23"
+                    ],
+                    "category_ids": [
+                        {
+                            "id": "3",
+                            "position": 1
+                        },
+                        {
+                            "id": "2",
+                            "position": 2
+                        }
+                    ],
+                    "choice_options": [
+                        {
+                            "name": "choice_23",
+                            "title": "Volume",
+                            "options": [
+                                "350ml Trigger Spray"
+                            ]
+                        }
+                    ],
+                    "discount": 120,
+                    "discount_type": "amount",
+                    "tax_type": "percent",
+                    "unit": "bottle",
+                    "total_stock": 55,
+                    "capacity": 350,
+                    "daily_needs": 1,
+                    "popularity_count": 170,
+                    "is_featured": 1,
+                    "view_count": 760,
+                    "maximum_order_quantity": 6,
+                    "weight": 380,
+                    "wishlist_count": 16,
+                    "category_discount": null,
+                    "rating": [
+                        {
+                            "average": "5.0",
+                            "product_id": 7
+                        }
+                    ],
+                    "active_reviews": [
+                        {
+                            "id": 8,
+                            "product_id": 7,
+                            "user_id": 108,
+                            "comment": "Excellent quality trigger bottle and immediate results. Very happy.",
+                            "rating": 5,
+                            "created_at": "2026-11-15T12:00:00Z"
+                        }
+                    ]
+                }
+            ]
+        },
+        "4": {
+            "id": 4,
+            "name": "2 Litre Jumbo Packs",
+            "parent_id": 0,
+            "position": 0,
+            "status": 1,
+            "image": "cat-2liter-jumbo.jpg",
+            "priority": 4,
+            "translations": [],
+            "childes": [],
+            "products": [
+                {
+                    "id": 4,
+                    "name": "TOUCHSTAINS Heavy Duty Fabric Stain Remover (2 Litre Jumbo Pack)",
+                    "description": "<p><b>TOUCHSTAINS Heavy Duty 2 Litre Combo Pack</b> (Purple & Yellow bottles). Formulated for heavy commercial laundry and family households.</p><p>Removes oil, grease, lipstick, tea, coffee, sauces, ink, and tough dirt. Super economical value pack that lasts for months!</p>",
+                    "image": [
+                        "touchstains-2liter-stain-remover-combo.jpg"
+                    ],
+                    "price": 599,
+                    "variations": [
+                        {
+                            "type": "2 Litre Duo",
+                            "price": 599,
+                            "stock": 25
+                        },
+                        {
+                            "type": "4 Litre Family Combo",
+                            "price": 1099,
+                            "stock": 15
+                        }
+                    ],
+                    "tax": 0,
+                    "status": 1,
+                    "created_at": "2026-11-04T10:00:00.000000Z",
+                    "updated_at": "2026-11-16T10:00:00.000000Z",
+                    "attributes": [
+                        "23"
+                    ],
+                    "category_ids": [
+                        {
+                            "id": "4",
+                            "position": 1
+                        }
+                    ],
+                    "choice_options": [
+                        {
+                            "name": "choice_23",
+                            "title": "Size",
+                            "options": [
+                                "2 Litre Duo",
+                                "4 Litre Family Combo"
+                            ]
+                        }
+                    ],
+                    "discount": 300,
+                    "discount_type": "amount",
+                    "tax_type": "percent",
+                    "unit": "pack",
+                    "total_stock": 40,
+                    "capacity": 2000,
+                    "daily_needs": 1,
+                    "popularity_count": 165,
+                    "is_featured": 1,
+                    "view_count": 810,
+                    "maximum_order_quantity": 4,
+                    "weight": 2100,
+                    "wishlist_count": 18,
+                    "category_discount": null,
+                    "rating": [
+                        {
+                            "average": "4.9",
+                            "product_id": 4
+                        }
+                    ],
+                    "active_reviews": [
+                        {
+                            "id": 5,
+                            "product_id": 4,
+                            "user_id": 105,
+                            "comment": "Best value for family laundry! Used it on husband work clothes and kids uniforms.",
+                            "rating": 5,
+                            "created_at": "2026-11-14T11:45:00Z"
+                        }
+                    ]
+                }
+            ]
+        },
+        "5": {
+            "id": 5,
+            "name": "School Uniform Care",
+            "parent_id": 0,
+            "position": 0,
+            "status": 1,
+            "image": "cat-school-uniform.jpg",
+            "priority": 5,
+            "translations": [],
+            "childes": [],
+            "products": [
+                {
+                    "id": 5,
+                    "name": "TOUCHSTAINS School Uniform & Clothes Ink Stain Remover Kit",
+                    "description": "<p><b>TOUCHSTAINS School Uniform & Clothes Ink Stain Remover</b> is every parent best friend. Effortlessly eliminates blue ballpen ink, fountain pen ink, marker stains, and school lunchtime stains from uniforms.</p><p>Gentle on fabric weaves and colors, ensuring school uniforms stay crisp and looking brand new.</p>",
+                    "image": [
+                        "touchstains-school-uniform-ink-remover.jpg"
+                    ],
+                    "price": 199,
+                    "variations": [
+                        {
+                            "type": "1 Kit",
+                            "price": 199,
+                            "stock": 60
+                        }
+                    ],
+                    "tax": 0,
+                    "status": 1,
+                    "created_at": "2026-11-05T10:00:00.000000Z",
+                    "updated_at": "2026-11-16T10:00:00.000000Z",
+                    "attributes": [
+                        "23"
+                    ],
+                    "category_ids": [
+                        {
+                            "id": "5",
+                            "position": 1
+                        }
+                    ],
+                    "choice_options": [
+                        {
+                            "name": "choice_23",
+                            "title": "Pack",
+                            "options": [
+                                "1 Kit"
+                            ]
+                        }
+                    ],
+                    "discount": 80,
+                    "discount_type": "amount",
+                    "tax_type": "percent",
+                    "unit": "kit",
+                    "total_stock": 60,
+                    "capacity": 1,
+                    "daily_needs": 1,
+                    "popularity_count": 180,
+                    "is_featured": 1,
+                    "view_count": 920,
+                    "maximum_order_quantity": 10,
+                    "weight": 210,
+                    "wishlist_count": 22,
+                    "category_discount": null,
+                    "rating": [
+                        {
+                            "average": "5.0",
+                            "product_id": 5
+                        }
+                    ],
+                    "active_reviews": [
+                        {
+                            "id": 6,
+                            "product_id": 5,
+                            "user_id": 106,
+                            "comment": "My daughter got dark blue ink on her new school dress. This removed it 100%!",
+                            "rating": 5,
+                            "created_at": "2026-11-14T16:10:00Z"
+                        }
+                    ]
+                },
+                {
+                    "id": 6,
+                    "name": "TOUCHSTAINS White Uniform Rust & Iron Stain Remover (250ml)",
+                    "description": "<p><b>TOUCHSTAINS White Uniform Rust & Iron Stain Remover</b>. Removes ugly brownish rust marks left by rusted metal clips, buttons, water tanks, or clothes drying lines.</p><p>Quick 2-drop formula restores shirts and blouses back to pristine bright white.</p>",
+                    "image": [
+                        "touchstains-rust-stain-school-shirt.jpg"
+                    ],
+                    "price": 179,
+                    "variations": [
+                        {
+                            "type": "250ml Bottle",
+                            "price": 179,
+                            "stock": 45
+                        }
+                    ],
+                    "tax": 0,
+                    "status": 1,
+                    "created_at": "2026-11-06T10:00:00.000000Z",
+                    "updated_at": "2026-11-16T10:00:00.000000Z",
+                    "attributes": [
+                        "23"
+                    ],
+                    "category_ids": [
+                        {
+                            "id": "5",
+                            "position": 1
+                        },
+                        {
+                            "id": "2",
+                            "position": 2
+                        }
+                    ],
+                    "choice_options": [
+                        {
+                            "name": "choice_23",
+                            "title": "Volume",
+                            "options": [
+                                "250ml Bottle"
+                            ]
+                        }
+                    ],
+                    "discount": 80,
+                    "discount_type": "amount",
+                    "tax_type": "percent",
+                    "unit": "bottle",
+                    "total_stock": 45,
+                    "capacity": 250,
+                    "daily_needs": 0,
+                    "popularity_count": 130,
+                    "is_featured": 0,
+                    "view_count": 530,
+                    "maximum_order_quantity": 6,
+                    "weight": 270,
+                    "wishlist_count": 8,
+                    "category_discount": null,
+                    "rating": [
+                        {
+                            "average": "4.9",
+                            "product_id": 6
+                        }
+                    ],
+                    "active_reviews": [
+                        {
+                            "id": 7,
+                            "product_id": 6,
+                            "user_id": 107,
+                            "comment": "Worked like a charm on rusted button spots on white shirt.",
+                            "rating": 5,
+                            "created_at": "2026-11-15T08:00:00Z"
+                        }
+                    ]
+                }
+            ]
+        },
+        "6": {
+            "id": 6,
+            "name": "Active Enzyme Cleaners",
+            "parent_id": 0,
+            "position": 0,
+            "status": 1,
+            "image": "cat-enzyme-cleaner.jpg",
+            "priority": 6,
+            "translations": [],
+            "childes": [],
+            "products": [
+                {
+                    "id": 8,
+                    "name": "TOUCHSTAINS Eco-Clean Biodegradable Enzyme Stain Remover Spray (500ml)",
+                    "description": "<p><b>TOUCHSTAINS Eco-Clean Biodegradable Enzyme Stain Remover Spray</b>. Harnesses plant-derived bio-enzymes that naturally digest organic and chemical stain particles.</p><p>Stains vanish without harsh chlorine or bleach. Safe for sensitive skin, babies clothes, and premium delicate silks & linens.</p>",
+                    "image": [
+                        "touchstains-biodegradable-enzyme-spray.jpg"
+                    ],
+                    "price": 249,
+                    "variations": [
+                        {
+                            "type": "500ml Spray",
+                            "price": 249,
+                            "stock": 30
+                        }
+                    ],
+                    "tax": 0,
+                    "status": 1,
+                    "created_at": "2026-11-08T10:00:00.000000Z",
+                    "updated_at": "2026-11-16T10:00:00.000000Z",
+                    "attributes": [
+                        "23"
+                    ],
+                    "category_ids": [
+                        {
+                            "id": "6",
+                            "position": 1
+                        }
+                    ],
+                    "choice_options": [
+                        {
+                            "name": "choice_23",
+                            "title": "Volume",
+                            "options": [
+                                "500ml Spray"
+                            ]
+                        }
+                    ],
+                    "discount": 150,
+                    "discount_type": "amount",
+                    "tax_type": "percent",
+                    "unit": "bottle",
+                    "total_stock": 30,
+                    "capacity": 500,
+                    "daily_needs": 1,
+                    "popularity_count": 195,
+                    "is_featured": 1,
+                    "view_count": 980,
+                    "maximum_order_quantity": 6,
+                    "weight": 520,
+                    "wishlist_count": 26,
+                    "category_discount": null,
+                    "rating": [
+                        {
+                            "average": "5.0",
+                            "product_id": 8
+                        }
+                    ],
+                    "active_reviews": [
+                        {
+                            "id": 9,
+                            "product_id": 8,
+                            "user_id": 109,
+                            "comment": "Natural enzymes that really work! Cleaned coffee and blood stains with zero smell or bleach damage.",
+                            "rating": 5,
+                            "created_at": "2026-11-15T14:30:00Z"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "allProducts": [
+        {
+            "id": 1,
+            "name": "TOUCHSTAINS Fabric Stain Remover - Twin Bottle Kit (No. 1 & No. 2)",
+            "description": "<p><b>TOUCHSTAINS Fabric Stain Remover</b> is a powerful, professional-grade cleaner formulated for all types of fabrics and washable clothes.</p><p>Effectively removes stubborn stains such as <b>Ball Pen Ink, Oil, Paan, Turmeric (Haldi), Tea, Coffee, Gutka, Nail Polish, Chewing Gum, Ice-Cream, Grease, and Food Stains</b> without damaging fabric texture or fading colors.</p><p><b>Certified ISO 9001:2015 Trusted Quality</b>. Includes Bottle No. 1 and Bottle No. 2 with detailed usage guide.</p>",
+            "image": [
+                "touchstains-box-bottles-demo.jpg",
+                "touchstains-stain-remover-packshot.jpg"
+            ],
+            "price": 199,
+            "variations": [
+                {
+                    "type": "1 Kit (2x50ml)",
+                    "price": 199,
+                    "stock": 50
+                },
+                {
+                    "type": "2 Kits (Combo)",
+                    "price": 369,
+                    "stock": 30
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-01T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "1",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Pack Size",
+                    "options": [
+                        "1 Kit (2x50ml)",
+                        "2 Kits (Combo)"
+                    ]
+                }
+            ],
+            "discount": 100,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "kit",
+            "total_stock": 80,
+            "capacity": 1,
+            "daily_needs": 1,
+            "popularity_count": 190,
+            "is_featured": 1,
+            "view_count": 890,
+            "maximum_order_quantity": 10,
+            "weight": 200,
+            "wishlist_count": 14,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 1
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 1,
+                    "product_id": 1,
+                    "user_id": 101,
+                    "comment": "Amazing stain remover! Removed old ball pen ink and tea stain from my white shirt in 2 minutes.",
+                    "rating": 5,
+                    "created_at": "2026-11-10T12:00:00Z"
+                },
+                {
+                    "id": 2,
+                    "product_id": 1,
+                    "user_id": 102,
+                    "comment": "Turmeric curry stain completely disappeared. Very happy with the result!",
+                    "rating": 5,
+                    "created_at": "2026-11-12T15:30:00Z"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "TOUCHSTAINS Fabric Rust Stain Remover (Nozzle Dropper Bottle)",
+            "description": "<p><b>TOUCHSTAINS Fabric Rust Stain Remover</b> is an ultra-fast acting formula specially engineered to dissolve iron rust, oxidation marks, and metallic stains from clothes.</p><p><b>How to use:</b> Use 2 drops on dry clothes to remove the rust in seconds, then wash cloth normally. Safe on white clothes, linen, and delicate cottons.</p>",
+            "image": [
+                "touchstains-rust-remover-dropper.jpg"
+            ],
+            "price": 149,
+            "variations": [
+                {
+                    "type": "100ml",
+                    "price": 149,
+                    "stock": 40
+                },
+                {
+                    "type": "200ml",
+                    "price": 269,
+                    "stock": 25
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-02T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "2",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Volume",
+                    "options": [
+                        "100ml",
+                        "200ml"
+                    ]
+                }
+            ],
+            "discount": 71,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "bottle",
+            "total_stock": 65,
+            "capacity": 100,
+            "daily_needs": 1,
+            "popularity_count": 175,
+            "is_featured": 1,
+            "view_count": 750,
+            "maximum_order_quantity": 10,
+            "weight": 120,
+            "wishlist_count": 12,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "4.9",
+                    "product_id": 2
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 3,
+                    "product_id": 2,
+                    "user_id": 103,
+                    "comment": "Cleaned rust stains from wet umbrella and metal hanger effortlessly.",
+                    "rating": 5,
+                    "created_at": "2026-11-11T09:15:00Z"
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "name": "TOUCHSTAINS Instant Fabric Rust Stain Remover Spray (200ml)",
+            "description": "<p><b>TOUCHSTAINS Instant Fabric Rust Stain Remover Spray</b> delivers fast, targeted spraying on tough rust patches. Proven Before & After performance on white shirts, trousers, and uniforms.</p><p>Instant penetration dissolves rust molecules in under 30 seconds.</p>",
+            "image": [
+                "touchstains-spray-rust-before-after.jpg"
+            ],
+            "price": 189,
+            "variations": [
+                {
+                    "type": "200ml Spray",
+                    "price": 189,
+                    "stock": 35
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-03T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "2",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Volume",
+                    "options": [
+                        "200ml Spray"
+                    ]
+                }
+            ],
+            "discount": 91,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "bottle",
+            "total_stock": 35,
+            "capacity": 200,
+            "daily_needs": 0,
+            "popularity_count": 140,
+            "is_featured": 1,
+            "view_count": 620,
+            "maximum_order_quantity": 8,
+            "weight": 220,
+            "wishlist_count": 9,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 3
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 4,
+                    "product_id": 3,
+                    "user_id": 104,
+                    "comment": "The spray design makes it so easy to treat spots without making a mess.",
+                    "rating": 5,
+                    "created_at": "2026-11-13T14:20:00Z"
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "name": "TOUCHSTAINS Heavy Duty Fabric Stain Remover (2 Litre Jumbo Pack)",
+            "description": "<p><b>TOUCHSTAINS Heavy Duty 2 Litre Combo Pack</b> (Purple & Yellow bottles). Formulated for heavy commercial laundry and family households.</p><p>Removes oil, grease, lipstick, tea, coffee, sauces, ink, and tough dirt. Super economical value pack that lasts for months!</p>",
+            "image": [
+                "touchstains-2liter-stain-remover-combo.jpg"
+            ],
+            "price": 599,
+            "variations": [
+                {
+                    "type": "2 Litre Duo",
+                    "price": 599,
+                    "stock": 25
+                },
+                {
+                    "type": "4 Litre Family Combo",
+                    "price": 1099,
+                    "stock": 15
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-04T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "4",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Size",
+                    "options": [
+                        "2 Litre Duo",
+                        "4 Litre Family Combo"
+                    ]
+                }
+            ],
+            "discount": 300,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "pack",
+            "total_stock": 40,
+            "capacity": 2000,
+            "daily_needs": 1,
+            "popularity_count": 165,
+            "is_featured": 1,
+            "view_count": 810,
+            "maximum_order_quantity": 4,
+            "weight": 2100,
+            "wishlist_count": 18,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "4.9",
+                    "product_id": 4
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 5,
+                    "product_id": 4,
+                    "user_id": 105,
+                    "comment": "Best value for family laundry! Used it on husband work clothes and kids uniforms.",
+                    "rating": 5,
+                    "created_at": "2026-11-14T11:45:00Z"
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "name": "TOUCHSTAINS School Uniform & Clothes Ink Stain Remover Kit",
+            "description": "<p><b>TOUCHSTAINS School Uniform & Clothes Ink Stain Remover</b> is every parent best friend. Effortlessly eliminates blue ballpen ink, fountain pen ink, marker stains, and school lunchtime stains from uniforms.</p><p>Gentle on fabric weaves and colors, ensuring school uniforms stay crisp and looking brand new.</p>",
+            "image": [
+                "touchstains-school-uniform-ink-remover.jpg"
+            ],
+            "price": 199,
+            "variations": [
+                {
+                    "type": "1 Kit",
+                    "price": 199,
+                    "stock": 60
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-05T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "5",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Pack",
+                    "options": [
+                        "1 Kit"
+                    ]
+                }
+            ],
+            "discount": 80,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "kit",
+            "total_stock": 60,
+            "capacity": 1,
+            "daily_needs": 1,
+            "popularity_count": 180,
+            "is_featured": 1,
+            "view_count": 920,
+            "maximum_order_quantity": 10,
+            "weight": 210,
+            "wishlist_count": 22,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 5
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 6,
+                    "product_id": 5,
+                    "user_id": 106,
+                    "comment": "My daughter got dark blue ink on her new school dress. This removed it 100%!",
+                    "rating": 5,
+                    "created_at": "2026-11-14T16:10:00Z"
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "name": "TOUCHSTAINS White Uniform Rust & Iron Stain Remover (250ml)",
+            "description": "<p><b>TOUCHSTAINS White Uniform Rust & Iron Stain Remover</b>. Removes ugly brownish rust marks left by rusted metal clips, buttons, water tanks, or clothes drying lines.</p><p>Quick 2-drop formula restores shirts and blouses back to pristine bright white.</p>",
+            "image": [
+                "touchstains-rust-stain-school-shirt.jpg"
+            ],
+            "price": 179,
+            "variations": [
+                {
+                    "type": "250ml Bottle",
+                    "price": 179,
+                    "stock": 45
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-06T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "5",
+                    "position": 1
+                },
+                {
+                    "id": "2",
+                    "position": 2
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Volume",
+                    "options": [
+                        "250ml Bottle"
+                    ]
+                }
+            ],
+            "discount": 80,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "bottle",
+            "total_stock": 45,
+            "capacity": 250,
+            "daily_needs": 0,
+            "popularity_count": 130,
+            "is_featured": 0,
+            "view_count": 530,
+            "maximum_order_quantity": 6,
+            "weight": 270,
+            "wishlist_count": 8,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "4.9",
+                    "product_id": 6
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 7,
+                    "product_id": 6,
+                    "user_id": 107,
+                    "comment": "Worked like a charm on rusted button spots on white shirt.",
+                    "rating": 5,
+                    "created_at": "2026-11-15T08:00:00Z"
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "name": "TOUCHSTAINS All-Fabric Rust & Tough Stain Remover Trigger Spray (350ml)",
+            "description": "<p><b>TOUCHSTAINS All-Fabric Rust & Tough Stain Remover Trigger Spray</b>. Features a heavy-duty mist-and-stream spray nozzle for effortless coverage on collars, cuffs, and large garments.</p><p>Use 2 drops or light spray in dry clothes to remove rust in seconds, then wash cloth normally. Flipkart Assured standard quality.</p>",
+            "image": [
+                "touchstains-rust-stain-remover-spray.jpg"
+            ],
+            "price": 229,
+            "variations": [
+                {
+                    "type": "350ml Trigger Spray",
+                    "price": 229,
+                    "stock": 55
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-07T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "3",
+                    "position": 1
+                },
+                {
+                    "id": "2",
+                    "position": 2
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Volume",
+                    "options": [
+                        "350ml Trigger Spray"
+                    ]
+                }
+            ],
+            "discount": 120,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "bottle",
+            "total_stock": 55,
+            "capacity": 350,
+            "daily_needs": 1,
+            "popularity_count": 170,
+            "is_featured": 1,
+            "view_count": 760,
+            "maximum_order_quantity": 6,
+            "weight": 380,
+            "wishlist_count": 16,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 7
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 8,
+                    "product_id": 7,
+                    "user_id": 108,
+                    "comment": "Excellent quality trigger bottle and immediate results. Very happy.",
+                    "rating": 5,
+                    "created_at": "2026-11-15T12:00:00Z"
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "name": "TOUCHSTAINS Eco-Clean Biodegradable Enzyme Stain Remover Spray (500ml)",
+            "description": "<p><b>TOUCHSTAINS Eco-Clean Biodegradable Enzyme Stain Remover Spray</b>. Harnesses plant-derived bio-enzymes that naturally digest organic and chemical stain particles.</p><p>Stains vanish without harsh chlorine or bleach. Safe for sensitive skin, babies clothes, and premium delicate silks & linens.</p>",
+            "image": [
+                "touchstains-biodegradable-enzyme-spray.jpg"
+            ],
+            "price": 249,
+            "variations": [
+                {
+                    "type": "500ml Spray",
+                    "price": 249,
+                    "stock": 30
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-08T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "6",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Volume",
+                    "options": [
+                        "500ml Spray"
+                    ]
+                }
+            ],
+            "discount": 150,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "bottle",
+            "total_stock": 30,
+            "capacity": 500,
+            "daily_needs": 1,
+            "popularity_count": 195,
+            "is_featured": 1,
+            "view_count": 980,
+            "maximum_order_quantity": 6,
+            "weight": 520,
+            "wishlist_count": 26,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 8
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 9,
+                    "product_id": 8,
+                    "user_id": 109,
+                    "comment": "Natural enzymes that really work! Cleaned coffee and blood stains with zero smell or bleach damage.",
+                    "rating": 5,
+                    "created_at": "2026-11-15T14:30:00Z"
+                }
+            ]
+        },
+        {
+            "id": 9,
+            "name": "TOUCHSTAINS Professional Ink & Tough Spot Remover (Dual Bottle Set)",
+            "description": "<p><b>TOUCHSTAINS Professional Ink & Tough Spot Remover</b> dual bottle set. Formulated for heavy ballpen leaks, printer ink stains, marker pens, and stubborn spots.</p><p>Works within seconds on cotton, polyester, linen, and blends.</p>",
+            "image": [
+                "touchstains-ink-stain-dual-pack.jpg"
+            ],
+            "price": 199,
+            "variations": [
+                {
+                    "type": "1 Set (2 Bottles)",
+                    "price": 199,
+                    "stock": 50
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-09T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "1",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Pack",
+                    "options": [
+                        "1 Set (2 Bottles)"
+                    ]
+                }
+            ],
+            "discount": 100,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "set",
+            "total_stock": 50,
+            "capacity": 100,
+            "daily_needs": 0,
+            "popularity_count": 150,
+            "is_featured": 1,
+            "view_count": 670,
+            "maximum_order_quantity": 10,
+            "weight": 180,
+            "wishlist_count": 11,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "4.9",
+                    "product_id": 9
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 10,
+                    "product_id": 9,
+                    "user_id": 110,
+                    "comment": "Removed printer ink leak from my favourite shirt! Saved a 2000 rupee garment.",
+                    "rating": 5,
+                    "created_at": "2026-11-15T18:00:00Z"
+                }
+            ]
+        },
+        {
+            "id": 10,
+            "name": "TOUCHSTAINS Multi-Purpose Fabric Stain Cleaner Box Pack",
+            "description": "<p><b>TOUCHSTAINS Multi-Purpose Fabric Stain Cleaner Box Pack</b>. Certified ISO 9001:2015 Trusted Quality.</p><p>Special cleaner for all types of clothes: Ball Pen, Ink, Oil, Paan, Turmeric, Tea, Gutka, Nail Polish, Chewing Gum, Ice-Cream, Grease, etc.</p>",
+            "image": [
+                "touchstains-stain-remover-packshot.jpg",
+                "touchstains-box-bottles-demo.jpg"
+            ],
+            "price": 169,
+            "variations": [
+                {
+                    "type": "Standard Box Pack",
+                    "price": 169,
+                    "stock": 70
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-10T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "1",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Pack",
+                    "options": [
+                        "Standard Box Pack"
+                    ]
+                }
+            ],
+            "discount": 71,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "pack",
+            "total_stock": 70,
+            "capacity": 1,
+            "daily_needs": 1,
+            "popularity_count": 185,
+            "is_featured": 1,
+            "view_count": 850,
+            "maximum_order_quantity": 10,
+            "weight": 190,
+            "wishlist_count": 20,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 10
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 11,
+                    "product_id": 10,
+                    "user_id": 111,
+                    "comment": "Very effective and reliable. Everyone should keep one at home.",
+                    "rating": 5,
+                    "created_at": "2026-11-16T08:30:00Z"
+                }
+            ]
+        }
+    ],
+    "featuredProducts": [
+        {
+            "id": 1,
+            "name": "TOUCHSTAINS Fabric Stain Remover - Twin Bottle Kit (No. 1 & No. 2)",
+            "description": "<p><b>TOUCHSTAINS Fabric Stain Remover</b> is a powerful, professional-grade cleaner formulated for all types of fabrics and washable clothes.</p><p>Effectively removes stubborn stains such as <b>Ball Pen Ink, Oil, Paan, Turmeric (Haldi), Tea, Coffee, Gutka, Nail Polish, Chewing Gum, Ice-Cream, Grease, and Food Stains</b> without damaging fabric texture or fading colors.</p><p><b>Certified ISO 9001:2015 Trusted Quality</b>. Includes Bottle No. 1 and Bottle No. 2 with detailed usage guide.</p>",
+            "image": [
+                "touchstains-box-bottles-demo.jpg",
+                "touchstains-stain-remover-packshot.jpg"
+            ],
+            "price": 199,
+            "variations": [
+                {
+                    "type": "1 Kit (2x50ml)",
+                    "price": 199,
+                    "stock": 50
+                },
+                {
+                    "type": "2 Kits (Combo)",
+                    "price": 369,
+                    "stock": 30
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-01T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "1",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Pack Size",
+                    "options": [
+                        "1 Kit (2x50ml)",
+                        "2 Kits (Combo)"
+                    ]
+                }
+            ],
+            "discount": 100,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "kit",
+            "total_stock": 80,
+            "capacity": 1,
+            "daily_needs": 1,
+            "popularity_count": 190,
+            "is_featured": 1,
+            "view_count": 890,
+            "maximum_order_quantity": 10,
+            "weight": 200,
+            "wishlist_count": 14,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 1
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 1,
+                    "product_id": 1,
+                    "user_id": 101,
+                    "comment": "Amazing stain remover! Removed old ball pen ink and tea stain from my white shirt in 2 minutes.",
+                    "rating": 5,
+                    "created_at": "2026-11-10T12:00:00Z"
+                },
+                {
+                    "id": 2,
+                    "product_id": 1,
+                    "user_id": 102,
+                    "comment": "Turmeric curry stain completely disappeared. Very happy with the result!",
+                    "rating": 5,
+                    "created_at": "2026-11-12T15:30:00Z"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "TOUCHSTAINS Fabric Rust Stain Remover (Nozzle Dropper Bottle)",
+            "description": "<p><b>TOUCHSTAINS Fabric Rust Stain Remover</b> is an ultra-fast acting formula specially engineered to dissolve iron rust, oxidation marks, and metallic stains from clothes.</p><p><b>How to use:</b> Use 2 drops on dry clothes to remove the rust in seconds, then wash cloth normally. Safe on white clothes, linen, and delicate cottons.</p>",
+            "image": [
+                "touchstains-rust-remover-dropper.jpg"
+            ],
+            "price": 149,
+            "variations": [
+                {
+                    "type": "100ml",
+                    "price": 149,
+                    "stock": 40
+                },
+                {
+                    "type": "200ml",
+                    "price": 269,
+                    "stock": 25
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-02T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "2",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Volume",
+                    "options": [
+                        "100ml",
+                        "200ml"
+                    ]
+                }
+            ],
+            "discount": 71,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "bottle",
+            "total_stock": 65,
+            "capacity": 100,
+            "daily_needs": 1,
+            "popularity_count": 175,
+            "is_featured": 1,
+            "view_count": 750,
+            "maximum_order_quantity": 10,
+            "weight": 120,
+            "wishlist_count": 12,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "4.9",
+                    "product_id": 2
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 3,
+                    "product_id": 2,
+                    "user_id": 103,
+                    "comment": "Cleaned rust stains from wet umbrella and metal hanger effortlessly.",
+                    "rating": 5,
+                    "created_at": "2026-11-11T09:15:00Z"
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "name": "TOUCHSTAINS Instant Fabric Rust Stain Remover Spray (200ml)",
+            "description": "<p><b>TOUCHSTAINS Instant Fabric Rust Stain Remover Spray</b> delivers fast, targeted spraying on tough rust patches. Proven Before & After performance on white shirts, trousers, and uniforms.</p><p>Instant penetration dissolves rust molecules in under 30 seconds.</p>",
+            "image": [
+                "touchstains-spray-rust-before-after.jpg"
+            ],
+            "price": 189,
+            "variations": [
+                {
+                    "type": "200ml Spray",
+                    "price": 189,
+                    "stock": 35
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-03T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "2",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Volume",
+                    "options": [
+                        "200ml Spray"
+                    ]
+                }
+            ],
+            "discount": 91,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "bottle",
+            "total_stock": 35,
+            "capacity": 200,
+            "daily_needs": 0,
+            "popularity_count": 140,
+            "is_featured": 1,
+            "view_count": 620,
+            "maximum_order_quantity": 8,
+            "weight": 220,
+            "wishlist_count": 9,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 3
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 4,
+                    "product_id": 3,
+                    "user_id": 104,
+                    "comment": "The spray design makes it so easy to treat spots without making a mess.",
+                    "rating": 5,
+                    "created_at": "2026-11-13T14:20:00Z"
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "name": "TOUCHSTAINS Heavy Duty Fabric Stain Remover (2 Litre Jumbo Pack)",
+            "description": "<p><b>TOUCHSTAINS Heavy Duty 2 Litre Combo Pack</b> (Purple & Yellow bottles). Formulated for heavy commercial laundry and family households.</p><p>Removes oil, grease, lipstick, tea, coffee, sauces, ink, and tough dirt. Super economical value pack that lasts for months!</p>",
+            "image": [
+                "touchstains-2liter-stain-remover-combo.jpg"
+            ],
+            "price": 599,
+            "variations": [
+                {
+                    "type": "2 Litre Duo",
+                    "price": 599,
+                    "stock": 25
+                },
+                {
+                    "type": "4 Litre Family Combo",
+                    "price": 1099,
+                    "stock": 15
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-04T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "4",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Size",
+                    "options": [
+                        "2 Litre Duo",
+                        "4 Litre Family Combo"
+                    ]
+                }
+            ],
+            "discount": 300,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "pack",
+            "total_stock": 40,
+            "capacity": 2000,
+            "daily_needs": 1,
+            "popularity_count": 165,
+            "is_featured": 1,
+            "view_count": 810,
+            "maximum_order_quantity": 4,
+            "weight": 2100,
+            "wishlist_count": 18,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "4.9",
+                    "product_id": 4
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 5,
+                    "product_id": 4,
+                    "user_id": 105,
+                    "comment": "Best value for family laundry! Used it on husband work clothes and kids uniforms.",
+                    "rating": 5,
+                    "created_at": "2026-11-14T11:45:00Z"
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "name": "TOUCHSTAINS School Uniform & Clothes Ink Stain Remover Kit",
+            "description": "<p><b>TOUCHSTAINS School Uniform & Clothes Ink Stain Remover</b> is every parent best friend. Effortlessly eliminates blue ballpen ink, fountain pen ink, marker stains, and school lunchtime stains from uniforms.</p><p>Gentle on fabric weaves and colors, ensuring school uniforms stay crisp and looking brand new.</p>",
+            "image": [
+                "touchstains-school-uniform-ink-remover.jpg"
+            ],
+            "price": 199,
+            "variations": [
+                {
+                    "type": "1 Kit",
+                    "price": 199,
+                    "stock": 60
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-05T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "5",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Pack",
+                    "options": [
+                        "1 Kit"
+                    ]
+                }
+            ],
+            "discount": 80,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "kit",
+            "total_stock": 60,
+            "capacity": 1,
+            "daily_needs": 1,
+            "popularity_count": 180,
+            "is_featured": 1,
+            "view_count": 920,
+            "maximum_order_quantity": 10,
+            "weight": 210,
+            "wishlist_count": 22,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 5
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 6,
+                    "product_id": 5,
+                    "user_id": 106,
+                    "comment": "My daughter got dark blue ink on her new school dress. This removed it 100%!",
+                    "rating": 5,
+                    "created_at": "2026-11-14T16:10:00Z"
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "name": "TOUCHSTAINS All-Fabric Rust & Tough Stain Remover Trigger Spray (350ml)",
+            "description": "<p><b>TOUCHSTAINS All-Fabric Rust & Tough Stain Remover Trigger Spray</b>. Features a heavy-duty mist-and-stream spray nozzle for effortless coverage on collars, cuffs, and large garments.</p><p>Use 2 drops or light spray in dry clothes to remove rust in seconds, then wash cloth normally. Flipkart Assured standard quality.</p>",
+            "image": [
+                "touchstains-rust-stain-remover-spray.jpg"
+            ],
+            "price": 229,
+            "variations": [
+                {
+                    "type": "350ml Trigger Spray",
+                    "price": 229,
+                    "stock": 55
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-07T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "3",
+                    "position": 1
+                },
+                {
+                    "id": "2",
+                    "position": 2
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Volume",
+                    "options": [
+                        "350ml Trigger Spray"
+                    ]
+                }
+            ],
+            "discount": 120,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "bottle",
+            "total_stock": 55,
+            "capacity": 350,
+            "daily_needs": 1,
+            "popularity_count": 170,
+            "is_featured": 1,
+            "view_count": 760,
+            "maximum_order_quantity": 6,
+            "weight": 380,
+            "wishlist_count": 16,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 7
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 8,
+                    "product_id": 7,
+                    "user_id": 108,
+                    "comment": "Excellent quality trigger bottle and immediate results. Very happy.",
+                    "rating": 5,
+                    "created_at": "2026-11-15T12:00:00Z"
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "name": "TOUCHSTAINS Eco-Clean Biodegradable Enzyme Stain Remover Spray (500ml)",
+            "description": "<p><b>TOUCHSTAINS Eco-Clean Biodegradable Enzyme Stain Remover Spray</b>. Harnesses plant-derived bio-enzymes that naturally digest organic and chemical stain particles.</p><p>Stains vanish without harsh chlorine or bleach. Safe for sensitive skin, babies clothes, and premium delicate silks & linens.</p>",
+            "image": [
+                "touchstains-biodegradable-enzyme-spray.jpg"
+            ],
+            "price": 249,
+            "variations": [
+                {
+                    "type": "500ml Spray",
+                    "price": 249,
+                    "stock": 30
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-08T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "6",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Volume",
+                    "options": [
+                        "500ml Spray"
+                    ]
+                }
+            ],
+            "discount": 150,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "bottle",
+            "total_stock": 30,
+            "capacity": 500,
+            "daily_needs": 1,
+            "popularity_count": 195,
+            "is_featured": 1,
+            "view_count": 980,
+            "maximum_order_quantity": 6,
+            "weight": 520,
+            "wishlist_count": 26,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 8
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 9,
+                    "product_id": 8,
+                    "user_id": 109,
+                    "comment": "Natural enzymes that really work! Cleaned coffee and blood stains with zero smell or bleach damage.",
+                    "rating": 5,
+                    "created_at": "2026-11-15T14:30:00Z"
+                }
+            ]
+        },
+        {
+            "id": 9,
+            "name": "TOUCHSTAINS Professional Ink & Tough Spot Remover (Dual Bottle Set)",
+            "description": "<p><b>TOUCHSTAINS Professional Ink & Tough Spot Remover</b> dual bottle set. Formulated for heavy ballpen leaks, printer ink stains, marker pens, and stubborn spots.</p><p>Works within seconds on cotton, polyester, linen, and blends.</p>",
+            "image": [
+                "touchstains-ink-stain-dual-pack.jpg"
+            ],
+            "price": 199,
+            "variations": [
+                {
+                    "type": "1 Set (2 Bottles)",
+                    "price": 199,
+                    "stock": 50
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-09T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "1",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Pack",
+                    "options": [
+                        "1 Set (2 Bottles)"
+                    ]
+                }
+            ],
+            "discount": 100,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "set",
+            "total_stock": 50,
+            "capacity": 100,
+            "daily_needs": 0,
+            "popularity_count": 150,
+            "is_featured": 1,
+            "view_count": 670,
+            "maximum_order_quantity": 10,
+            "weight": 180,
+            "wishlist_count": 11,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "4.9",
+                    "product_id": 9
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 10,
+                    "product_id": 9,
+                    "user_id": 110,
+                    "comment": "Removed printer ink leak from my favourite shirt! Saved a 2000 rupee garment.",
+                    "rating": 5,
+                    "created_at": "2026-11-15T18:00:00Z"
+                }
+            ]
+        },
+        {
+            "id": 10,
+            "name": "TOUCHSTAINS Multi-Purpose Fabric Stain Cleaner Box Pack",
+            "description": "<p><b>TOUCHSTAINS Multi-Purpose Fabric Stain Cleaner Box Pack</b>. Certified ISO 9001:2015 Trusted Quality.</p><p>Special cleaner for all types of clothes: Ball Pen, Ink, Oil, Paan, Turmeric, Tea, Gutka, Nail Polish, Chewing Gum, Ice-Cream, Grease, etc.</p>",
+            "image": [
+                "touchstains-stain-remover-packshot.jpg",
+                "touchstains-box-bottles-demo.jpg"
+            ],
+            "price": 169,
+            "variations": [
+                {
+                    "type": "Standard Box Pack",
+                    "price": 169,
+                    "stock": 70
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-10T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "1",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Pack",
+                    "options": [
+                        "Standard Box Pack"
+                    ]
+                }
+            ],
+            "discount": 71,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "pack",
+            "total_stock": 70,
+            "capacity": 1,
+            "daily_needs": 1,
+            "popularity_count": 185,
+            "is_featured": 1,
+            "view_count": 850,
+            "maximum_order_quantity": 10,
+            "weight": 190,
+            "wishlist_count": 20,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 10
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 11,
+                    "product_id": 10,
+                    "user_id": 111,
+                    "comment": "Very effective and reliable. Everyone should keep one at home.",
+                    "rating": 5,
+                    "created_at": "2026-11-16T08:30:00Z"
+                }
+            ]
+        }
+    ],
+    "dailyNeedsProducts": [
+        {
+            "id": 1,
+            "name": "TOUCHSTAINS Fabric Stain Remover - Twin Bottle Kit (No. 1 & No. 2)",
+            "description": "<p><b>TOUCHSTAINS Fabric Stain Remover</b> is a powerful, professional-grade cleaner formulated for all types of fabrics and washable clothes.</p><p>Effectively removes stubborn stains such as <b>Ball Pen Ink, Oil, Paan, Turmeric (Haldi), Tea, Coffee, Gutka, Nail Polish, Chewing Gum, Ice-Cream, Grease, and Food Stains</b> without damaging fabric texture or fading colors.</p><p><b>Certified ISO 9001:2015 Trusted Quality</b>. Includes Bottle No. 1 and Bottle No. 2 with detailed usage guide.</p>",
+            "image": [
+                "touchstains-box-bottles-demo.jpg",
+                "touchstains-stain-remover-packshot.jpg"
+            ],
+            "price": 199,
+            "variations": [
+                {
+                    "type": "1 Kit (2x50ml)",
+                    "price": 199,
+                    "stock": 50
+                },
+                {
+                    "type": "2 Kits (Combo)",
+                    "price": 369,
+                    "stock": 30
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-01T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "1",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Pack Size",
+                    "options": [
+                        "1 Kit (2x50ml)",
+                        "2 Kits (Combo)"
+                    ]
+                }
+            ],
+            "discount": 100,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "kit",
+            "total_stock": 80,
+            "capacity": 1,
+            "daily_needs": 1,
+            "popularity_count": 190,
+            "is_featured": 1,
+            "view_count": 890,
+            "maximum_order_quantity": 10,
+            "weight": 200,
+            "wishlist_count": 14,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 1
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 1,
+                    "product_id": 1,
+                    "user_id": 101,
+                    "comment": "Amazing stain remover! Removed old ball pen ink and tea stain from my white shirt in 2 minutes.",
+                    "rating": 5,
+                    "created_at": "2026-11-10T12:00:00Z"
+                },
+                {
+                    "id": 2,
+                    "product_id": 1,
+                    "user_id": 102,
+                    "comment": "Turmeric curry stain completely disappeared. Very happy with the result!",
+                    "rating": 5,
+                    "created_at": "2026-11-12T15:30:00Z"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "TOUCHSTAINS Fabric Rust Stain Remover (Nozzle Dropper Bottle)",
+            "description": "<p><b>TOUCHSTAINS Fabric Rust Stain Remover</b> is an ultra-fast acting formula specially engineered to dissolve iron rust, oxidation marks, and metallic stains from clothes.</p><p><b>How to use:</b> Use 2 drops on dry clothes to remove the rust in seconds, then wash cloth normally. Safe on white clothes, linen, and delicate cottons.</p>",
+            "image": [
+                "touchstains-rust-remover-dropper.jpg"
+            ],
+            "price": 149,
+            "variations": [
+                {
+                    "type": "100ml",
+                    "price": 149,
+                    "stock": 40
+                },
+                {
+                    "type": "200ml",
+                    "price": 269,
+                    "stock": 25
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-02T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "2",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Volume",
+                    "options": [
+                        "100ml",
+                        "200ml"
+                    ]
+                }
+            ],
+            "discount": 71,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "bottle",
+            "total_stock": 65,
+            "capacity": 100,
+            "daily_needs": 1,
+            "popularity_count": 175,
+            "is_featured": 1,
+            "view_count": 750,
+            "maximum_order_quantity": 10,
+            "weight": 120,
+            "wishlist_count": 12,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "4.9",
+                    "product_id": 2
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 3,
+                    "product_id": 2,
+                    "user_id": 103,
+                    "comment": "Cleaned rust stains from wet umbrella and metal hanger effortlessly.",
+                    "rating": 5,
+                    "created_at": "2026-11-11T09:15:00Z"
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "name": "TOUCHSTAINS Heavy Duty Fabric Stain Remover (2 Litre Jumbo Pack)",
+            "description": "<p><b>TOUCHSTAINS Heavy Duty 2 Litre Combo Pack</b> (Purple & Yellow bottles). Formulated for heavy commercial laundry and family households.</p><p>Removes oil, grease, lipstick, tea, coffee, sauces, ink, and tough dirt. Super economical value pack that lasts for months!</p>",
+            "image": [
+                "touchstains-2liter-stain-remover-combo.jpg"
+            ],
+            "price": 599,
+            "variations": [
+                {
+                    "type": "2 Litre Duo",
+                    "price": 599,
+                    "stock": 25
+                },
+                {
+                    "type": "4 Litre Family Combo",
+                    "price": 1099,
+                    "stock": 15
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-04T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "4",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Size",
+                    "options": [
+                        "2 Litre Duo",
+                        "4 Litre Family Combo"
+                    ]
+                }
+            ],
+            "discount": 300,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "pack",
+            "total_stock": 40,
+            "capacity": 2000,
+            "daily_needs": 1,
+            "popularity_count": 165,
+            "is_featured": 1,
+            "view_count": 810,
+            "maximum_order_quantity": 4,
+            "weight": 2100,
+            "wishlist_count": 18,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "4.9",
+                    "product_id": 4
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 5,
+                    "product_id": 4,
+                    "user_id": 105,
+                    "comment": "Best value for family laundry! Used it on husband work clothes and kids uniforms.",
+                    "rating": 5,
+                    "created_at": "2026-11-14T11:45:00Z"
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "name": "TOUCHSTAINS School Uniform & Clothes Ink Stain Remover Kit",
+            "description": "<p><b>TOUCHSTAINS School Uniform & Clothes Ink Stain Remover</b> is every parent best friend. Effortlessly eliminates blue ballpen ink, fountain pen ink, marker stains, and school lunchtime stains from uniforms.</p><p>Gentle on fabric weaves and colors, ensuring school uniforms stay crisp and looking brand new.</p>",
+            "image": [
+                "touchstains-school-uniform-ink-remover.jpg"
+            ],
+            "price": 199,
+            "variations": [
+                {
+                    "type": "1 Kit",
+                    "price": 199,
+                    "stock": 60
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-05T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "5",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Pack",
+                    "options": [
+                        "1 Kit"
+                    ]
+                }
+            ],
+            "discount": 80,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "kit",
+            "total_stock": 60,
+            "capacity": 1,
+            "daily_needs": 1,
+            "popularity_count": 180,
+            "is_featured": 1,
+            "view_count": 920,
+            "maximum_order_quantity": 10,
+            "weight": 210,
+            "wishlist_count": 22,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 5
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 6,
+                    "product_id": 5,
+                    "user_id": 106,
+                    "comment": "My daughter got dark blue ink on her new school dress. This removed it 100%!",
+                    "rating": 5,
+                    "created_at": "2026-11-14T16:10:00Z"
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "name": "TOUCHSTAINS All-Fabric Rust & Tough Stain Remover Trigger Spray (350ml)",
+            "description": "<p><b>TOUCHSTAINS All-Fabric Rust & Tough Stain Remover Trigger Spray</b>. Features a heavy-duty mist-and-stream spray nozzle for effortless coverage on collars, cuffs, and large garments.</p><p>Use 2 drops or light spray in dry clothes to remove rust in seconds, then wash cloth normally. Flipkart Assured standard quality.</p>",
+            "image": [
+                "touchstains-rust-stain-remover-spray.jpg"
+            ],
+            "price": 229,
+            "variations": [
+                {
+                    "type": "350ml Trigger Spray",
+                    "price": 229,
+                    "stock": 55
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-07T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "3",
+                    "position": 1
+                },
+                {
+                    "id": "2",
+                    "position": 2
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Volume",
+                    "options": [
+                        "350ml Trigger Spray"
+                    ]
+                }
+            ],
+            "discount": 120,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "bottle",
+            "total_stock": 55,
+            "capacity": 350,
+            "daily_needs": 1,
+            "popularity_count": 170,
+            "is_featured": 1,
+            "view_count": 760,
+            "maximum_order_quantity": 6,
+            "weight": 380,
+            "wishlist_count": 16,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 7
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 8,
+                    "product_id": 7,
+                    "user_id": 108,
+                    "comment": "Excellent quality trigger bottle and immediate results. Very happy.",
+                    "rating": 5,
+                    "created_at": "2026-11-15T12:00:00Z"
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "name": "TOUCHSTAINS Eco-Clean Biodegradable Enzyme Stain Remover Spray (500ml)",
+            "description": "<p><b>TOUCHSTAINS Eco-Clean Biodegradable Enzyme Stain Remover Spray</b>. Harnesses plant-derived bio-enzymes that naturally digest organic and chemical stain particles.</p><p>Stains vanish without harsh chlorine or bleach. Safe for sensitive skin, babies clothes, and premium delicate silks & linens.</p>",
+            "image": [
+                "touchstains-biodegradable-enzyme-spray.jpg"
+            ],
+            "price": 249,
+            "variations": [
+                {
+                    "type": "500ml Spray",
+                    "price": 249,
+                    "stock": 30
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-08T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "6",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Volume",
+                    "options": [
+                        "500ml Spray"
+                    ]
+                }
+            ],
+            "discount": 150,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "bottle",
+            "total_stock": 30,
+            "capacity": 500,
+            "daily_needs": 1,
+            "popularity_count": 195,
+            "is_featured": 1,
+            "view_count": 980,
+            "maximum_order_quantity": 6,
+            "weight": 520,
+            "wishlist_count": 26,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 8
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 9,
+                    "product_id": 8,
+                    "user_id": 109,
+                    "comment": "Natural enzymes that really work! Cleaned coffee and blood stains with zero smell or bleach damage.",
+                    "rating": 5,
+                    "created_at": "2026-11-15T14:30:00Z"
+                }
+            ]
+        },
+        {
+            "id": 10,
+            "name": "TOUCHSTAINS Multi-Purpose Fabric Stain Cleaner Box Pack",
+            "description": "<p><b>TOUCHSTAINS Multi-Purpose Fabric Stain Cleaner Box Pack</b>. Certified ISO 9001:2015 Trusted Quality.</p><p>Special cleaner for all types of clothes: Ball Pen, Ink, Oil, Paan, Turmeric, Tea, Gutka, Nail Polish, Chewing Gum, Ice-Cream, Grease, etc.</p>",
+            "image": [
+                "touchstains-stain-remover-packshot.jpg",
+                "touchstains-box-bottles-demo.jpg"
+            ],
+            "price": 169,
+            "variations": [
+                {
+                    "type": "Standard Box Pack",
+                    "price": 169,
+                    "stock": 70
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-10T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "1",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Pack",
+                    "options": [
+                        "Standard Box Pack"
+                    ]
+                }
+            ],
+            "discount": 71,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "pack",
+            "total_stock": 70,
+            "capacity": 1,
+            "daily_needs": 1,
+            "popularity_count": 185,
+            "is_featured": 1,
+            "view_count": 850,
+            "maximum_order_quantity": 10,
+            "weight": 190,
+            "wishlist_count": 20,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 10
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 11,
+                    "product_id": 10,
+                    "user_id": 111,
+                    "comment": "Very effective and reliable. Everyone should keep one at home.",
+                    "rating": 5,
+                    "created_at": "2026-11-16T08:30:00Z"
+                }
+            ]
+        }
+    ],
+    "mostReviewedProducts": [
+        {
+            "id": 8,
+            "name": "TOUCHSTAINS Eco-Clean Biodegradable Enzyme Stain Remover Spray (500ml)",
+            "description": "<p><b>TOUCHSTAINS Eco-Clean Biodegradable Enzyme Stain Remover Spray</b>. Harnesses plant-derived bio-enzymes that naturally digest organic and chemical stain particles.</p><p>Stains vanish without harsh chlorine or bleach. Safe for sensitive skin, babies clothes, and premium delicate silks & linens.</p>",
+            "image": [
+                "touchstains-biodegradable-enzyme-spray.jpg"
+            ],
+            "price": 249,
+            "variations": [
+                {
+                    "type": "500ml Spray",
+                    "price": 249,
+                    "stock": 30
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-08T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "6",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Volume",
+                    "options": [
+                        "500ml Spray"
+                    ]
+                }
+            ],
+            "discount": 150,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "bottle",
+            "total_stock": 30,
+            "capacity": 500,
+            "daily_needs": 1,
+            "popularity_count": 195,
+            "is_featured": 1,
+            "view_count": 980,
+            "maximum_order_quantity": 6,
+            "weight": 520,
+            "wishlist_count": 26,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 8
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 9,
+                    "product_id": 8,
+                    "user_id": 109,
+                    "comment": "Natural enzymes that really work! Cleaned coffee and blood stains with zero smell or bleach damage.",
+                    "rating": 5,
+                    "created_at": "2026-11-15T14:30:00Z"
+                }
+            ]
+        },
+        {
+            "id": 1,
+            "name": "TOUCHSTAINS Fabric Stain Remover - Twin Bottle Kit (No. 1 & No. 2)",
+            "description": "<p><b>TOUCHSTAINS Fabric Stain Remover</b> is a powerful, professional-grade cleaner formulated for all types of fabrics and washable clothes.</p><p>Effectively removes stubborn stains such as <b>Ball Pen Ink, Oil, Paan, Turmeric (Haldi), Tea, Coffee, Gutka, Nail Polish, Chewing Gum, Ice-Cream, Grease, and Food Stains</b> without damaging fabric texture or fading colors.</p><p><b>Certified ISO 9001:2015 Trusted Quality</b>. Includes Bottle No. 1 and Bottle No. 2 with detailed usage guide.</p>",
+            "image": [
+                "touchstains-box-bottles-demo.jpg",
+                "touchstains-stain-remover-packshot.jpg"
+            ],
+            "price": 199,
+            "variations": [
+                {
+                    "type": "1 Kit (2x50ml)",
+                    "price": 199,
+                    "stock": 50
+                },
+                {
+                    "type": "2 Kits (Combo)",
+                    "price": 369,
+                    "stock": 30
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-01T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "1",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Pack Size",
+                    "options": [
+                        "1 Kit (2x50ml)",
+                        "2 Kits (Combo)"
+                    ]
+                }
+            ],
+            "discount": 100,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "kit",
+            "total_stock": 80,
+            "capacity": 1,
+            "daily_needs": 1,
+            "popularity_count": 190,
+            "is_featured": 1,
+            "view_count": 890,
+            "maximum_order_quantity": 10,
+            "weight": 200,
+            "wishlist_count": 14,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 1
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 1,
+                    "product_id": 1,
+                    "user_id": 101,
+                    "comment": "Amazing stain remover! Removed old ball pen ink and tea stain from my white shirt in 2 minutes.",
+                    "rating": 5,
+                    "created_at": "2026-11-10T12:00:00Z"
+                },
+                {
+                    "id": 2,
+                    "product_id": 1,
+                    "user_id": 102,
+                    "comment": "Turmeric curry stain completely disappeared. Very happy with the result!",
+                    "rating": 5,
+                    "created_at": "2026-11-12T15:30:00Z"
+                }
+            ]
+        },
+        {
+            "id": 10,
+            "name": "TOUCHSTAINS Multi-Purpose Fabric Stain Cleaner Box Pack",
+            "description": "<p><b>TOUCHSTAINS Multi-Purpose Fabric Stain Cleaner Box Pack</b>. Certified ISO 9001:2015 Trusted Quality.</p><p>Special cleaner for all types of clothes: Ball Pen, Ink, Oil, Paan, Turmeric, Tea, Gutka, Nail Polish, Chewing Gum, Ice-Cream, Grease, etc.</p>",
+            "image": [
+                "touchstains-stain-remover-packshot.jpg",
+                "touchstains-box-bottles-demo.jpg"
+            ],
+            "price": 169,
+            "variations": [
+                {
+                    "type": "Standard Box Pack",
+                    "price": 169,
+                    "stock": 70
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-10T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "1",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Pack",
+                    "options": [
+                        "Standard Box Pack"
+                    ]
+                }
+            ],
+            "discount": 71,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "pack",
+            "total_stock": 70,
+            "capacity": 1,
+            "daily_needs": 1,
+            "popularity_count": 185,
+            "is_featured": 1,
+            "view_count": 850,
+            "maximum_order_quantity": 10,
+            "weight": 190,
+            "wishlist_count": 20,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 10
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 11,
+                    "product_id": 10,
+                    "user_id": 111,
+                    "comment": "Very effective and reliable. Everyone should keep one at home.",
+                    "rating": 5,
+                    "created_at": "2026-11-16T08:30:00Z"
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "name": "TOUCHSTAINS School Uniform & Clothes Ink Stain Remover Kit",
+            "description": "<p><b>TOUCHSTAINS School Uniform & Clothes Ink Stain Remover</b> is every parent best friend. Effortlessly eliminates blue ballpen ink, fountain pen ink, marker stains, and school lunchtime stains from uniforms.</p><p>Gentle on fabric weaves and colors, ensuring school uniforms stay crisp and looking brand new.</p>",
+            "image": [
+                "touchstains-school-uniform-ink-remover.jpg"
+            ],
+            "price": 199,
+            "variations": [
+                {
+                    "type": "1 Kit",
+                    "price": 199,
+                    "stock": 60
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-05T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "5",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Pack",
+                    "options": [
+                        "1 Kit"
+                    ]
+                }
+            ],
+            "discount": 80,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "kit",
+            "total_stock": 60,
+            "capacity": 1,
+            "daily_needs": 1,
+            "popularity_count": 180,
+            "is_featured": 1,
+            "view_count": 920,
+            "maximum_order_quantity": 10,
+            "weight": 210,
+            "wishlist_count": 22,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 5
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 6,
+                    "product_id": 5,
+                    "user_id": 106,
+                    "comment": "My daughter got dark blue ink on her new school dress. This removed it 100%!",
+                    "rating": 5,
+                    "created_at": "2026-11-14T16:10:00Z"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "TOUCHSTAINS Fabric Rust Stain Remover (Nozzle Dropper Bottle)",
+            "description": "<p><b>TOUCHSTAINS Fabric Rust Stain Remover</b> is an ultra-fast acting formula specially engineered to dissolve iron rust, oxidation marks, and metallic stains from clothes.</p><p><b>How to use:</b> Use 2 drops on dry clothes to remove the rust in seconds, then wash cloth normally. Safe on white clothes, linen, and delicate cottons.</p>",
+            "image": [
+                "touchstains-rust-remover-dropper.jpg"
+            ],
+            "price": 149,
+            "variations": [
+                {
+                    "type": "100ml",
+                    "price": 149,
+                    "stock": 40
+                },
+                {
+                    "type": "200ml",
+                    "price": 269,
+                    "stock": 25
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-02T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "2",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Volume",
+                    "options": [
+                        "100ml",
+                        "200ml"
+                    ]
+                }
+            ],
+            "discount": 71,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "bottle",
+            "total_stock": 65,
+            "capacity": 100,
+            "daily_needs": 1,
+            "popularity_count": 175,
+            "is_featured": 1,
+            "view_count": 750,
+            "maximum_order_quantity": 10,
+            "weight": 120,
+            "wishlist_count": 12,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "4.9",
+                    "product_id": 2
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 3,
+                    "product_id": 2,
+                    "user_id": 103,
+                    "comment": "Cleaned rust stains from wet umbrella and metal hanger effortlessly.",
+                    "rating": 5,
+                    "created_at": "2026-11-11T09:15:00Z"
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "name": "TOUCHSTAINS All-Fabric Rust & Tough Stain Remover Trigger Spray (350ml)",
+            "description": "<p><b>TOUCHSTAINS All-Fabric Rust & Tough Stain Remover Trigger Spray</b>. Features a heavy-duty mist-and-stream spray nozzle for effortless coverage on collars, cuffs, and large garments.</p><p>Use 2 drops or light spray in dry clothes to remove rust in seconds, then wash cloth normally. Flipkart Assured standard quality.</p>",
+            "image": [
+                "touchstains-rust-stain-remover-spray.jpg"
+            ],
+            "price": 229,
+            "variations": [
+                {
+                    "type": "350ml Trigger Spray",
+                    "price": 229,
+                    "stock": 55
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-07T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "3",
+                    "position": 1
+                },
+                {
+                    "id": "2",
+                    "position": 2
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Volume",
+                    "options": [
+                        "350ml Trigger Spray"
+                    ]
+                }
+            ],
+            "discount": 120,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "bottle",
+            "total_stock": 55,
+            "capacity": 350,
+            "daily_needs": 1,
+            "popularity_count": 170,
+            "is_featured": 1,
+            "view_count": 760,
+            "maximum_order_quantity": 6,
+            "weight": 380,
+            "wishlist_count": 16,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 7
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 8,
+                    "product_id": 7,
+                    "user_id": 108,
+                    "comment": "Excellent quality trigger bottle and immediate results. Very happy.",
+                    "rating": 5,
+                    "created_at": "2026-11-15T12:00:00Z"
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "name": "TOUCHSTAINS Heavy Duty Fabric Stain Remover (2 Litre Jumbo Pack)",
+            "description": "<p><b>TOUCHSTAINS Heavy Duty 2 Litre Combo Pack</b> (Purple & Yellow bottles). Formulated for heavy commercial laundry and family households.</p><p>Removes oil, grease, lipstick, tea, coffee, sauces, ink, and tough dirt. Super economical value pack that lasts for months!</p>",
+            "image": [
+                "touchstains-2liter-stain-remover-combo.jpg"
+            ],
+            "price": 599,
+            "variations": [
+                {
+                    "type": "2 Litre Duo",
+                    "price": 599,
+                    "stock": 25
+                },
+                {
+                    "type": "4 Litre Family Combo",
+                    "price": 1099,
+                    "stock": 15
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-04T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "4",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Size",
+                    "options": [
+                        "2 Litre Duo",
+                        "4 Litre Family Combo"
+                    ]
+                }
+            ],
+            "discount": 300,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "pack",
+            "total_stock": 40,
+            "capacity": 2000,
+            "daily_needs": 1,
+            "popularity_count": 165,
+            "is_featured": 1,
+            "view_count": 810,
+            "maximum_order_quantity": 4,
+            "weight": 2100,
+            "wishlist_count": 18,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "4.9",
+                    "product_id": 4
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 5,
+                    "product_id": 4,
+                    "user_id": 105,
+                    "comment": "Best value for family laundry! Used it on husband work clothes and kids uniforms.",
+                    "rating": 5,
+                    "created_at": "2026-11-14T11:45:00Z"
+                }
+            ]
+        },
+        {
+            "id": 9,
+            "name": "TOUCHSTAINS Professional Ink & Tough Spot Remover (Dual Bottle Set)",
+            "description": "<p><b>TOUCHSTAINS Professional Ink & Tough Spot Remover</b> dual bottle set. Formulated for heavy ballpen leaks, printer ink stains, marker pens, and stubborn spots.</p><p>Works within seconds on cotton, polyester, linen, and blends.</p>",
+            "image": [
+                "touchstains-ink-stain-dual-pack.jpg"
+            ],
+            "price": 199,
+            "variations": [
+                {
+                    "type": "1 Set (2 Bottles)",
+                    "price": 199,
+                    "stock": 50
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-09T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "1",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Pack",
+                    "options": [
+                        "1 Set (2 Bottles)"
+                    ]
+                }
+            ],
+            "discount": 100,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "set",
+            "total_stock": 50,
+            "capacity": 100,
+            "daily_needs": 0,
+            "popularity_count": 150,
+            "is_featured": 1,
+            "view_count": 670,
+            "maximum_order_quantity": 10,
+            "weight": 180,
+            "wishlist_count": 11,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "4.9",
+                    "product_id": 9
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 10,
+                    "product_id": 9,
+                    "user_id": 110,
+                    "comment": "Removed printer ink leak from my favourite shirt! Saved a 2000 rupee garment.",
+                    "rating": 5,
+                    "created_at": "2026-11-15T18:00:00Z"
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "name": "TOUCHSTAINS Instant Fabric Rust Stain Remover Spray (200ml)",
+            "description": "<p><b>TOUCHSTAINS Instant Fabric Rust Stain Remover Spray</b> delivers fast, targeted spraying on tough rust patches. Proven Before & After performance on white shirts, trousers, and uniforms.</p><p>Instant penetration dissolves rust molecules in under 30 seconds.</p>",
+            "image": [
+                "touchstains-spray-rust-before-after.jpg"
+            ],
+            "price": 189,
+            "variations": [
+                {
+                    "type": "200ml Spray",
+                    "price": 189,
+                    "stock": 35
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-03T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "2",
+                    "position": 1
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Volume",
+                    "options": [
+                        "200ml Spray"
+                    ]
+                }
+            ],
+            "discount": 91,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "bottle",
+            "total_stock": 35,
+            "capacity": 200,
+            "daily_needs": 0,
+            "popularity_count": 140,
+            "is_featured": 1,
+            "view_count": 620,
+            "maximum_order_quantity": 8,
+            "weight": 220,
+            "wishlist_count": 9,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "5.0",
+                    "product_id": 3
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 4,
+                    "product_id": 3,
+                    "user_id": 104,
+                    "comment": "The spray design makes it so easy to treat spots without making a mess.",
+                    "rating": 5,
+                    "created_at": "2026-11-13T14:20:00Z"
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "name": "TOUCHSTAINS White Uniform Rust & Iron Stain Remover (250ml)",
+            "description": "<p><b>TOUCHSTAINS White Uniform Rust & Iron Stain Remover</b>. Removes ugly brownish rust marks left by rusted metal clips, buttons, water tanks, or clothes drying lines.</p><p>Quick 2-drop formula restores shirts and blouses back to pristine bright white.</p>",
+            "image": [
+                "touchstains-rust-stain-school-shirt.jpg"
+            ],
+            "price": 179,
+            "variations": [
+                {
+                    "type": "250ml Bottle",
+                    "price": 179,
+                    "stock": 45
+                }
+            ],
+            "tax": 0,
+            "status": 1,
+            "created_at": "2026-11-06T10:00:00.000000Z",
+            "updated_at": "2026-11-16T10:00:00.000000Z",
+            "attributes": [
+                "23"
+            ],
+            "category_ids": [
+                {
+                    "id": "5",
+                    "position": 1
+                },
+                {
+                    "id": "2",
+                    "position": 2
+                }
+            ],
+            "choice_options": [
+                {
+                    "name": "choice_23",
+                    "title": "Volume",
+                    "options": [
+                        "250ml Bottle"
+                    ]
+                }
+            ],
+            "discount": 80,
+            "discount_type": "amount",
+            "tax_type": "percent",
+            "unit": "bottle",
+            "total_stock": 45,
+            "capacity": 250,
+            "daily_needs": 0,
+            "popularity_count": 130,
+            "is_featured": 0,
+            "view_count": 530,
+            "maximum_order_quantity": 6,
+            "weight": 270,
+            "wishlist_count": 8,
+            "category_discount": null,
+            "rating": [
+                {
+                    "average": "4.9",
+                    "product_id": 6
+                }
+            ],
+            "active_reviews": [
+                {
+                    "id": 7,
+                    "product_id": 6,
+                    "user_id": 107,
+                    "comment": "Worked like a charm on rusted button spots on white shirt.",
+                    "rating": 5,
+                    "created_at": "2026-11-15T08:00:00Z"
+                }
+            ]
+        }
+    ],
+    "coupons": [],
+    "bank_account": {
+        "account_holder_name": "ZOYA ENTERPRISES",
+        "bank_name": "AU Small Finance Bank",
+        "account_number": "2502266564968702",
+        "ifsc_code": "AUBL0002665",
+        "account_type": "Current Account - Basic",
+        "branch_name": "Sion East",
+        "branch_address": "Shop No. 3 & 4, Tower B, Braumonte, Road No. 28-A, Sion Koliwada, Sion, Mumbai, Maharashtra - 400022, India.",
+        "is_active": true,
+        "instructions": "Please transfer the exact order amount via NEFT, IMPS or RTGS to our official AU Small Finance Bank account. After transferring, enter your UTR / Reference number and upload an optional screenshot for verification."
+    }
+}

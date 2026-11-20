@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ - Frequently Asked Questions - Getgozo</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="padding-top:24px;padding-bottom:48px;">
+    <div class="surface-card" style="max-width:920px;margin:0 auto;padding:34px 28px;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border-color);">
+        <img src="../assets/image/faq.png" alt="FAQ" style="width:44px;height:44px;">
+        <div>
+          <h1 style="font-size:24px;font-weight:800;">Frequently Asked Questions (FAQ)</h1>
+          <p style="font-size:13px;color:var(--text-medium);">Everything you need to know about ordering on Getgozo</p>
+        </div>
+      </div>
+      <div id="faqApiContent" style="font-size:14.5px;line-height:1.8;color:var(--text-dark);"></div>
+    </div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const cfg = window.Getgozo.CONFIG;
+      const el = document.getElementById('faqApiContent');
+      if (el && cfg.faq) {
+        el.innerHTML = cfg.faq;
+      }
+    });
+  </script>
+</body>
+</html>
+

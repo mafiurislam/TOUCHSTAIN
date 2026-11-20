@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details - Getgozo</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="padding-top:20px;padding-bottom:44px;">
+    <div style="font-size:13px;color:var(--text-light);margin-bottom:10px;" id="pdBreadcrumb">
+      <a href="../index.html">Home</a> › <a href="shop.html">Products</a> › <span id="pdBreadName" style="color:var(--text-dark);font-weight:600;">Product</span>
+    </div>
+
+    <div id="productDetailsContainer"></div>
+
+    <!-- Description & Reviews Tabs -->
+    <div class="surface-card" style="margin-top:24px;">
+      <div style="display:flex;gap:18px;border-bottom:1px solid var(--border-color);margin-bottom:18px;">
+        <button type="button" id="tabBtnDesc" onclick="switchPdTab('desc')" style="padding:10px 4px;font-weight:700;font-size:15px;color:var(--primary);border-bottom:2.5px solid var(--primary);">
+          Description
+        </button>
+        <button type="button" id="tabBtnRev" onclick="switchPdTab('rev')" style="padding:10px 4px;font-weight:600;font-size:15px;color:var(--text-medium);border-bottom:2.5px solid transparent;">
+          Customer Reviews
+        </button>
+      </div>
+      <div id="pdTabDescContent" style="font-size:14px;line-height:1.75;color:var(--text-medium);"></div>
+      <div id="pdTabRevContent" style="display:none;"></div>
+    </div>
+
+    <!-- Related Products from Same Category -->
+    <section class="home-section" style="margin-top:20px;">
+      <div class="section-head">
+        <h2 class="section-head-title">Related Products</h2>
+        <a href="shop.html" class="view-all-link">View All →</a>
+      </div>
+      <div class="products-grid" id="relatedProductsGrid"></div>
+    </section>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    let currentProduct = null;
+    let selectedQty = 1;
+    let selectedVariation = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const G = window.Getgozo;
+      const params = new URLSearchParams(window.location.search);
+      const id = Number(params.get('id')) || 1;
+      currentProduct = G.findProduct(id) || G.ALL_PRODUCTS[0];
+      if (!currentProduct) return;
+
+      document.title = `${currentProduct.name} - Getgozo`;
+      const breadName = document.getElementById('pdBreadName');
+      if (breadName) breadName.textContent = currentProduct.name;
+
+      if (currentProduct.variations && currentProduct.variations.length > 0) {
+        selectedVariation = currentProduct.variations[0];
+      }
+
+      renderProductDetailsView();
+    });
+
+    function renderProductDetailsView() {
+      const G = window.Getgozo;
+      const p = currentProduct;
+      const container = document.getElementById('productDetailsContainer');
+      if (!container || !p) return;
+
+      const varPrice = selectedVariation ? Number(selectedVariation.price) : Number(p.price);
+      const { rawPrice, finalPrice, hasDiscount, discountLabel } = G.getProductPricing(p, varPrice);
+      const images = Array.isArray(p.image) && p.image.length > 0 ? p.image : ['place_holder.png'];
+      const mainImgUrl = G.getProductImageUrl(images[0]);
+      const isTouchstains = String(images[0]).startsWith('touchstains');
+      const liveMainFallback = isTouchstains ? mainImgUrl : `https://getgozo.in/app/storage/app/public/product/${images[0]}`;
+      const outOfStock = Number(p.total_stock) <= 0;
+      const isWished = G.getWishlist().includes(Number(p.id));
+      const unitLabel = selectedVariation && selectedVariation.type ? selectedVariation.type : G.getProductUnitLabel(p);
+
+      // Find category name
+      let catObj = null;
+      if (Array.isArray(p.category_ids) && p.category_ids.length > 0) {
+        catObj = G.CATEGORIES.find(c => String(c.id) === String(p.category_ids[0].id));
+      }
+
+      const variationsHtml = (p.variations && p.variations.length > 0) ? `
+        <div style="margin:16px 0;">
+          <label style="display:block;font-size:13px;font-weight:700;margin-bottom:8px;">Weight / Pack Size:</label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            ${p.variations.map((v, idx) => {
+              const isAct = selectedVariation && selectedVariation.type === v.type;
+              return `
+                <button type="button" class="subcat-pill ${isAct ? 'active' : ''}" onclick="selectVariationByIndex(${idx})">
+                  ${G.escapeHtml(v.type)} — ₹${G.getProductPricing(p, Number(v.price)).finalPrice}
+                </button>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      ` : '';
+
+      container.innerHTML = `
+        <div class="product-details-box">
+          <!-- Gallery -->
+          <div>
+            <div class="pd-main-image" style="position:relative;">
+              ${hasDiscount ? `<span class="product-discount-tag" style="font-size:12.5px;padding:5px 12px;">${discountLabel}</span>` : ''}
+              <img id="pdMainImg" src="${mainImgUrl}" alt="${G.escapeHtml(p.name)}" onerror="if(this.src!=='${liveMainFallback}'){this.src='${liveMainFallback}';}else{this.src='../assets/image/place_holder.png';}">
+            </div>
+            <div class="pd-thumbs">
+              ${images.map((img, i) => {
+                const u = G.getProductImageUrl(img);
+                const isTs = String(img).startsWith('touchstains');
+                const lu = isTs ? u : `https://getgozo.in/app/storage/app/public/product/${img}`;
+                return `
+                  <div class="pd-thumb-item ${i === 0 ? 'active' : ''}" onclick="changePdMainImage('${u}', '${lu}', this)">
+                    <img src="${u}" alt="" style="max-height:56px;object-fit:contain;">
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+
+          <!-- Info -->
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap;">
+              ${catObj ? `<a href="categories.html?cat=${catObj.id}" class="badge badge-unit">${G.escapeHtml(catObj.name)}</a>` : ''}
+              <span class="badge ${outOfStock ? 'badge-stock-out' : 'badge-unit'}" style="${!outOfStock ? 'background:#E6F7F2;color:#01684B;' : ''}">
+                ${outOfStock ? 'Out of Stock' : `In Stock (${p.total_stock} available)`}
+              </span>
+            </div>
+
+            <h1 style="font-size:26px;font-weight:700;margin-bottom:6px;line-height:1.3;">${G.escapeHtml(p.name)}</h1>
+            <div style="font-size:14px;color:var(--text-light);font-weight:500;margin-bottom:14px;">
+              Capacity / Unit: <strong style="color:var(--text-dark);">${G.escapeHtml(unitLabel)}</strong>
+            </div>
+
+            <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:18px;padding:14px 18px;background:var(--primary-light);border-radius:var(--radius-sm);">
+              <span style="font-size:30px;font-weight:800;color:var(--primary);">₹${finalPrice}</span>
+              ${hasDiscount ? `<span style="font-size:18px;color:var(--text-light);text-decoration:line-through;">₹${rawPrice}</span>` : ''}
+              ${hasDiscount ? `<span class="badge badge-discount">${discountLabel}</span>` : ''}
+            </div>
+
+            ${variationsHtml}
+
+            <!-- Quantity & Total -->
+            <div style="display:flex;align-items:center;gap:20px;margin:20px 0;flex-wrap:wrap;">
+              <div>
+                <label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Quantity</label>
+                <div class="card-qty-stepper" style="height:42px;padding:0 4px;">
+                  <button type="button" style="width:36px;height:42px;font-size:18px;" onclick="updatePdQty(-1)">−</button>
+                  <span id="pdQtyDisplay" style="min-width:36px;font-size:15px;">${selectedQty}</span>
+                  <button type="button" style="width:36px;height:42px;font-size:18px;" onclick="updatePdQty(1)">+</button>
+                </div>
+              </div>
+              <div>
+                <label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Total Amount</label>
+                <div id="pdTotalDisplay" style="font-size:22px;font-weight:800;color:var(--primary);">₹${Math.round(finalPrice * selectedQty * 100) / 100}</div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;">
+              <button type="button" class="btn btn-primary" style="flex:1;min-width:180px;padding:13px 24px;font-size:15px;" ${outOfStock ? 'disabled' : ''} onclick="addCurrentProductToCart(false)">
+                🛒 ${outOfStock ? 'Out of Stock' : 'Add To Shopping Bag'}
+              </button>
+              <button type="button" class="btn btn-outline" style="flex:1;min-width:150px;padding:13px 24px;font-size:15px;" ${outOfStock ? 'disabled' : ''} onclick="addCurrentProductToCart(true)">
+                ⚡ Buy Now
+              </button>
+              <button type="button" class="btn btn-outline" style="padding:13px 16px;" data-wish-btn="${p.id}" onclick="window.Getgozo.toggleWishlist(${p.id}, event)">
+                ${isWished ? '❤️' : '🤍'}
+              </button>
+            </div>
+
+            <!-- Loyalty & Delivery Info Box -->
+            <div style="margin-top:24px;padding:14px 16px;border:1px dashed var(--border-color);border-radius:var(--radius-sm);font-size:13px;color:var(--text-medium);display:grid;gap:6px;">
+              <div>🚚 <strong>Free Delivery</strong> on orders above ₹${G.CONFIG.free_delivery_over_amount || 69} across India</div>
+              <div>🪙 Earn up to <strong>5% Loyalty Points</strong> on every order (20 points = ₹20 wallet balance)</div>
+              <div>💵 <strong>Cash on Delivery (COD)</strong> available</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Description Tab
+      const descEl = document.getElementById('pdTabDescContent');
+      if (descEl) {
+        descEl.innerHTML = p.description || `<p>Fresh and high-quality <strong>${G.escapeHtml(p.name)}</strong> (${G.escapeHtml(unitLabel)}) delivered directly to your doorstep by Getgozo.</p>`;
+      }
+
+      // Reviews Tab
+      const revEl = document.getElementById('pdTabRevContent');
+      if (revEl) {
+        const reviews = p.active_reviews || [];
+        if (reviews.length === 0) {
+          revEl.innerHTML = `
+            <div style="padding:20px 0;color:var(--text-medium);font-size:13.5px;">
+              <p style="margin-bottom:14px;">⭐⭐⭐⭐⭐ Rated 5.0 by verified customers across India.</p>
+              <form onsubmit="submitProductReview(event)" style="max-width:480px;background:var(--bg-muted);padding:16px;border-radius:var(--radius-sm);">
+                <h4 style="font-size:14px;margin-bottom:10px;">Write a Review</h4>
+                <div class="form-group">
+                  <select class="form-control" required>
+                    <option value="5">★★★★★ (5/5 - Excellent)</option>
+                    <option value="4">★★★★☆ (4/5 - Good)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <textarea class="form-control" rows="3" required placeholder="Share your experience with this product..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm">Submit Review</button>
+              </form>
+            </div>
+          `;
+        }
+      }
+
+      // Related Products
+      const relGrid = document.getElementById('relatedProductsGrid');
+      if (relGrid) {
+        const primaryCatId = Array.isArray(p.category_ids) && p.category_ids[0] ? String(p.category_ids[0].id) : null;
+        let related = G.ALL_PRODUCTS.filter(item =>
+          Number(item.id) !== Number(p.id) &&
+          Array.isArray(item.category_ids) &&
+          item.category_ids.some(c => String(c.id) === primaryCatId)
+        ).slice(0, 5);
+        if (related.length < 5) {
+          related = G.ALL_PRODUCTS.filter(item => Number(item.id) !== Number(p.id)).slice(0, 5);
+        }
+        relGrid.innerHTML = related.map(rp => G.renderProductCard(rp)).join('');
+      }
+    }
+
+    function changePdMainImage(url, fallbackUrl, thumbEl) {
+      const mainImg = document.getElementById('pdMainImg');
+      if (mainImg) {
+        mainImg.src = url;
+        mainImg.onerror = function () { this.src = fallbackUrl; };
+      }
+      document.querySelectorAll('.pd-thumb-item').forEach(el => el.classList.remove('active'));
+      if (thumbEl) thumbEl.classList.add('active');
+    }
+
+    function selectVariationByIndex(idx) {
+      if (!currentProduct || !currentProduct.variations) return;
+      selectedVariation = currentProduct.variations[idx];
+      renderProductDetailsView();
+    }
+
+    function updatePdQty(delta) {
+      if (!currentProduct) return;
+      const maxQty = Math.max(1, Number(currentProduct.total_stock || 99));
+      selectedQty = Math.max(1, Math.min(maxQty, selectedQty + delta));
+      const varPrice = selectedVariation ? Number(selectedVariation.price) : Number(currentProduct.price);
+      const { finalPrice } = window.Getgozo.getProductPricing(currentProduct, varPrice);
+      document.getElementById('pdQtyDisplay').textContent = selectedQty;
+      document.getElementById('pdTotalDisplay').textContent = '₹' + (Math.round(finalPrice * selectedQty * 100) / 100);
+    }
+
+    function addCurrentProductToCart(goToCheckout) {
+      if (!currentProduct) return;
+      const unitLabel = selectedVariation && selectedVariation.type ? selectedVariation.type : window.Getgozo.getProductUnitLabel(currentProduct);
+      if (goToCheckout) {
+        window.Getgozo.clearCart();
+        window.Getgozo.addToCart(currentProduct.id, selectedQty, unitLabel);
+        window.location.href = 'checkout.html';
+        return;
+      }
+      window.Getgozo.addToCart(currentProduct.id, selectedQty, unitLabel);
+    }
+
+    function switchPdTab(tab) {
+      const isDesc = tab === 'desc';
+      document.getElementById('pdTabDescContent').style.display = isDesc ? 'block' : 'none';
+      document.getElementById('pdTabRevContent').style.display = isDesc ? 'none' : 'block';
+      document.getElementById('tabBtnDesc').style.color = isDesc ? 'var(--primary)' : 'var(--text-medium)';
+      document.getElementById('tabBtnDesc').style.borderBottomColor = isDesc ? 'var(--primary)' : 'transparent';
+      document.getElementById('tabBtnRev').style.color = !isDesc ? 'var(--primary)' : 'var(--text-medium)';
+      document.getElementById('tabBtnRev').style.borderBottomColor = !isDesc ? 'var(--primary)' : 'transparent';
+    }
+
+    function submitProductReview(e) {
+      e.preventDefault();
+      window.Getgozo.showToast('Thank you! Your review has been submitted.', 'success');
+      e.target.reset();
+    }
+  </script>
+</body>
+</html>
+

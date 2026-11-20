@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="TOUCHSTAINS - Professional Fabric Stain & Rust Remover for all types of clothes. Fast delivery, trusted quality.">
+  <title>TOUCHSTAINS - Fabric Stain & Rust Remover</title>
+  <link rel="icon" type="image/png" href="favicon.png?v=2.3">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png?v=2.3">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css?v=2.3">
+  <link rel="stylesheet" href="css/laravel-app.css?v=2.3">
+  <link rel="stylesheet" href="public/css/laravel-app.css?v=2.3">
+</head>
+
+<body>
+
+  <!-- Preloader -->
+  <div class="preloader" id="pagePreloader">
+    <div class="preloader-container">
+      <img width="95" class="preloader-img" src="storage/restaurant/touchstains-logo.png?v=2.3" alt="TOUCHSTAINS" onerror="this.src='assets/image/touchstains-logo.png'">
+      <div class="loader"></div>
+    </div>
+  </div>
+
+  <!-- Shared App Header (Matching Exact Reference Image) -->
+  <header class="gf-header" id="siteHeader">
+    <div class="gf-container gf-header-inner">
+      <div class="gf-header-left">
+        <a href="index.html" class="gf-logo" title="TOUCHSTAINS Fabric Stain Remover">
+          <img src="storage/restaurant/touchstains-logo.png?v=2.3" alt="TOUCHSTAINS" onerror="this.src='assets/image/touchstains-logo.png'">
+        </a>
+        <nav class="gf-nav">
+          <a href="index.html" class="gf-nav-link active">Home</a>
+          <div class="gf-cat-menu-wrap" id="gfCatMenuWrap">
+            <button type="button" class="gf-nav-link" onclick="document.getElementById('gfCatMenuWrap').classList.toggle('open')">
+              <span>Categories</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="gf-cat-dropdown" id="homeMegaCatDropdown"></div>
+          </div>
+        </nav>
+      </div>
+
+      <div class="gf-search-wrap header-search-box">
+        <form class="gf-search-form" onsubmit="window.Getgozo.submitSearch(event)">
+          <input type="text" id="globalSearchInput" class="header-search-input" placeholder="Search for Products" autocomplete="off">
+          <button type="submit" class="gf-search-btn" title="Search">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#01684B" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+        </form>
+        <div class="search-suggestions-dropdown" id="searchSuggestionsDropdown"></div>
+      </div>
+
+      <div class="gf-header-icons">
+        <a href="pages/wishlist.html" class="gf-icon-btn" title="Favourite List">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#01684B" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          <span class="gf-badge js-wish-count" data-wishlist-count>0</span>
+        </a>
+
+        <button type="button" class="gf-icon-btn" onclick="window.Getgozo.openCartDrawer()" title="Shopping Bag">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#01684B">
+            <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+          </svg>
+          <span class="gf-badge js-cart-count" data-cart-count>0</span>
+        </button>
+
+        <a href="pages/account.html" class="gf-icon-btn gf-desktop-profile-btn" title="Profile">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+        </a>
+
+        <button type="button" class="gf-icon-btn gf-hamburger-btn" onclick="window.Getgozo.openMenuDrawer()" title="Menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#01684B" stroke-width="2.6" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="gf-container container">
+
+    <!-- 1. EXACT 3-CARD BANNER CAROUSEL ROW FROM SCREENSHOT (AUTO-SLIDING) -->
+    <section class="gf-banner-section" id="heroBannerSection">
+      <div class="gf-banner-carousel-wrap" id="heroBannerWrap">
+        <div class="gf-banner-track" id="heroBannerTrack">
+          <div class="gf-banner-slide" data-index="0">
+            <a href="pages/product.html?id=1" class="gf-banner-card" title="TOUCHSTAINS Fabric Stain Remover">
+              <img src="storage/banner/touchstains-hero-banner-1.jpg" alt="TOUCHSTAINS Fabric Stain Remover">
+            </a>
+          </div>
+          <div class="gf-banner-slide" data-index="1">
+            <a href="pages/product.html?id=2" class="gf-banner-card" title="TOUCHSTAINS Before & After Stain Remover">
+              <img src="storage/banner/touchstains-hero-banner-2.jpg" alt="TOUCHSTAINS Before & After Stain Remover">
+            </a>
+          </div>
+          <div class="gf-banner-slide" data-index="2">
+            <a href="pages/product.html?id=8" class="gf-banner-card" title="TOUCHSTAINS Family Fabric Care">
+              <img src="storage/banner/touchstains-hero-banner-3.jpg" alt="TOUCHSTAINS Family Fabric Care">
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="gf-banner-dots" id="heroBannerDots">
+        <button type="button" class="gf-banner-dot active" data-slide="0" aria-label="Slide 1"></button>
+        <button type="button" class="gf-banner-dot" data-slide="1" aria-label="Slide 2"></button>
+        <button type="button" class="gf-banner-dot" data-slide="2" aria-label="Slide 3"></button>
+      </div>
+    </section>
+
+    <!-- COLORFUL TRUST & VALUE HIGHLIGHT BAR (Hidden on Mobile Devices) -->
+    <div class="gf-trust-bar d-none d-md-grid">
+      <div class="gf-trust-card">
+        <div class="gf-trust-icon" style="background:linear-gradient(135deg,#06B6D4,#3B82F6)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+        </div>
+        <div>
+          <h4>Certified ISO 9001:2015</h4>
+          <p>100% Authentic Quality</p>
+        </div>
+      </div>
+      <div class="gf-trust-card">
+        <div class="gf-trust-icon" style="background:linear-gradient(135deg,#10B981,#059669)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2">
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+        </div>
+        <div>
+          <h4>Fast Express Shipping</h4>
+          <p>Safe delivery across India</p>
+        </div>
+      </div>
+      <div class="gf-trust-card">
+        <div class="gf-trust-icon" style="background:linear-gradient(135deg,#F59E0B,#D97706)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2">
+            <rect x="2" y="5" width="20" height="14" rx="2" />
+            <line x1="2" y1="10" x2="22" y2="10" />
+          </svg>
+        </div>
+        <div>
+          <h4>Razorpay &amp; Cash on Delivery</h4>
+          <p>100% Secure Online &amp; COD Payment</p>
+        </div>
+      </div>
+      <div class="gf-trust-card">
+        <div class="gf-trust-icon" style="background:linear-gradient(135deg,#EC4899,#8B5CF6)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+            <polyline points="22 4 12 14.01 9 11.01" />
+          </svg>
+        </div>
+        <div>
+          <h4>Instant Stain Vanish</h4>
+          <p>2 drops in dry clothes magic</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1.5 LIVE VIDEO DEMO SECTION -->
+    <section class="gf-section gf-video-section">
+      <div class="gf-section-head">
+        <div>
+          <div class="gf-video-badge">
+            <span class="gf-video-badge-dot"></span>
+            <span>Live Action Demos</span>
+          </div>
+          <h2 class="gf-section-title">Instant Stain Vanish • Live Demos</h2>
+          <p style="font-size:12.5px;color:var(--text-medium);margin-top:2px;">
+            Watch how tough fabric stains, rust marks, and ink leaks disappear in seconds
+          </p>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button type="button" class="gf-carousel-arrow prev"
+            style="position:static;opacity:1;pointer-events:auto;transform:none;"
+            onclick="document.getElementById('homeVideoTrack').scrollBy({left:-480,behavior:'smooth'})"
+            aria-label="Previous">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#01684B" stroke-width="2.4"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </button>
+          <button type="button" class="gf-carousel-arrow next" style="position:static;transform:none;"
+            onclick="document.getElementById('homeVideoTrack').scrollBy({left:480,behavior:'smooth'})"
+            aria-label="Next">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#01684B" stroke-width="2.4"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="gf-carousel-wrap">
+        <div class="gf-video-track" id="homeVideoTrack">
+          <!-- Video Card 1 -->
+          <div class="gf-video-card">
+            <div class="gf-video-box">
+              <span class="gf-video-tag-pill">▶ Ink Demo</span>
+              <video src="videos/touchstains-demo-1.mp4" playsinline controls preload="metadata"></video>
+            </div>
+            <div class="gf-video-info">
+              <h3 class="gf-video-title">Ballpen &amp; Ink Stain Removal</h3>
+              <span class="gf-video-subtitle">Instant Results • Live Proof</span>
+              <a href="pages/product.html?id=1" class="gf-video-btn">
+                <span>View Product</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Video Card 2 -->
+          <div class="gf-video-card">
+            <div class="gf-video-box">
+              <span class="gf-video-tag-pill">▶ Rust Demo</span>
+              <video src="videos/touchstains-demo-2.mp4" playsinline controls preload="metadata"></video>
+            </div>
+            <div class="gf-video-info">
+              <h3 class="gf-video-title">Rust &amp; Iron Stain Removal</h3>
+              <span class="gf-video-subtitle">Vanishes in 2 Drops Magic</span>
+              <a href="pages/product.html?id=2" class="gf-video-btn">
+                <span>View Product</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Video Card 3 -->
+          <div class="gf-video-card">
+            <div class="gf-video-box">
+              <span class="gf-video-tag-pill">▶ Tough Stains</span>
+              <video src="videos/touchstains-demo-3.mp4" playsinline controls preload="metadata"></video>
+            </div>
+            <div class="gf-video-info">
+              <h3 class="gf-video-title">Turmeric, Oil &amp; Curry Stains</h3>
+              <span class="gf-video-subtitle">100% Effective Magic Formula</span>
+              <a href="pages/product.html?id=10" class="gf-video-btn">
+                <span>View Product</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Video Card 4 -->
+          <div class="gf-video-card">
+            <div class="gf-video-box">
+              <span class="gf-video-tag-pill">▶ Uniform Care</span>
+              <video src="videos/touchstains-demo-4.mp4" playsinline controls preload="metadata"></video>
+            </div>
+            <div class="gf-video-info">
+              <h3 class="gf-video-title">School Uniforms &amp; White Clothes</h3>
+              <span class="gf-video-subtitle">Bright &amp; Stain-Free Clothes</span>
+              <a href="pages/product.html?id=5" class="gf-video-btn">
+                <span>View Product</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Video Card 5 -->
+          <div class="gf-video-card">
+            <div class="gf-video-box">
+              <span class="gf-video-tag-pill">▶ Spray Action</span>
+              <video src="videos/touchstains-demo-5.mp4" playsinline controls preload="metadata"></video>
+            </div>
+            <div class="gf-video-info">
+              <h3 class="gf-video-title">Instant Spray Live Action</h3>
+              <span class="gf-video-subtitle">Large Areas &amp; Collar Cleaning</span>
+              <a href="pages/product.html?id=7" class="gf-video-btn">
+                <span>View Product</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Video Card 6 -->
+          <div class="gf-video-card">
+            <div class="gf-video-box">
+              <span class="gf-video-tag-pill">▶ Enzyme Clean</span>
+              <video src="videos/touchstains-demo-6.mp4" playsinline controls preload="metadata"></video>
+            </div>
+            <div class="gf-video-info">
+              <h3 class="gf-video-title">Active Enzyme Wash Test</h3>
+              <span class="gf-video-subtitle">100% Safe on Colored Fabrics</span>
+              <a href="pages/product.html?id=8" class="gf-video-btn">
+                <span>View Product</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. EXACT POPULAR CATEGORIES (7 Circular Photos Centered) FROM SCREENSHOT -->
+    <section class="gf-section">
+      <div class="gf-section-head">
+        <h2 class="gf-section-title" id="lblCategories">Popular Categories</h2>
+      </div>
+      <div class="gf-pop-cat-row" id="homeCategoriesGrid"></div>
+    </section>
+
+    <!-- 3. DAILY NEEDS SECTION FROM SCREENSHOT -->
+    <section class="gf-section">
+      <div class="gf-section-head">
+        <h2 class="gf-section-title">Daily Needs</h2>
+        <a href="pages/shop.html?type=daily-needs" class="gf-view-all">View All</a>
+      </div>
+      <div class="gf-carousel-wrap">
+        <button type="button" class="gf-carousel-arrow prev"
+          onclick="document.getElementById('dailyNeedsGrid').scrollBy({left:-480,behavior:'smooth'})">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#01684B" stroke-width="2.4"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <div class="gf-carousel-track" id="dailyNeedsGrid"></div>
+        <button type="button" class="gf-carousel-arrow next"
+          onclick="document.getElementById('dailyNeedsGrid').scrollBy({left:480,behavior:'smooth'})">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#01684B" stroke-width="2.4"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- 4. FEATURED PRODUCTS SECTION (Horizontal Cards + Carousel Arrow) -->
+    <section class="gf-section">
+      <div class="gf-section-head">
+        <h2 class="gf-section-title">Featured Items</h2>
+        <a href="pages/shop.html?type=featured" class="gf-view-all">View All</a>
+      </div>
+      <div class="gf-carousel-wrap">
+        <button type="button" class="gf-carousel-arrow prev"
+          onclick="document.getElementById('featuredProductsGrid').scrollBy({left:-560,behavior:'smooth'})">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#01684B" stroke-width="2.4"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <div class="gf-hcard-track" id="featuredProductsGrid"></div>
+        <button type="button" class="gf-carousel-arrow next"
+          onclick="document.getElementById('featuredProductsGrid').scrollBy({left:560,behavior:'smooth'})">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#01684B" stroke-width="2.4"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- 5. MOST REVIEWED / POPULAR PRODUCTS SECTION -->
+    <section class="gf-section">
+      <div class="gf-section-head">
+        <h2 class="gf-section-title">Most Reviewed Items</h2>
+        <a href="pages/shop.html?type=most-reviewed" class="gf-view-all">View All</a>
+      </div>
+      <div class="gf-carousel-wrap">
+        <button type="button" class="gf-carousel-arrow prev"
+          onclick="document.getElementById('mostReviewedGrid').scrollBy({left:-480,behavior:'smooth'})">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#01684B" stroke-width="2.4"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <div class="gf-carousel-track" id="mostReviewedGrid"></div>
+        <button type="button" class="gf-carousel-arrow next"
+          onclick="document.getElementById('mostReviewedGrid').scrollBy({left:480,behavior:'smooth'})">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#01684B" stroke-width="2.4"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- 6. Category-wise Showcases (All 7 Real Categories) -->
+    <div id="categoryShowcasesContainer"></div>
+
+    <!-- 7. All Products Section (All 240 Real Products) -->
+    <section class="gf-section" id="allProductsSection">
+      <div class="gf-section-head" style="flex-wrap:wrap;">
+        <h2 class="gf-section-title">All Items</h2>
+        <a href="pages/shop.html" class="gf-view-all">View All</a>
+      </div>
+      <div class="products-grid" id="allProductsHomeGrid"></div>
+      <div style="text-align:center;margin-top:26px;" id="loadMoreWrap">
+        <button type="button" class="btn btn-outline" onclick="loadMoreHomeProducts()" id="loadMoreBtn">
+          See More
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Shared App Footer -->
+  <div id="app-footer"></div>
+
+  <script src="js/site-data.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    let currentHomeList = [];
+    let visibleHomeCount = 25;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const G = window.Getgozo;
+      const data = G.DATA;
+
+      // 1. Render 3-Card Banner Carousel Row
+      const trackEl = document.getElementById('heroBannerTrack');
+      const dotsEl = document.getElementById('heroBannerDots');
+      if (trackEl && G.BANNERS && G.BANNERS.length > 0) {
+        trackEl.innerHTML = G.BANNERS.map((b, idx) => {
+          const imgUrl = G.getBannerImageUrl(b.image);
+          const targetHref = b.product_id ? `pages/product.html?id=${b.product_id}` : (b.category_id ? `pages/categories.html?cat=${b.category_id}` : 'pages/shop.html');
+          return `
+            <div class="gf-banner-slide" data-index="${idx}">
+              <a href="${targetHref}" class="gf-banner-card" title="${G.escapeHtml(b.title)}">
+                <img src="${imgUrl}" alt="${G.escapeHtml(b.title)}">
+              </a>
+            </div>
+          `;
+        }).join('');
+        if (dotsEl) {
+          dotsEl.innerHTML = G.BANNERS.map((_, idx) => `
+            <button type="button" class="gf-banner-dot ${idx === 0 ? 'active' : ''}" data-slide="${idx}" aria-label="Slide ${idx + 1}"></button>
+          `).join('');
+        }
+      }
+
+      // 2. Render Circular Popular Categories
+      const catGrid = document.getElementById('homeCategoriesGrid');
+      if (catGrid) {
+        catGrid.innerHTML = G.CATEGORIES.map(c => {
+          const imgUrl = G.getCategoryImageUrl(c.image);
+          return `
+            <a href="pages/categories.html?cat=${c.id}" class="gf-pop-cat-item">
+              <div class="gf-pop-cat-circle">
+                <img src="${imgUrl}" alt="${G.escapeHtml(c.name)}">
+              </div>
+              <span class="gf-pop-cat-name">${G.escapeHtml(c.name)}</span>
+            </a>
+          `;
+        }).join('');
+      }
+
+      // 3. Render Daily Needs (first 10)
+      const dailyGrid = document.getElementById('dailyNeedsGrid');
+      if (dailyGrid) {
+        const dailyList = (data.dailyNeedsProducts || []).slice(0, 10);
+        dailyGrid.innerHTML = dailyList.map(p => G.renderProductCard(p)).join('');
+      }
+
+      // 4. Render Featured Products (Horizontal Cards)
+      const featGrid = document.getElementById('featuredProductsGrid');
+      if (featGrid) {
+        const featList = (data.featuredProducts || []).slice(0, 12);
+        featGrid.innerHTML = featList.map(p => G.renderHorizontalProductCard(p)).join('');
+      }
+
+      // 5. Render Most Reviewed Products (first 10)
+      const revGrid = document.getElementById('mostReviewedGrid');
+      if (revGrid) {
+        const revList = (data.mostReviewedProducts || []).slice(0, 10);
+        revGrid.innerHTML = revList.map(p => G.renderProductCard(p)).join('');
+      }
+
+      // 6. Render Category-wise Showcases for all 7 Real Categories
+      const catShowcases = document.getElementById('categoryShowcasesContainer');
+      if (catShowcases) {
+        catShowcases.innerHTML = G.CATEGORIES.map(c => {
+          const detail = G.CAT_DETAILS[c.id] || {};
+          const prods = (detail.products || []).slice(0, 5);
+          if (prods.length === 0) return '';
+          return `
+            <section class="gf-section">
+              <div class="gf-section-head">
+                <h2 class="gf-section-title">${G.escapeHtml(c.name)}</h2>
+                <a href="pages/categories.html?cat=${c.id}" class="gf-view-all">View All</a>
+              </div>
+              <div class="products-grid">
+                ${prods.map(p => G.renderProductCard(p)).join('')}
+              </div>
+            </section>
+          `;
+        }).join('');
+      }
+
+      // 7. Render All 240 Products Section
+      currentHomeList = [...G.ALL_PRODUCTS];
+      renderHomeAllGrid();
+    });
+
+    function renderHomeAllGrid() {
+      const G = window.Getgozo;
+      const grid = document.getElementById('allProductsHomeGrid');
+      const btn = document.getElementById('loadMoreBtn');
+      if (!grid) return;
+
+      const slice = currentHomeList.slice(0, visibleHomeCount);
+      grid.innerHTML = slice.map(p => G.renderProductCard(p)).join('');
+
+      if (btn) {
+        if (visibleHomeCount >= currentHomeList.length) {
+          btn.style.display = 'none';
+        } else {
+          btn.style.display = 'inline-flex';
+          btn.textContent = `See More (${visibleHomeCount} / ${currentHomeList.length})`;
+        }
+      }
+    }
+
+    function loadMoreHomeProducts() {
+      visibleHomeCount += 30;
+      renderHomeAllGrid();
+    }
+  </script>
+</body>
+
+</html>

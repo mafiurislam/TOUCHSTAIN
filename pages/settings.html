@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - Getgozo</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="padding-top:24px;padding-bottom:48px;">
+    <div style="max-width:720px;margin:0 auto;display:grid;gap:20px;">
+      <div class="surface-card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border-color);">
+          <img src="../assets/image/settings.png" alt="Settings" style="width:32px;height:32px;">
+          <div>
+            <h1 style="font-size:22px;font-weight:700;">App Settings</h1>
+            <p style="font-size:13px;color:var(--text-medium);">Customize theme, language & account preferences</p>
+          </div>
+        </div>
+
+        <!-- Theme Toggle -->
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border-color);">
+          <div>
+            <h4 style="font-size:15px;font-weight:600;">🌙 Dark Mode</h4>
+            <p style="font-size:12.5px;color:var(--text-medium);">Switch between Light and Dark appearance</p>
+          </div>
+          <button type="button" class="btn btn-outline btn-sm" onclick="window.Getgozo.toggleTheme()">Toggle Theme</button>
+        </div>
+
+        <!-- Language Selector -->
+        <div style="padding:16px 0;border-bottom:1px solid var(--border-color);">
+          <h4 style="font-size:15px;font-weight:600;margin-bottom:12px;">🌐 Choose Language</h4>
+          <div style="display:grid;grid-template-columns:1fr;gap:12px;">
+            <button type="button" class="surface-card" style="padding:12px;display:flex;align-items:center;gap:10px;justify-content:center;">
+              <img src="../assets/image/england.png" alt="EN" style="width:24px;height:24px;border-radius:50%;">
+              <strong>English (Default)</strong>
+            </button>
+          </div>
+        </div>
+
+        <!-- Store & Currency Info -->
+        <div style="padding:16px 0;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+          <div>
+            <h4 style="font-size:15px;font-weight:600;">🏪 Active Branch & Currency</h4>
+            <p style="font-size:12.5px;color:var(--text-medium);">Jadupr (Shop No. 3 & 4, Tower B, Braumonte, Road No. 28-A, Sion Koliwada, Sion, Mumbai, Maharashtra - 400022 - 732201) • Currency: INR (₹)</p>
+          </div>
+          <span class="badge badge-unit">v7.7 Active</span>
+        </div>
+
+        <!-- Clear Local Cache / Reset Demo -->
+        <div style="padding-top:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+          <div>
+            <h4 style="font-size:15px;font-weight:600;">🗑️ Reset Shopping Bag & Saved Data</h4>
+            <p style="font-size:12.5px;color:var(--text-medium);">Clear cached cart items and restore default settings</p>
+          </div>
+          <button type="button" class="btn btn-danger btn-sm" onclick="localStorage.clear();window.location.reload();">Reset Data</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+</html>
+

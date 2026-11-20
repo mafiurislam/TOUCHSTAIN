@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Categories - Getgozo</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="padding-top:20px;padding-bottom:40px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+      <div>
+        <h1 style="font-size:24px;font-weight:700;" id="activeCatHeading">All Categories</h1>
+        <p style="font-size:13px;color:var(--text-medium);" id="activeCatSubtext">Browse products by category and
+          subcategory</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <label style="font-size:13px;font-weight:600;">Sort by:</label>
+        <select id="catSortSelect" class="form-control" style="width:auto;padding:8px 14px;"
+          onchange="renderActiveCategoryProducts()">
+          <option value="default">Relevance</option>
+          <option value="low_to_high">Price: Low to High</option>
+          <option value="high_to_low">Price: High to Low</option>
+          <option value="a_to_z">Name: A to Z</option>
+          <option value="z_to_a">Name: Z to A</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="categories-explorer">
+      <!-- Left Category Sidebar (Exact GroFresh /categories layout) -->
+      <aside class="cat-sidebar-list" id="catSidebarList"></aside>
+
+      <!-- Right Subcategory Pills & Products Grid -->
+      <section>
+        <div class="subcat-pills-bar" id="subcatPillsBar"></div>
+        <div class="products-grid products-grid-4" id="catProductsGrid"></div>
+      </section>
+    </div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    let selectedCatId = 1;
+    let selectedSubId = 'all';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const G = window.Getgozo;
+      if (params.get('cat')) {
+        selectedCatId = Number(params.get('cat'));
+      } else if (G.CATEGORIES.length > 0) {
+        selectedCatId = Number(G.CATEGORIES[0].id);
+      }
+      if (params.get('sub')) {
+        selectedSubId = String(params.get('sub'));
+      }
+      renderCategoryExplorer();
+    });
+
+    function selectCategory(catId) {
+      selectedCatId = Number(catId);
+      selectedSubId = 'all';
+      renderCategoryExplorer();
+    }
+
+    function selectSubCategory(subId) {
+      selectedSubId = String(subId);
+      renderSubcatPills();
+      renderActiveCategoryProducts();
+    }
+
+    function renderCategoryExplorer() {
+      const G = window.Getgozo;
+      const sidebar = document.getElementById('catSidebarList');
+      if (!sidebar) return;
+
+      sidebar.innerHTML = G.CATEGORIES.map(c => {
+        const detail = G.CAT_DETAILS[c.id] || {};
+        const count = (detail.products || []).length;
+        const active = Number(c.id) === Number(selectedCatId) ? 'active' : '';
+        const imgUrl = G.getCategoryImageUrl(c.image);
+        const liveUrl = `https://getgozo.in/app/storage/app/public/category/${c.image}`;
+        return `
+          <button type="button" class="cat-sidebar-btn ${active}" onclick="selectCategory(${c.id})">
+            <img src="${imgUrl}" alt="${G.escapeHtml(c.name)}">
+            <div>
+              <div>${G.escapeHtml(c.name)}</div>
+              <small style="font-size:11px;color:var(--text-light);font-weight:400;">${count} items</small>
+            </div>
+          </button>
+        `;
+      }).join('');
+
+      renderSubcatPills();
+      renderActiveCategoryProducts();
+    }
+
+    function renderSubcatPills() {
+      const G = window.Getgozo;
+      const detail = G.CAT_DETAILS[selectedCatId] || {};
+      const bar = document.getElementById('subcatPillsBar');
+      const heading = document.getElementById('activeCatHeading');
+      const subtext = document.getElementById('activeCatSubtext');
+
+      if (heading) heading.textContent = detail.name || 'Category';
+      const children = detail.childes || [];
+
+      if (bar) {
+        bar.innerHTML = `
+          <button type="button" class="subcat-pill ${selectedSubId === 'all' ? 'active' : ''}" onclick="selectSubCategory('all')">
+            All ${G.escapeHtml(detail.name || '')} (${(detail.products || []).length})
+          </button>
+          ${children.map(ch => `
+            <button type="button" class="subcat-pill ${String(selectedSubId) === String(ch.id) ? 'active' : ''}" onclick="selectSubCategory('${ch.id}')">
+              ${G.escapeHtml(ch.name)}
+            </button>
+          `).join('')}
+        `;
+      }
+      if (subtext) {
+        subtext.textContent = `Showing products under ${detail.name || 'selected category'}`;
+      }
+    }
+
+    function renderActiveCategoryProducts() {
+      const G = window.Getgozo;
+      const detail = G.CAT_DETAILS[selectedCatId] || {};
+      const grid = document.getElementById('catProductsGrid');
+      const sortMode = document.getElementById('catSortSelect')?.value || 'default';
+      if (!grid) return;
+
+      let list = [...(detail.products || [])];
+      if (selectedSubId !== 'all') {
+        list = list.filter(p =>
+          Array.isArray(p.category_ids) &&
+          p.category_ids.some(cid => String(cid.id) === String(selectedSubId))
+        );
+      }
+
+      if (sortMode === 'low_to_high') {
+        list.sort((a, b) => G.getProductPricing(a).finalPrice - G.getProductPricing(b).finalPrice);
+      } else if (sortMode === 'high_to_low') {
+        list.sort((a, b) => G.getProductPricing(b).finalPrice - G.getProductPricing(a).finalPrice);
+      } else if (sortMode === 'a_to_z') {
+        list.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (sortMode === 'z_to_a') {
+        list.sort((a, b) => b.name.localeCompare(a.name));
+      }
+
+      if (list.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column:1/-1;text-align:center;padding:60px 20px;background:var(--bg-card);border-radius:var(--radius-md);border:1px solid var(--border-color);">
+            <img src="../assets/image/not_found.png" alt="No Result" style="width:110px;margin:0 auto 14px;">
+            <h3 style="font-size:17px;margin-bottom:6px;">No Products Found</h3>
+            <p style="color:var(--text-light);font-size:13px;">Try selecting "All" or another category on the left.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = list.map(p => G.renderProductCard(p)).join('');
+    }
+  </script>
+</body>
+
+</html>

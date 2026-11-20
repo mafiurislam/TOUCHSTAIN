@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script>window.location.replace('account.html');</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Refer & Earn - Getgozo</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="padding-top:24px;padding-bottom:48px;">
+    <div class="surface-card" style="max-width:680px;margin:0 auto;text-align:center;padding:36px 24px;">
+      <img src="../assets/image/refer_banner.png" alt="Refer & Earn" style="max-width:260px;margin:0 auto 20px;">
+      <h1 style="font-size:24px;font-weight:800;margin-bottom:8px;">Invite Friends & Earn Rewards!</h1>
+      <p style="font-size:14px;color:var(--text-medium);margin-bottom:24px;">
+        Share your referral code with family and friends. When they place their first order on TOUCHSTAINS, you both earn bonus rewards!
+      </p>
+      <div style="display:inline-flex;align-items:center;gap:14px;padding:12px 22px;background:var(--primary-light);border:1.5px dashed var(--primary);border-radius:var(--radius-sm);margin-bottom:20px;">
+        <strong style="font-size:20px;letter-spacing:1.5px;color:var(--primary);" id="refCodeText">TOUCHSTAINS</strong>
+        <button type="button" class="btn btn-primary btn-sm" onclick="copyRefCode()">Copy</button>
+      </div>
+      <div>
+        <a href="https://wa.me/?text=Order%20fresh%20vegetables%20and%20groceries%20on%20Getgozo%20(https://getgozo.in)%20using%20my%20referral%20code%20TOUCHSTAINS!" target="_blank" rel="noopener" class="btn btn-outline">
+          💬 Share via WhatsApp
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    function copyRefCode() {
+      if (navigator.clipboard) navigator.clipboard.writeText('TOUCHSTAINS');
+      window.Getgozo.showToast('Referral code copied!', 'success');
+    }
+  </script>
+</body>
+</html>
+

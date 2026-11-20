@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop Products - Getgozo</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="padding-top:20px;padding-bottom:40px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+      <div>
+        <h1 style="font-size:24px;font-weight:700;" id="shopPageTitle">All Products</h1>
+        <p style="font-size:13px;color:var(--text-medium);" id="shopResultCount">Showing 10 items found</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <input type="text" id="shopQuickSearch" class="form-control" style="width:240px;padding:8px 14px;"
+          placeholder="Filter by product name..." oninput="applyShopFilters()">
+        <select id="shopSortSelect" class="form-control" style="width:auto;padding:8px 14px;"
+          onchange="applyShopFilters()">
+          <option value="relevance">Sort by: Relevance</option>
+          <option value="low_to_high">Price: Low to High</option>
+          <option value="high_to_low">Price: High to Low</option>
+          <option value="ascending">Name: Ascending (A–Z)</option>
+          <option value="descending">Name: Descending (Z–A)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="shop-page-grid">
+      <!-- Left Filter Sidebar (Exact GroFresh Filter Dialog / Sidebar) -->
+      <aside class="filter-card">
+        <div
+          style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border-color);">
+          <h3 style="font-size:16px;font-weight:700;">🔍 Filter Products</h3>
+          <button type="button" onclick="resetShopFilters()"
+            style="color:var(--danger);font-size:12.5px;font-weight:600;">Reset</button>
+        </div>
+
+        <!-- Collection Type -->
+        <div style="margin-bottom:20px;">
+          <h4 style="font-size:13.5px;font-weight:700;margin-bottom:10px;">Collection</h4>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+              <input type="radio" name="collectionType" value="all" checked onchange="applyShopFilters()"> All Products
+              (10)
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+              <input type="radio" name="collectionType" value="daily-needs" onchange="applyShopFilters()"> Daily Needs
+              (7)
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+              <input type="radio" name="collectionType" value="featured" onchange="applyShopFilters()"> Featured Items
+              (9)
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+              <input type="radio" name="collectionType" value="most-reviewed" onchange="applyShopFilters()"> Most
+              Reviewed (10)
+            </label>
+          </div>
+        </div>
+
+        <!-- Categories Checkboxes -->
+        <div style="margin-bottom:20px;">
+          <h4 style="font-size:13.5px;font-weight:700;margin-bottom:10px;">Categories</h4>
+          <div id="shopCategoryCheckboxes" style="display:flex;flex-direction:column;gap:8px;font-size:13px;"></div>
+        </div>
+
+        <!-- Price Range -->
+        <div style="margin-bottom:20px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+            <h4 style="font-size:13.5px;font-weight:700;">Max Price</h4>
+            <strong id="maxPriceLabel" style="color:var(--primary);font-size:13px;">₹1500</strong>
+          </div>
+          <input type="range" id="shopPriceRange" min="10" max="1500" step="10" value="1500"
+            style="width:100%;accent-color:var(--primary);"
+            oninput="document.getElementById('maxPriceLabel').textContent='₹'+this.value; applyShopFilters();">
+          <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text-light);">
+            <span>₹10</span>
+            <span>₹1500</span>
+          </div>
+        </div>
+
+        <!-- Availability & Offers -->
+        <div>
+          <h4 style="font-size:13.5px;font-weight:700;margin-bottom:10px;">Availability & Offers</h4>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;margin-bottom:8px;">
+            <input type="checkbox" id="filterInStockOnly" onchange="applyShopFilters()"> In Stock Only
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;">
+            <input type="checkbox" id="filterDiscountOnly" onchange="applyShopFilters()"> Discounted Items Only
+          </label>
+        </div>
+      </aside>
+
+      <!-- Right Products Grid -->
+      <section>
+        <div class="products-grid products-grid-4" id="shopProductsGrid"></div>
+      </section>
+    </div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const G = window.Getgozo;
+      const params = new URLSearchParams(window.location.search);
+
+      // Render category checkboxes
+      const catBox = document.getElementById('shopCategoryCheckboxes');
+      if (catBox) {
+        catBox.innerHTML = G.CATEGORIES.map(c => {
+          const detail = G.CAT_DETAILS[c.id] || {};
+          return `
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+              <input type="checkbox" class="js-shop-cat-cb" value="${c.id}" onchange="applyShopFilters()">
+              <span>${G.escapeHtml(c.name)} (${(detail.products || []).length})</span>
+            </label>
+          `;
+        }).join('');
+      }
+
+      // Check URL query parameters
+      const typeParam = params.get('type');
+      if (typeParam && ['daily-needs', 'featured', 'most-reviewed'].includes(typeParam)) {
+        const radio = document.querySelector(`input[name="collectionType"][value="${typeParam}"]`);
+        if (radio) radio.checked = true;
+      }
+
+      const catParam = params.get('cat');
+      if (catParam) {
+        const cb = document.querySelector(`.js-shop-cat-cb[value="${catParam}"]`);
+        if (cb) cb.checked = true;
+      }
+
+      const searchParam = params.get('search');
+      if (searchParam) {
+        const qInput = document.getElementById('shopQuickSearch');
+        if (qInput) qInput.value = searchParam;
+        const gInput = document.getElementById('globalSearchInput');
+        if (gInput) gInput.value = searchParam;
+      }
+
+      applyShopFilters();
+    });
+
+    function applyShopFilters() {
+      const G = window.Getgozo;
+      const data = G.DATA;
+      const colType = document.querySelector('input[name="collectionType"]:checked')?.value || 'all';
+      const titleEl = document.getElementById('shopPageTitle');
+
+      let baseList = [...G.ALL_PRODUCTS];
+      if (colType === 'daily-needs') {
+        baseList = [...(data.dailyNeedsProducts || [])];
+        if (titleEl) titleEl.textContent = '🥬 Daily Needs';
+      } else if (colType === 'featured') {
+        baseList = [...(data.featuredProducts || [])];
+        if (titleEl) titleEl.textContent = '⭐ Featured Items';
+      } else if (colType === 'most-reviewed') {
+        baseList = [...(data.mostReviewedProducts || [])];
+        if (titleEl) titleEl.textContent = '🔥 Most Reviewed Products';
+      } else {
+        if (titleEl) titleEl.textContent = 'All Products';
+      }
+
+      // Selected categories
+      const checkedCats = [...document.querySelectorAll('.js-shop-cat-cb:checked')].map(cb => String(cb.value));
+      if (checkedCats.length > 0) {
+        baseList = baseList.filter(p =>
+          Array.isArray(p.category_ids) &&
+          p.category_ids.some(cid => checkedCats.includes(String(cid.id)))
+        );
+      }
+
+      // Search keyword
+      const q = (document.getElementById('shopQuickSearch')?.value || '').trim().toLowerCase();
+      if (q) {
+        baseList = baseList.filter(p =>
+          p.name.toLowerCase().includes(q) ||
+          (p.description && p.description.toLowerCase().includes(q))
+        );
+      }
+
+      // Max Price
+      const maxPrice = Number(document.getElementById('shopPriceRange')?.value || 1500);
+      baseList = baseList.filter(p => G.getProductPricing(p).finalPrice <= maxPrice);
+
+      // In stock / Discount
+      if (document.getElementById('filterInStockOnly')?.checked) {
+        baseList = baseList.filter(p => Number(p.total_stock) > 0);
+      }
+      if (document.getElementById('filterDiscountOnly')?.checked) {
+        baseList = baseList.filter(p => Number(p.discount) > 0);
+      }
+
+      // Sort
+      const sortMode = document.getElementById('shopSortSelect')?.value || 'relevance';
+      if (sortMode === 'low_to_high') {
+        baseList.sort((a, b) => G.getProductPricing(a).finalPrice - G.getProductPricing(b).finalPrice);
+      } else if (sortMode === 'high_to_low') {
+        baseList.sort((a, b) => G.getProductPricing(b).finalPrice - G.getProductPricing(a).finalPrice);
+      } else if (sortMode === 'ascending') {
+        baseList.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (sortMode === 'descending') {
+        baseList.sort((a, b) => b.name.localeCompare(a.name));
+      }
+
+      const countEl = document.getElementById('shopResultCount');
+      if (countEl) countEl.textContent = `${baseList.length} items found`;
+
+      const grid = document.getElementById('shopProductsGrid');
+      if (!grid) return;
+
+      if (baseList.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column:1/-1;text-align:center;padding:60px 20px;background:var(--bg-card);border-radius:var(--radius-md);border:1px solid var(--border-color);">
+            <img src="../assets/image/not_found.png" alt="No Result" style="width:110px;margin:0 auto 14px;">
+            <h3 style="font-size:18px;margin-bottom:6px;">No Result Found</h3>
+            <p style="color:var(--text-light);font-size:13px;margin-bottom:16px;">Try clearing some filters or searching a different keyword.</p>
+            <button type="button" class="btn btn-primary btn-sm" onclick="resetShopFilters()">Reset Filters</button>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = baseList.map(p => G.renderProductCard(p)).join('');
+    }
+
+    function resetShopFilters() {
+      const allRadio = document.querySelector('input[name="collectionType"][value="all"]');
+      if (allRadio) allRadio.checked = true;
+      document.querySelectorAll('.js-shop-cat-cb').forEach(cb => cb.checked = false);
+      document.getElementById('shopQuickSearch').value = '';
+      document.getElementById('shopPriceRange').value = 1500;
+      document.getElementById('maxPriceLabel').textContent = '₹1500';
+      document.getElementById('filterInStockOnly').checked = false;
+      document.getElementById('filterDiscountOnly').checked = false;
+      document.getElementById('shopSortSelect').value = 'relevance';
+      applyShopFilters();
+    }
+  </script>
+</body>
+
+</html>

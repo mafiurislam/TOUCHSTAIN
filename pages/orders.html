@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders - Getgozo</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="padding-top:24px;padding-bottom:48px;">
+    <div
+      style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+      <h1 style="font-size:24px;font-weight:700;">📦 My Orders</h1>
+      <div style="display:flex;gap:8px;">
+        <button type="button" class="subcat-pill active" id="tabOngoingOrders"
+          onclick="filterOrderList('all', this)">All Orders</button>
+        <button type="button" class="subcat-pill" onclick="filterOrderList('ongoing', this)">Ongoing</button>
+        <button type="button" class="subcat-pill" onclick="filterOrderList('history', this)">History /
+          Delivered</button>
+      </div>
+    </div>
+
+    <div id="ordersListContainer" style="display:grid;gap:18px;"></div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    let currentOrderFilter = 'all';
+
+    document.addEventListener('DOMContentLoaded', () => renderOrdersPage());
+
+    function filterOrderList(mode, btnEl) {
+      currentOrderFilter = mode;
+      document.querySelectorAll('.subcat-pill').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+      renderOrdersPage();
+    }
+
+    function renderOrdersPage() {
+      const G = window.Getgozo;
+      let orders = G.getOrders();
+      if (currentOrderFilter === 'ongoing') {
+        orders = orders.filter(o => o.status !== 'delivered' && o.status !== 'cancelled');
+      } else if (currentOrderFilter === 'history') {
+        orders = orders.filter(o => o.status === 'delivered' || o.status === 'cancelled');
+      }
+
+      const wrap = document.getElementById('ordersListContainer');
+      if (!wrap) return;
+
+      if (orders.length === 0) {
+        wrap.innerHTML = `
+          <div class="surface-card" style="text-align:center;padding:65px 20px;">
+            <img src="../assets/image/empty_order_image.png" alt="No Order History" style="width:130px;margin:0 auto 14px;">
+            <h3 style="font-size:19px;margin-bottom:6px;">No Order History</h3>
+            <p style="color:var(--text-light);margin-bottom:18px;">Buy something to see your order here.</p>
+            <a href="shop.html" class="btn btn-primary">Shop Groceries →</a>
+          </div>
+        `;
+        return;
+      }
+
+      wrap.innerHTML = orders.map(o => {
+        const isDelivered = o.status === 'delivered';
+        const isCancelled = o.status === 'cancelled';
+        const statusColor = isDelivered ? '#01684B' : isCancelled ? '#FF4D4F' : '#D97706';
+        return `
+          <div class="surface-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid var(--border-color);margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+              <div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap;">
+                  <span style="font-size:16px;font-weight:700;">Order #${o.id}</span>
+                  ${o.razorpayPaymentId || (o.paymentMethod && o.paymentMethod.toLowerCase().includes('razorpay')) ? `
+                    <span style="background:#DCFCE7;color:#166534;font-size:10.5px;padding:2px 8px;border-radius:99px;font-weight:700;">
+                      ✓ Paid via Razorpay
+                    </span>
+                  ` : `
+                    <span style="background:#FEF3C7;color:#92400E;font-size:10.5px;padding:2px 8px;border-radius:99px;font-weight:700;">
+                      🚚 Cash on Delivery
+                    </span>
+                  `}
+                </div>
+                <div style="font-size:12px;color:var(--text-light);">
+                  Placed on: ${G.escapeHtml(o.date)} • ${G.escapeHtml(o.deliveryType || 'Home Delivery')} • 
+                  <strong>${G.escapeHtml(o.paymentMethod || 'Razorpay Online Payment')}</strong>
+                  ${o.razorpayPaymentId || o.utrNumber ? `<span style="font-family:monospace;font-size:11px;margin-left:4px;">(${G.escapeHtml(o.razorpayPaymentId || o.utrNumber)})</span>` : ''}
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span class="badge" style="background:${statusColor}18;color:${statusColor};text-transform:uppercase;padding:5px 12px;">
+                  ● ${G.escapeHtml(o.status)}
+                </span>
+                <a href="order-details.html?id=${o.id}" class="btn btn-outline btn-sm">🧾 Details</a>
+                <a href="track-order.html?id=${o.id}" class="btn btn-outline btn-sm">📍 Track Order</a>
+                <button type="button" class="btn btn-primary btn-sm" onclick="reorderItems(${o.id})">🔄 Reorder</button>
+              </div>
+            </div>
+
+            <div style="display:grid;gap:10px;margin-bottom:14px;">
+              ${(o.items || []).map(item => {
+          const imgUrl = G.getProductImageUrl(item.image);
+          const liveUrl = `https://getgozo.in/app/storage/app/public/product/${item.image}`;
+          return `
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                    <div style="display:flex;align-items:center;gap:12px;">
+                      <img src="${imgUrl}" alt="" onerror="this.src='${liveUrl}'" style="width:48px;height:48px;object-fit:contain;border:1px solid var(--border-color);border-radius:8px;padding:3px;background:#fff;">
+                      <div>
+                        <a href="product.html?id=${item.id}" style="font-weight:600;font-size:13.5px;">${G.escapeHtml(item.name)}</a>
+                        <div style="font-size:11.5px;color:var(--text-light);">${G.escapeHtml(item.unit)} × ${item.qty}</div>
+                      </div>
+                    </div>
+                    <strong style="font-size:14px;">₹${Math.round(item.price * item.qty * 100) / 100}</strong>
+                  </div>
+                `;
+        }).join('')}
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px dashed var(--border-color);font-size:13.5px;flex-wrap:wrap;gap:10px;">
+              <span style="color:var(--text-medium);">📍 Delivery Address: ${G.escapeHtml(o.address)}</span>
+              <div>
+                <span style="color:var(--text-light);margin-right:8px;">Delivery: ${o.deliveryCharge === 0 ? 'FREE' : '₹' + o.deliveryCharge}</span>
+                <strong style="font-size:17px;color:var(--primary);">Total: ₹${o.total}</strong>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function reorderItems(orderId) {
+      const G = window.Getgozo;
+      const ord = G.getOrders().find(o => Number(o.id) === Number(orderId));
+      if (!ord) return;
+      (ord.items || []).forEach(it => {
+        G.addToCart(it.id, it.qty, it.unit);
+      });
+      window.location.href = 'cart.html';
+    }
+  </script>
+</body>
+
+</html>

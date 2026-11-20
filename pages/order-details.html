@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Details - TOUCHSTAINS</title>
+  <link rel="icon" type="image/png" href="../favicon.png?v=2.3">
+  <link rel="stylesheet" href="../css/style.css?v=2.3">
+</head>
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="padding-top:24px;padding-bottom:48px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <img src="../assets/image/order_details.png" alt="" style="width:34px;height:34px;object-fit:contain;">
+        <div>
+          <h1 style="font-size:23px;font-weight:700;" id="odTitle">Order Details</h1>
+          <p style="font-size:12.5px;color:var(--text-medium);" id="odDateSub">Branch: Mumbai Head Office (Shop No. 3 & 4, Tower B, Braumonte, Road No. 28-A, Sion Koliwada, Sion, Mumbai, Maharashtra - 400022)</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button type="button" class="btn btn-outline btn-sm" onclick="window.print()">🖨️ Print Invoice</button>
+        <a href="orders.html" class="btn btn-outline btn-sm">← Back to Orders</a>
+      </div>
+    </div>
+
+    <div id="orderDetailsWrapper"></div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    let activeOrderObj = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const G = window.Getgozo;
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      const orders = G.getOrders();
+      activeOrderObj = (id && orders.find(o => String(o.id) === String(id))) || orders[0];
+      renderOrderDetailsScreen();
+    });
+
+    function renderOrderDetailsScreen() {
+      const G = window.Getgozo;
+      const wrap = document.getElementById('orderDetailsWrapper');
+      if (!wrap || !activeOrderObj) return;
+
+      const o = activeOrderObj;
+      document.getElementById('odTitle').textContent = `Order #${o.id}`;
+      document.getElementById('odDateSub').textContent = `Placed on ${o.date} • ${o.deliveryType || 'Home Delivery'}`;
+
+      const isDelivered = o.status === 'delivered';
+      const isCancelled = o.status === 'cancelled';
+      const statusBadgeColor = isDelivered ? '#01684B' : isCancelled ? '#FF4D4F' : '#D97706';
+      const isRzp = o.razorpayPaymentId || (o.paymentMethod && o.paymentMethod.toLowerCase().includes('razorpay'));
+
+      wrap.innerHTML = `
+        <div class="cart-page-grid">
+          <div style="display:flex;flex-direction:column;gap:18px;">
+            <div class="surface-card" style="border:1.5px solid ${isRzp ? '#93C5FD' : '#86EFAC'};background:${isRzp ? '#EFF6FF' : '#F0FDF4'};">
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+                <div>
+                  <strong style="font-size:14.5px;color:${isRzp ? '#1E3A8A' : '#065F46'};display:block;">
+                    ${isRzp ? '⚡ Paid Online via Razorpay' : '🚚 Cash on Delivery (COD)'}
+                  </strong>
+                  <span style="font-size:12.5px;color:#334155;">
+                    Amount: <strong>₹${o.total}</strong>
+                    ${o.razorpayPaymentId || o.utrNumber ? ` • Payment ID: <code>${G.escapeHtml(o.razorpayPaymentId || o.utrNumber)}</code>` : ''}
+                  </span>
+                </div>
+                <span style="background:${isRzp ? '#DCFCE7' : '#FEF3C7'};color:${isRzp ? '#166534' : '#92400E'};padding:4px 10px;border-radius:99px;font-size:11.5px;font-weight:800;">
+                  ${isRzp ? '✓ PAID' : 'PAY ON DELIVERY'}
+                </span>
+              </div>
+            </div>
+
+            <div class="surface-card">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--border-color);margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+                <div>
+                  <span style="font-size:13px;color:var(--text-medium);">Order Status:</span>
+                  <span class="badge" style="background:${statusBadgeColor}18;color:${statusBadgeColor};text-transform:uppercase;margin-left:6px;padding:4px 12px;">
+                    ● ${G.escapeHtml(o.status)}
+                  </span>
+                </div>
+                <div style="font-size:13px;color:var(--text-medium);">
+                  Preference Time: <strong>${G.escapeHtml(o.timeSlot || 'Express Delivery')}</strong>
+                </div>
+              </div>
+
+              <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;">Ordered Items (${(o.items || []).reduce((s, i) => s + i.qty, 0)})</h3>
+              <div style="display:grid;gap:12px;">
+                ${(o.items || []).map(item => {
+                  const imgUrl = G.getProductImageUrl(item.image);
+                  return `
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px dashed var(--border-color);">
+                      <div style="display:flex;align-items:center;gap:12px;">
+                        <img src="${imgUrl}" alt="" style="width:58px;height:58px;object-fit:contain;border:1px solid var(--border-color);border-radius:8px;padding:4px;background:#fff;">
+                        <div>
+                          <a href="product.html?id=${item.id}" style="font-size:14.5px;font-weight:600;">${G.escapeHtml(item.name)}</a>
+                          <div style="font-size:12px;color:var(--text-light);">Unit: ${G.escapeHtml(item.unit)} • Price: ₹${item.price} × ${item.qty}</div>
+                        </div>
+                      </div>
+                      <strong style="font-size:15px;color:var(--primary);">₹${Math.round(item.price * item.qty * 100) / 100}</strong>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+
+            <div class="surface-card">
+              <h3 style="font-size:16px;font-weight:700;margin-bottom:12px;">Delivery &amp; Branch Information</h3>
+              <div style="display:grid;gap:10px;font-size:13.5px;color:var(--text-medium);">
+                <div><strong>📍 Delivery Address:</strong> ${G.escapeHtml(o.address)}</div>
+                <div><strong>🏪 Dispatch Branch:</strong> Mumbai Head Office — Shop No. 3 & 4, Tower B, Braumonte, Road No. 28-A, Sion Koliwada, Sion, Mumbai, Maharashtra - 400022</div>
+                <div><strong>💳 Payment Method:</strong> ${isRzp ? 'Razorpay Online Payment' : 'Cash on Delivery (COD)'}</div>
+                ${o.note ? `<div><strong>📝 Order Note:</strong> ${G.escapeHtml(o.note)}</div>` : ''}
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:18px;">
+            <div class="surface-card">
+              <h3 style="font-size:16.5px;font-weight:700;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border-color);">Invoice Summary</h3>
+              <div style="display:grid;gap:10px;font-size:13.5px;color:var(--text-medium);padding-bottom:14px;border-bottom:1px solid var(--border-color);margin-bottom:14px;">
+                <div style="display:flex;justify-content:space-between;">
+                  <span>Items Subtotal</span>
+                  <span>₹${o.subtotal || o.total}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;color:var(--primary);">
+                  <span>Total Discount</span>
+                  <span>− ₹${o.discount || 0}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;">
+                  <span>Delivery Fee</span>
+                  <span>${o.deliveryCharge === 0 ? '<strong style="color:var(--primary);">FREE</strong>' : '₹' + o.deliveryCharge}</span>
+                </div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                <span style="font-size:16px;font-weight:700;">Total Amount</span>
+                <span style="font-size:22px;font-weight:800;color:var(--primary);">₹${o.total}</span>
+              </div>
+
+              <div style="display:grid;gap:10px;">
+                <a href="track-order.html?id=${o.id}" class="btn btn-primary" style="width:100%;">📍 Track Order Live</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>

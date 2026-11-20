@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saved Addresses - Getgozo</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="padding-top:24px;padding-bottom:48px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <h1 style="font-size:24px;font-weight:700;">📍 Saved Addresses</h1>
+        <p style="font-size:13px;color:var(--text-medium);">Manage your delivery locations in Shop No. 3 & 4, Tower B, Braumonte, Road No. 28-A, Sion Koliwada, Sion, Mumbai, Maharashtra - 400022</p>
+      </div>
+      <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('addAddrCard').scrollIntoView({behavior:'smooth'})">
+        + Add New Address
+      </button>
+    </div>
+
+    <div class="cart-page-grid">
+      <div id="savedAddrList" style="display:grid;gap:14px;height:fit-content;"></div>
+
+      <div class="surface-card" id="addAddrCard">
+        <h3 style="font-size:17px;font-weight:700;margin-bottom:14px;">Add New Delivery Address</h3>
+        <form onsubmit="saveNewAddr(event)">
+          <div class="form-group">
+            <label class="form-label">Label As</label>
+            <div style="display:flex;gap:8px;">
+              <label style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-color);border-radius:var(--radius-xs);cursor:pointer;">
+                <input type="radio" name="addrType" value="Home" checked> 🏠 Home
+              </label>
+              <label style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-color);border-radius:var(--radius-xs);cursor:pointer;">
+                <input type="radio" name="addrType" value="Workplace"> 🏢 Workplace
+              </label>
+              <label style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-color);border-radius:var(--radius-xs);cursor:pointer;">
+                <input type="radio" name="addrType" value="Other"> 📍 Other
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contact Person Name *</label>
+            <input type="text" id="newAddrName" class="form-control" required placeholder="Enter contact person name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contact Person Number *</label>
+            <input type="tel" id="newAddrPhone" class="form-control" required placeholder="+91 7679416294 / 7039214465">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Street / Building / Area (Full Address) *</label>
+            <input type="text" id="newAddrLine" class="form-control" required placeholder="Shop No. 3 & 4, Tower B, Braumonte, Road No. 28-A, Sion Koliwada, Sion, Mumbai, Maharashtra - 400022">
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;">Save Location</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', renderAddressesList);
+
+    function renderAddressesList() {
+      const G = window.Getgozo;
+      const list = G.getAddresses();
+      const wrap = document.getElementById('savedAddrList');
+      if (!wrap) return;
+
+      if (list.length === 0) {
+        wrap.innerHTML = `<div class="surface-card" style="text-align:center;padding:40px;"><p>No Address Found. Add your delivery address on the right.</p></div>`;
+        return;
+      }
+
+      wrap.innerHTML = list.map(a => `
+        <div class="surface-card" style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;">
+          <div style="display:flex;gap:12px;">
+            <img src="../assets/image/delivery_address_icon.png" alt="Address" style="width:36px;height:36px;object-fit:contain;">
+            <div>
+              <span class="badge badge-unit" style="margin-bottom:4px;">${G.escapeHtml(a.type)}</span>
+              <h4 style="font-size:15px;font-weight:700;">${G.escapeHtml(a.name)} (${G.escapeHtml(a.phone)})</h4>
+              <p style="font-size:13px;color:var(--text-medium);margin-top:2px;">${G.escapeHtml(a.address)}</p>
+            </div>
+          </div>
+          <button type="button" onclick="deleteAddr(${a.id})" style="color:var(--danger);font-size:13px;font-weight:600;">Delete</button>
+        </div>
+      `).join('');
+    }
+
+    function saveNewAddr(e) {
+      e.preventDefault();
+      const G = window.Getgozo;
+      const type = document.querySelector('input[name="addrType"]:checked')?.value || 'Home';
+      const name = document.getElementById('newAddrName').value.trim();
+      const phone = document.getElementById('newAddrPhone').value.trim();
+      const address = document.getElementById('newAddrLine').value.trim();
+
+      const list = G.getAddresses();
+      list.push({ id: Date.now(), type, name, phone, address, branch: 'Jadupr' });
+      G.saveAddresses(list);
+      localStorage.setItem('getgozo_location', address);
+      renderAddressesList();
+      e.target.reset();
+      G.showToast('New delivery address saved!', 'success');
+    }
+
+    function deleteAddr(id) {
+      const G = window.Getgozo;
+      const list = G.getAddresses().filter(a => Number(a.id) !== Number(id));
+      G.saveAddresses(list);
+      renderAddressesList();
+      G.showToast('Address removed', 'info');
+    }
+  </script>
+</body>
+</html>
+

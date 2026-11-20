@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Refund Policy - Getgozo</title>
+  <link rel="icon" type="image/png" href="../favicon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div id="app-header"></div>
+
+  <main class="container" style="padding-top:24px;padding-bottom:48px;">
+    <div class="surface-card" style="max-width:920px;margin:0 auto;padding:34px 28px;">
+      <h1 style="font-size:24px;font-weight:800;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border-color);color:var(--primary);">💰 Refund Policy</h1>
+      <div id="refundOnlyBox" style="font-size:14.5px;line-height:1.8;color:var(--text-dark);"></div>
+    </div>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <script src="../js/site-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('refundOnlyBox').innerHTML = window.Getgozo.CONFIG.refund_policy || '';
+    });
+  </script>
+</body>
+</html>
+
