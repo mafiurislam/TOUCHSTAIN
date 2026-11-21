@@ -60,6 +60,13 @@ class Shipment extends Model
         return $this->status === 'delivered';
     }
 
+    public function hasRemoteLabelUrl(): bool
+    {
+        return !empty($this->label_url)
+            && (str_starts_with($this->label_url, 'http://') || str_starts_with($this->label_url, 'https://'))
+            && !str_contains($this->label_url, 'admin/delivery/shipments');
+    }
+
     public function getFormattedStatusAttribute(): string
     {
         return ucwords(str_replace('_', ' ', $this->status));

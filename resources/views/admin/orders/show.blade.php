@@ -162,6 +162,11 @@
                                     <a href="{{ route('admin.delivery.shipments.print-label', $order->shipment->id) }}" target="_blank" class="btn-action" style="background:#fff;border:1px solid #10B981;color:#065F46">
                                         🏷️ Print Label
                                     </a>
+                                    @if($order->shipment->hasRemoteLabelUrl())
+                                        <a href="{{ $order->shipment->label_url }}" target="_blank" class="btn-action" style="background:#047857;color:#fff;font-weight:700">
+                                            📄 Carrier PDF ↗
+                                        </a>
+                                    @endif
                                     <a href="{{ route('admin.delivery.shipments.print-manifest', $order->shipment->id) }}" target="_blank" class="btn-action" style="background:#fff;border:1px solid #10B981;color:#065F46">
                                         📋 Manifest
                                     </a>

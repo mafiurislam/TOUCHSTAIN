@@ -508,13 +508,17 @@ class ShiprocketService implements CourierServiceInterface
 
             $this->logApiCall('/courier/generate/label', 'POST', $payload, $response->json(), $response->status());
 
-            if ($response->successful() && !empty($response->json('label_url'))) {
-                $labelUrl = $response->json('label_url');
-                $shipment->update(['label_url' => $labelUrl]);
+            $rawJson = $response->json() ?? [];
+            $remoteLabelUrl = $rawJson['label_url'] 
+                ?? ($rawJson['response']['label_url'] ?? null)
+                ?? ($rawJson['data']['label_url'] ?? null);
+
+            if ($response->successful() && !empty($remoteLabelUrl)) {
+                $shipment->update(['label_url' => $remoteLabelUrl]);
                 return [
                     'success' => true,
-                    'label_url' => $labelUrl,
-                    'message' => 'Shipping label created on Shiprocket.',
+                    'label_url' => $remoteLabelUrl,
+                    'message' => 'Official Shiprocket carrier label created.',
                 ];
             }
 
@@ -954,6 +958,7 @@ class ShiprocketService implements CourierServiceInterface
         ]);
 
         $this->recordTrackingEvent($shipment, 'AWB Assigned', "AWB #{$awbCode} assigned via {$courierName}");
+        $this->generateLabel($shipment);
         $this->schedulePickup($shipment);
 
         return [

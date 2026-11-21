@@ -330,9 +330,14 @@
 
                                         @if($s->awb_number)
                                             <!-- Print Label -->
-                                            <a href="{{ route('admin.delivery.shipments.print-label', $s->id) }}" target="_blank" class="delivery-btn-sm" style="background:#F3F4F6;color:#1E232C;border-color:#D1D5DB" title="Print Shipping Label">
+                                            <a href="{{ route('admin.delivery.shipments.print-label', $s->id) }}" target="_blank" class="delivery-btn-sm" style="background:#F3F4F6;color:#1E232C;border-color:#D1D5DB" title="Print Shipping Label (Vector Barcode)">
                                                 🏷️ Label
                                             </a>
+                                            @if($s->hasRemoteLabelUrl())
+                                                <a href="{{ $s->label_url }}" target="_blank" class="delivery-btn-sm" style="background:#ECFDF5;color:#047857;border-color:#A7F3D0;font-weight:700" title="Official Carrier PDF Label (Shiprocket/Delhivery)">
+                                                    📄 Carrier PDF
+                                                </a>
+                                            @endif
                                             <!-- Print Manifest -->
                                             <a href="{{ route('admin.delivery.shipments.print-manifest', $s->id) }}" target="_blank" class="delivery-btn-sm" style="background:#F3F4F6;color:#1E232C;border-color:#D1D5DB" title="Print Manifest">
                                                 📋 Manifest

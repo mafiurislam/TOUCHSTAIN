@@ -3,197 +3,328 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shipping Label — AWB: {{ $shipment->awb_number ?? ('ORD-' . $shipment->order_id) }}</title>
+    @php
+        $awbCode = $shipment->awb_number ?: ('SR' . ($shipment->order_id ?? rand(10000000, 99999999)));
+        $order = $shipment->order;
+        $orderId = $shipment->order_id ?: ($order ? $order->id : '1');
+        $pincode = $order ? $order->getDeliveryPincode() : ($settings->warehouse_pincode ?: '400074');
+        $customerName = $order ? $order->getCustomerName() : 'Customer';
+        $customerPhone = $order ? $order->getCustomerPhone() : 'N/A';
+        $customerAddress = $order ? $order->getDeliveryAddressFormatted() : 'Delivery Address';
+        $isCod = strtoupper($shipment->payment_method ?? '') === 'COD' || ($shipment->cod_amount > 0) || ($order && strtoupper($order->payment_method ?? '') === 'CASH_ON_DELIVERY');
+        $collectAmount = $shipment->cod_amount ?: ($order ? $order->order_amount : 0);
+        $courierName = $shipment->courier_name ?: 'DELHIVERY SURFACE';
+        $qrData = "AWB:{$awbCode}|ORD:{$orderId}|PIN:{$pincode}|COD:" . ($isCod ? number_format($collectAmount, 2) : '0');
+    @endphp
+    <title>Shipping Label — AWB: {{ $awbCode }} — Order #{{ $orderId }}</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
         body { background: #f0f2f5; color: #000; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        
+
+        /* Top Toolbar */
         .no-print-toolbar {
             background: #fff;
             padding: 12px 24px;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-bottom: 20px;
             display: flex;
             gap: 12px;
             align-items: center;
+            flex-wrap: wrap;
+            max-width: 100mm;
+            width: 100%;
         }
         .btn-print {
             background: #01684B;
             color: #fff;
             border: none;
-            padding: 9px 18px;
+            padding: 10px 18px;
             border-radius: 6px;
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-carrier-pdf {
+            background: #2563EB;
+            color: #fff;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-invoice {
+            background: #f1f5f9;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+            padding: 9px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
         }
         .btn-close {
-            background: #e4e7eb;
-            color: #333;
+            background: #e2e8f0;
+            color: #475569;
             border: none;
-            padding: 9px 18px;
+            padding: 9px 14px;
             border-radius: 6px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             text-decoration: none;
         }
 
-        /* 4x6 inch (approx 100mm x 150mm / 384pt x 576pt) Thermal Label Container */
+        /* 4x6 inch (approx 100mm x 150mm) Standard Thermal Label Container */
         .shipping-label {
             width: 100mm;
-            min-height: 145mm;
+            min-height: 148mm;
             background: #fff;
             border: 2px solid #000;
-            padding: 8mm;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 5mm;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.15);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
+        /* Header */
         .label-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid #000;
-            padding-bottom: 6px;
-            margin-bottom: 6px;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
         }
         .label-header .brand {
             font-size: 16px;
             font-weight: 900;
             letter-spacing: 0.5px;
-        }
-        .label-header .courier {
-            font-size: 15px;
-            font-weight: 800;
-            text-align: right;
             text-transform: uppercase;
         }
+        .label-header .courier {
+            font-size: 14px;
+            font-weight: 900;
+            text-align: right;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
 
-        /* Barcode Area */
+        /* Primary AWB Barcode Box */
         .barcode-section {
             text-align: center;
-            padding: 6px 0;
+            padding: 4px 0 6px;
             border-bottom: 2px solid #000;
+            background: #fff;
         }
-        .barcode-stripes {
-            height: 38px;
-            background: repeating-linear-gradient(
-                90deg,
-                #000,
-                #000 2px,
-                #fff 2px,
-                #fff 4px,
-                #000 4px,
-                #000 7px,
-                #fff 7px,
-                #fff 9px,
-                #000 9px,
-                #000 12px,
-                #fff 12px,
-                #fff 15px
-            );
-            margin: 0 auto 4px;
-            width: 85%;
+        .barcode-container {
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 65px;
+            overflow: hidden;
         }
-        .awb-code {
-            font-size: 15px;
+        .barcode-container svg {
+            width: 95% !important;
+            height: 65px !important;
+            display: block;
+            margin: 0 auto;
+            shape-rendering: crispEdges !important;
+        }
+        .awb-text-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3px 6px 0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
             font-weight: 900;
-            letter-spacing: 2px;
-            font-family: monospace;
+            letter-spacing: 1.5px;
         }
 
-        /* Routing block */
+        /* Routing Block (Pincode + Payment + QR Code) */
         .routing-block {
             display: flex;
             border-bottom: 2px solid #000;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
+            min-height: 70px;
         }
         .routing-pincode {
-            flex: 1.2;
-            padding: 6px 4px;
+            flex: 1.1;
+            padding: 4px 6px;
             border-right: 2px solid #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .routing-pincode .title {
-            font-size: 9px;
+            font-size: 8.5px;
             text-transform: uppercase;
-            font-weight: 700;
+            font-weight: 800;
+            color: #222;
         }
         .routing-pincode .pincode-val {
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 900;
-            letter-spacing: 1px;
-            line-height: 1.1;
+            letter-spacing: 1.5px;
+            line-height: 1;
+            margin: 2px 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
+        .routing-pincode .hub-text {
+            font-size: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #555;
+        }
+
         .routing-payment {
-            flex: 1.8;
-            padding: 6px 8px;
+            flex: 1.4;
+            padding: 4px 6px;
+            border-right: 2px solid #000;
             display: flex;
             flex-direction: column;
             justify-content: center;
             text-align: center;
-            background: #f8f8f8;
+            background: #fff;
         }
         .payment-badge {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 900;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .cod-badge {
+            color: #000;
+            border: 2px solid #000;
+            padding: 2px 4px;
+            display: inline-block;
+            background: #f8f8f8;
+        }
+        .prepaid-badge {
+            color: #000;
+            border: 2px solid #000;
+            padding: 2px 4px;
+            display: inline-block;
+            background: #f8f8f8;
         }
         .cod-amount {
-            font-size: 18px;
+            font-size: 15px;
             font-weight: 900;
             color: #000;
-            margin-top: 2px;
+            margin-top: 3px;
         }
 
-        /* Addresses */
+        .routing-qr {
+            width: 72px;
+            padding: 3px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .routing-qr img, .routing-qr canvas, .routing-qr svg {
+            width: 62px;
+            height: 62px;
+            display: block;
+        }
+        .routing-qr .qr-label {
+            font-size: 7.5px;
+            font-weight: 800;
+            margin-top: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Customer Address Box */
         .address-box {
-            border-bottom: 1px solid #000;
-            padding-bottom: 6px;
-            margin-bottom: 6px;
-            font-size: 10.5px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+            font-size: 10px;
             line-height: 1.35;
         }
         .address-box .box-title {
-            font-size: 9px;
+            font-size: 8.5px;
             font-weight: 800;
             text-transform: uppercase;
             margin-bottom: 2px;
             display: block;
+            border-bottom: 1px dashed #666;
+            padding-bottom: 1px;
         }
         .address-box .person-name {
-            font-size: 13px;
-            font-weight: 800;
+            font-size: 12.5px;
+            font-weight: 900;
+            color: #000;
+            margin-bottom: 1px;
+        }
+
+        /* Package Details Bar */
+        .package-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            border-bottom: 1px solid #000;
+            padding-bottom: 3px;
+            margin-bottom: 4px;
+            font-weight: 600;
         }
 
         /* Items summary table */
         .items-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 9.5px;
-            margin-bottom: 6px;
+            font-size: 9px;
+            margin-bottom: 4px;
             border-bottom: 1px solid #000;
         }
         .items-table th, .items-table td {
-            padding: 3px 4px;
+            padding: 2px 3px;
             text-align: left;
         }
         .items-table th {
             border-bottom: 1px solid #000;
             font-weight: 800;
+            font-size: 8.5px;
+            text-transform: uppercase;
         }
 
-        .label-footer {
+        /* Return / Warehouse Address */
+        .return-box {
             font-size: 8.5px;
-            text-align: center;
-            color: #333;
             line-height: 1.3;
+            border-bottom: 1px dashed #000;
+            padding-bottom: 3px;
+            margin-bottom: 3px;
+        }
+        .return-box .return-title {
+            font-size: 8px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #222;
+        }
+
+        /* Footer */
+        .label-footer {
+            font-size: 7.5px;
+            text-align: center;
+            color: #222;
+            line-height: 1.25;
             margin-top: auto;
-            border-top: 1px dashed #000;
-            padding-top: 4px;
+            padding-top: 2px;
         }
 
         /* Print Settings */
@@ -209,10 +340,17 @@
             .shipping-label {
                 border: 2px solid #000;
                 box-shadow: none;
-                width: 100%;
-                height: 100%;
+                width: 100mm;
+                height: 148mm;
+                max-width: 100mm;
+                max-height: 148mm;
                 page-break-after: always;
-                padding: 6mm;
+                page-break-inside: avoid;
+                padding: 4mm;
+                margin: 0 auto;
+            }
+            svg {
+                shape-rendering: crispEdges !important;
             }
             @page {
                 size: 100mm 150mm;
@@ -223,120 +361,163 @@
 </head>
 <body>
 
+    <!-- Top Action Toolbar -->
     <div class="no-print-toolbar">
         <button class="btn-print" onclick="window.print()">🖨️ Print Label (4x6 / A6)</button>
-        <a href="{{ url('/admin/delivery') }}" class="btn-close">← Back to Delivery Dashboard</a>
-        <span style="font-size:12px;color:#666">Press Ctrl + P to print directly to thermal or laser printer.</span>
+        @if($shipment->hasRemoteLabelUrl())
+            <a href="{{ $shipment->label_url }}" target="_blank" class="btn-carrier-pdf">
+                📄 Official Shiprocket PDF Label ↗
+            </a>
+        @endif
+        <a href="{{ route('admin.orders.invoice', $orderId) }}" target="_blank" class="btn-invoice">
+            🧾 Tax Invoice
+        </a>
+        <a href="{{ url('/admin/delivery') }}" class="btn-close">
+            ← Dashboard
+        </a>
     </div>
 
+    <!-- Carrier-Grade Shipping Label Container -->
     <div class="shipping-label">
         
         <!-- Header -->
         <div class="label-header">
-            <div style="display:flex;align-items:center;gap:8px">
-                <img src="{{ asset('storage/restaurant/touchstains-logo.png') }}?v=2.3" alt="TOUCHSTAINS" style="height:34px;width:auto;object-fit:contain">
+            <div style="display:flex;align-items:center;gap:6px">
+                <img src="{{ asset('storage/restaurant/touchstains-logo.png') }}?v=2.3" alt="TOUCHSTAINS" style="height:30px;width:auto;object-fit:contain" onerror="this.style.display='none'">
                 <div>
                     <div class="brand">TOUCHSTAINS™</div>
-                    <div style="font-size:8.5px;color:#333">www.touchstains.com</div>
+                    <div style="font-size:8px;color:#333;font-weight:600">touchstains.com</div>
                 </div>
             </div>
             <div class="courier">
-                <div>{{ $shipment->courier_name ?: 'EXPRESS LOGISTICS' }}</div>
-                <div style="font-size:8.5px;font-weight:600">Standard Surface / Air</div>
+                <div>{{ $courierName }}</div>
+                <div style="font-size:8.5px;font-weight:700;color:#333">Standard Surface / Air</div>
             </div>
         </div>
 
-        <!-- Barcode & AWB -->
+        <!-- Primary High-Resolution Barcode (Code 128) -->
         <div class="barcode-section">
-            <div class="barcode-stripes"></div>
-            <div class="awb-code">AWB: {{ $shipment->awb_number ?: ('SR' . rand(100000000, 999999999)) }}</div>
-            <div style="font-size:9.5px;margin-top:2px">Order ID: <strong>#{{ $shipment->order_id }}</strong> | Date: {{ $shipment->created_at->format('d/m/Y') }}</div>
+            <div class="barcode-container" id="primary-barcode">
+                {!! \App\Services\Delivery\BarcodeService::getCode128Svg($awbCode, 65, 2, false, 12) !!}
+            </div>
+            <div class="awb-text-row">
+                <span>AWB: {{ $awbCode }}</span>
+                <span>ORD: #{{ $orderId }}</span>
+            </div>
         </div>
 
-        <!-- Routing & Payment Block -->
+        <!-- Routing, Pincode & Payment Block -->
         <div class="routing-block">
+            <!-- Destination Pincode -->
             <div class="routing-pincode">
-                <div class="title">Destination Pincode</div>
-                <div class="pincode-val">{{ $shipment->order ? $shipment->order->getDeliveryPincode() : '400022' }}</div>
+                <span class="title">Destination Pincode</span>
+                <div class="pincode-val">{{ $pincode }}</div>
+                <span class="hub-text">Routing Hub Sort</span>
             </div>
+
+            <!-- Payment Type -->
             <div class="routing-payment">
-                @if(strtoupper($shipment->payment_method) === 'COD' || ($shipment->cod_amount > 0))
-                    <div class="payment-badge" style="color:#B91C1C">CASH ON DELIVERY (COD)</div>
-                    <div class="cod-amount">COLLECT: ₹{{ number_format($shipment->cod_amount ?: $shipment->order->order_amount, 2) }}</div>
+                @if($isCod)
+                    <div class="payment-badge cod-badge">CASH ON DELIVERY (COD)</div>
+                    <div class="cod-amount">COLLECT: ₹{{ number_format($collectAmount, 2) }}</div>
                 @else
-                    <div class="payment-badge" style="color:#047857">PREPAID ORDER</div>
-                    <div style="font-size:11px;font-weight:700;margin-top:2px">DO NOT COLLECT CASH</div>
+                    <div class="payment-badge prepaid-badge">PREPAID ORDER</div>
+                    <div style="font-size:10px;font-weight:900;margin-top:3px;color:#000">DO NOT COLLECT CASH</div>
                 @endif
             </div>
+
+            <!-- Routing QR Code for Delivery Boy Scanner App -->
+            <div class="routing-qr">
+                <div id="qrcode-box">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&margin=1&data={{ urlencode($qrData) }}" alt="QR" style="width:62px;height:62px;object-fit:contain" onerror="renderJsQrFallback()">
+                </div>
+                <span class="qr-label">Scan to Pick</span>
+            </div>
         </div>
 
-        <!-- Ship To / Customer Details -->
+        <!-- Customer Address (SHIP TO) -->
         <div class="address-box">
             <span class="box-title">SHIP TO (DELIVERY ADDRESS):</span>
-            <div class="person-name">{{ $shipment->order ? $shipment->order->getCustomerName() : 'Customer' }}</div>
-            <div>
-                {{ $shipment->order ? $shipment->order->getDeliveryAddressFormatted() : 'Delivery Address' }}
-            </div>
-            <div style="margin-top:2px;font-weight:700">
-                Phone: {{ $shipment->order ? $shipment->order->getCustomerPhone() : 'N/A' }}
+            <div class="person-name">{{ $customerName }}</div>
+            <div>{{ $customerAddress }}</div>
+            <div style="margin-top:2px;font-weight:900;font-size:10.5px">
+                PINCODE: {{ $pincode }} | PHONE: {{ $customerPhone }}
             </div>
         </div>
 
-        <!-- Package Details -->
-        <div style="display:flex;justify-content:space-between;font-size:9.5px;border-bottom:1px solid #000;padding-bottom:4px;margin-bottom:6px">
+        <!-- Package Meta -->
+        <div class="package-meta">
             <div>Weight: <strong>{{ number_format($shipment->weight ?: 0.5, 2) }} KG</strong></div>
-            <div>Dimensions: <strong>{{ $shipment->length }}x{{ $shipment->breadth }}x{{ $shipment->height }} CM</strong></div>
-            <div>Pieces: <strong>1</strong></div>
+            <div>Dims: <strong>{{ $shipment->length ?: 10 }}x{{ $shipment->breadth ?: 10 }}x{{ $shipment->height ?: 5 }} CM</strong></div>
+            <div>Date: <strong>{{ $shipment->created_at ? $shipment->created_at->format('d/m/Y') : date('d/m/Y') }}</strong></div>
         </div>
 
-        <!-- Items Summary -->
+        <!-- Items Summary Table -->
         <table class="items-table">
             <thead>
                 <tr>
-                    <th>Item Description</th>
-                    <th style="text-align:center">Qty</th>
-                    <th style="text-align:right">Price</th>
+                    <th>Item</th>
+                    <th style="text-align:center;width:30px">Qty</th>
+                    <th style="text-align:right;width:55px">Total</th>
                 </tr>
             </thead>
             <tbody>
-                @if($shipment->order && $shipment->order->items && count($shipment->order->items) > 0)
-                    @foreach($shipment->order->items->take(3) as $item)
+                @if($order && $order->items && count($order->items) > 0)
+                    @foreach($order->items->take(2) as $item)
                         <tr>
-                            <td>{{ \Illuminate\Support\Str::limit($item->product_name ?? 'Touchstains Cleaner', 26) }}</td>
-                            <td style="text-align:center">{{ $item->quantity ?? 1 }}</td>
-                            <td style="text-align:right">₹{{ number_format($item->price ?? 0, 2) }}</td>
+                            <td>{{ \Illuminate\Support\Str::limit($item->product_name ?? 'Touchstains Stain Remover', 30) }}</td>
+                            <td style="text-align:center;font-weight:700">{{ $item->quantity ?? 1 }}</td>
+                            <td style="text-align:right">₹{{ number_format(($item->price ?? 0) * ($item->quantity ?? 1), 2) }}</td>
                         </tr>
                     @endforeach
-                    @if(count($shipment->order->items) > 3)
+                    @if(count($order->items) > 2)
                         <tr>
-                            <td colspan="3" style="font-style:italic;color:#555">+ {{ count($shipment->order->items) - 3 }} more item(s)</td>
+                            <td colspan="3" style="font-style:italic;color:#444">+ {{ count($order->items) - 2 }} more product(s)</td>
                         </tr>
                     @endif
                 @else
                     <tr>
-                        <td>Touchstains Fabric Stain & Rust Remover</td>
-                        <td style="text-align:center">1</td>
-                        <td style="text-align:right">₹{{ number_format($shipment->order->order_amount ?? 299, 2) }}</td>
+                        <td>Touchstains Fabric Stain & Rust Remover (250ml)</td>
+                        <td style="text-align:center;font-weight:700">1</td>
+                        <td style="text-align:right">₹{{ number_format($collectAmount ?: 299, 2) }}</td>
                     </tr>
                 @endif
             </tbody>
         </table>
 
-        <!-- Return / Ship From Address -->
-        <div class="address-box" style="border-bottom:none;padding-bottom:0;margin-bottom:4px">
-            <span class="box-title">IF UNDELIVERED, RETURN TO:</span>
-            <div style="font-weight:700">{{ $settings->warehouse_name ?? 'TOUCHSTAINS Dispatch Centre' }}</div>
-            <div>{{ $settings->warehouse_address }}, {{ $settings->warehouse_city }}, {{ $settings->warehouse_state }} - {{ $settings->warehouse_pincode }}</div>
-            <div>Contact: {{ $settings->contact_person }} (Ph: {{ $settings->contact_number }})</div>
+        <!-- Return / Dispatch Address -->
+        <div class="return-box">
+            <span class="return-title">IF UNDELIVERED, RETURN TO:</span>
+            <div style="font-weight:800">{{ $settings->warehouse_name ?: 'TOUCHSTAINS DISPATCH CENTRE' }}</div>
+            <div>{{ $settings->warehouse_address ?: '24 Bharat Mata Society, RC Marg, Rahul Road, Near RNA Park, Room 104, Mahada Colony, Vashi Naka, Chembur East' }}, Mumbai, Maharashtra - {{ $settings->warehouse_pincode ?: '400074' }}</div>
+            <div>Helpline: {{ $settings->contact_number ?: '+91 7679416294' }}</div>
         </div>
 
         <!-- Footer -->
         <div class="label-footer">
-            This is a computer generated shipping label and does not require a physical signature.<br>
-            Handled safely under Shiprocket Logistics Network.
+            Computer generated carrier label. No signature required.<br>
+            Tracking: <strong>shiprocket.co/tracking/{{ $awbCode }}</strong>
         </div>
 
     </div>
 
+    <!-- Client-side Fallback & QR Code Scripts -->
+    <script src="{{ asset('js/qrcode.min.js') }}"></script>
+    <script>
+        function renderJsQrFallback() {
+            var qrBox = document.getElementById('qrcode-box');
+            if (qrBox && typeof QRCode !== 'undefined') {
+                qrBox.innerHTML = '';
+                new QRCode(qrBox, {
+                    text: "{{ $qrData }}",
+                    width: 62,
+                    height: 62,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.M
+                });
+            }
+        }
+    </script>
 </body>
 </html>
