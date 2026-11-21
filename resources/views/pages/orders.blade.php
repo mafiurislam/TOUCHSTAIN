@@ -69,11 +69,22 @@
                                 </div>
                             @endif
 
-                            <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+                            <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;align-items:center">
                                 @foreach($ord->items->take(4) as $item)
-                                    <span style="font-size:11px;background:var(--bg-body);padding:4px 10px;border-radius:6px;border:1px solid var(--border)">
-                                        {{ $item->product_name }} × {{ $item->quantity }}
-                                    </span>
+                                    @php
+                                        $prod = $item->product;
+                                        $prodImg = $item->product_image;
+                                        if (!$prodImg && $prod && !empty($prod->images_list)) {
+                                            $prodImg = $prod->images_list[0];
+                                        }
+                                        $imgUrl = \App\Models\Product::getProductImageUrl($prodImg);
+                                    @endphp
+                                    <div style="display:flex;align-items:center;gap:8px;background:var(--bg-body);padding:5px 12px;border-radius:8px;border:1px solid var(--border)">
+                                        <img src="{{ $imgUrl }}" alt="{{ $item->product_name }}" style="width:28px;height:28px;object-fit:contain;border-radius:4px;background:#fff;border:1px solid #E2E8F0" onerror="this.src='{{ asset('storage/restaurant/touchstains-logo.png') }}'">
+                                        <span style="font-size:12px;font-weight:600">
+                                            {{ $item->product_name }} <strong style="color:var(--primary)">× {{ $item->quantity }}</strong>
+                                        </span>
+                                    </div>
                                 @endforeach
                             </div>
                         </div>

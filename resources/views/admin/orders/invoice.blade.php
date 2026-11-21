@@ -320,12 +320,16 @@
 
         <!-- Scannable Courier Logistics Strip (Compact Barcode + Phone Scan QR Code) -->
         <div class="courier-scan-strip">
-            <!-- 1D Compact Code 128 Barcode for Google Scan & Courier -->
+            <!-- 1D Compact Code 128 Barcode for Google Scan & Courier matching user reference design -->
             <div class="scan-barcode-box" style="text-align:left">
-                <div style="max-width:210px">
-                    {!! \App\Services\Delivery\BarcodeService::getCode128Svg($shortHost, 34, 1.3, false, 8) !!}
+                <div style="display:inline-block;background:#fff;border:1px solid #CBD5E1;border-radius:6px;padding:4px 10px;text-align:center">
+                    <div style="max-width:210px;margin:0 auto">
+                        {!! \App\Services\Delivery\BarcodeService::getCode128Svg($shortHost, 32, 1.2, false, 8) !!}
+                    </div>
+                    <div style="font-family:'Courier New',Courier,monospace;font-weight:700;font-size:11.5px;color:#000;letter-spacing:0.8px;margin-top:2px">
+                        AWB:  {{ $awbCode }}
+                    </div>
                 </div>
-                <div class="scan-barcode-caption">AWB: {{ $awbCode }}</div>
             </div>
 
             <!-- Routing & Payment Info -->
@@ -369,31 +373,54 @@
             </div>
         </div>
 
-        <!-- Items Table -->
+        <!-- Items Table with Product Barcodes matching User Reference Design -->
         <table class="inv-table">
             <thead>
                 <tr>
-                    <th style="width:30px">#</th>
-                    <th>Product Description</th>
-                    <th style="width:110px">SKU / ID</th>
-                    <th style="text-align:center;width:45px">Qty</th>
-                    <th style="text-align:right;width:80px">Rate (₹)</th>
-                    <th style="text-align:right;width:85px">Total (₹)</th>
+                    <th style="width:25px">#</th>
+                    <th>Product & Item Details</th>
+                    <th style="width:190px;text-align:center">Product Barcode (Scan for Details)</th>
+                    <th style="text-align:center;width:40px">Qty</th>
+                    <th style="text-align:right;width:75px">Rate (₹)</th>
+                    <th style="text-align:right;width:80px">Total (₹)</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($order->items as $idx => $item)
                     @php
                         $prod = $item->product;
-                        $sku = $prod && $prod->sku ? $prod->sku : ('TS-SR-' . ($item->product_id ?: $item->id));
+                        $prodId = $item->product_id ?: ($prod ? $prod->id : '1');
+                        $sku = $prod && $prod->sku ? $prod->sku : ('TS-SR-' . $prodId);
+                        $productScanUrl = "touchstains.com/p/{$prodId}?order={$order->id}";
+                        $prodImg = $item->product_image;
+                        if (!$prodImg && $prod && !empty($prod->images_list)) {
+                            $prodImg = $prod->images_list[0];
+                        }
+                        $imgUrl = \App\Models\Product::getProductImageUrl($prodImg);
+                        $itemAwb = ($shipment && $shipment->awb_number) ? $shipment->awb_number : ('SR' . str_pad($order->id . $prodId, 8, '0', STR_PAD_RIGHT));
                     @endphp
                     <tr>
                         <td>{{ $idx + 1 }}</td>
                         <td>
-                            <strong>{{ $item->product_name }}</strong>
-                            <span style="font-size:9.5px;color:#64748B">({{ $item->unit ?: '250ml Bottle' }})</span>
+                            <div style="display:flex;align-items:center;gap:8px">
+                                <img src="{{ $imgUrl }}" alt="{{ $item->product_name }}" style="width:34px;height:34px;object-fit:contain;border:1px solid #e2e8f0;border-radius:4px;background:#fff;flex-shrink:0" onerror="this.src='{{ asset('storage/restaurant/touchstains-logo.png') }}'">
+                                <div>
+                                    <strong style="font-size:11px;color:#0F172A;display:block">{{ $item->product_name }}</strong>
+                                    <span style="font-size:9.5px;color:#64748B">SKU: <span style="font-family:monospace">{{ $sku }}</span> • Vol: {{ $item->unit ?: '250ml Bottle' }}</span>
+                                </div>
+                            </div>
                         </td>
-                        <td style="font-family:monospace;font-size:10px">{{ $sku }}</td>
+                        <td style="text-align:center;vertical-align:middle;padding:4px">
+                            <!-- Styled barcode card matching user uploaded image -->
+                            <div style="display:inline-block;background:#fff;border:1px solid #CBD5E1;border-radius:6px;padding:3px 8px;text-align:center;max-width:185px">
+                                <div style="display:block;margin:0 auto">
+                                    {!! \App\Services\Delivery\BarcodeService::getCode128Svg($productScanUrl, 26, 0.85, false, 6) !!}
+                                </div>
+                                <div style="font-family:'Courier New',Courier,monospace;font-weight:700;font-size:10px;color:#000;letter-spacing:0.6px;margin-top:2px;white-space:nowrap">
+                                    AWB:  {{ $itemAwb }}
+                                </div>
+                            </div>
+                        </td>
                         <td style="text-align:center;font-weight:700">{{ $item->quantity }}</td>
                         <td style="text-align:right">₹{{ number_format($item->price, 2) }}</td>
                         <td style="text-align:right;font-weight:700">₹{{ number_format($item->price * $item->quantity, 2) }}</td>

@@ -18,7 +18,7 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Order::with(['items', 'user', 'shipment'])->orderByDesc('id');
+        $query = Order::with(['items.product', 'user', 'shipment'])->orderByDesc('id');
 
         if ($request->filled('status')) {
             $query->where('order_status', $request->input('status'));
@@ -136,7 +136,7 @@ class OrderController extends Controller
      */
     public function invoice($id)
     {
-        $order = Order::with(['items', 'user', 'shipment'])->findOrFail($id);
+        $order = Order::with(['items.product', 'user', 'shipment'])->findOrFail($id);
         return view('admin.orders.invoice', compact('order'));
     }
 

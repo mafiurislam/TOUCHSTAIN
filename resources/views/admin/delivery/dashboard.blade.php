@@ -159,8 +159,23 @@
                                         <div style="font-size:11.5px;color:#6B7280">{{ $pOrd->getDeliveryPincode() }} • {{ Str::limit($pOrd->getDeliveryAddressFormatted(), 45) }}</div>
                                     </td>
                                     <td>
-                                        <span>{{ $pOrd->items->count() }} items</span>
-                                        <div style="font-size:11.5px;color:#01684B;font-weight:600">~{{ $pOrd->calculateTotalWeight() }} kg</div>
+                                        @php
+                                            $firstPendingItem = $pOrd->items->first();
+                                            $prodImg = $firstPendingItem ? $firstPendingItem->product_image : null;
+                                            if (!$prodImg && $firstPendingItem && $firstPendingItem->product && !empty($firstPendingItem->product->images_list)) {
+                                                $prodImg = $firstPendingItem->product->images_list[0];
+                                            }
+                                            $imgUrl = \App\Models\Product::getProductImageUrl($prodImg);
+                                        @endphp
+                                        <div style="display:flex;align-items:center;gap:8px">
+                                            @if($firstPendingItem)
+                                                <img src="{{ $imgUrl }}" alt="Product" style="width:34px;height:34px;object-fit:contain;border-radius:6px;border:1px solid #CBD5E1;background:#fff;flex-shrink:0" onerror="this.src='{{ asset('storage/restaurant/touchstains-logo.png') }}'">
+                                            @endif
+                                            <div>
+                                                <span style="font-weight:600">{{ $pOrd->items->count() }} item(s)</span>
+                                                <div style="font-size:11.5px;color:#01684B;font-weight:600">~{{ $pOrd->calculateTotalWeight() }} kg</div>
+                                            </div>
+                                        </div>
                                     </td>
                                     <td>
                                         <span style="padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;background:{{ $pOrd->isCod() ? '#FEF3C7' : '#ECFDF5' }};color:{{ $pOrd->isCod() ? '#92400E' : '#065F46' }}">

@@ -77,6 +77,7 @@
                         <tr>
                             <th style="width:30px"><input type="checkbox" id="checkAll" onclick="toggleSelectAll(this)" style="accent-color:var(--primary)"></th>
                             <th>Order #</th>
+                            <th>Product</th>
                             <th>Date</th>
                             <th>Customer Info</th>
                             <th>Payment</th>
@@ -88,6 +89,15 @@
                     </thead>
                     <tbody>
                         @forelse($orders as $ord)
+                            @php
+                                $firstItem = $ord->items->first();
+                                $prodImg = $firstItem ? $firstItem->product_image : null;
+                                if (!$prodImg && $firstItem && $firstItem->product && !empty($firstItem->product->images_list)) {
+                                    $prodImg = $firstItem->product->images_list[0];
+                                }
+                                $imgUrl = \App\Models\Product::getProductImageUrl($prodImg);
+                                $totalItemsCount = $ord->items->count();
+                            @endphp
                             <tr>
                                 <td>
                                     <input type="checkbox" name="order_ids[]" value="{{ $ord->id }}" class="order-checkbox" style="accent-color:var(--primary)">
@@ -96,6 +106,33 @@
                                     <a href="{{ route('admin.orders.show', $ord->id) }}" style="color:var(--primary);text-decoration:none">
                                         #{{ $ord->id }}
                                     </a>
+                                </td>
+                                <td>
+                                    @if($firstItem)
+                                        <div style="display:flex;align-items:center;gap:10px;min-width:160px">
+                                            <div style="position:relative;width:44px;height:44px;background:#fff;border:1px solid #CBD5E1;border-radius:8px;padding:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                                                <img src="{{ $imgUrl }}" alt="{{ $firstItem->product_name }}" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:6px" onerror="this.src='{{ asset('storage/restaurant/touchstains-logo.png') }}'">
+                                                @if($totalItemsCount > 1)
+                                                    <span style="position:absolute;bottom:-4px;right:-4px;background:#01684B;color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:10px;border:1.5px solid #fff">
+                                                        +{{ $totalItemsCount - 1 }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                            <div>
+                                                <div style="font-weight:700;font-size:12.5px;color:var(--text-primary);max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="{{ $firstItem->product_name }}">
+                                                    {{ $firstItem->product_name }}
+                                                </div>
+                                                <div style="font-size:11px;color:var(--text-muted)">
+                                                    Qty: <strong style="color:var(--primary)">{{ $firstItem->quantity }}</strong>
+                                                    @if($firstItem->product && $firstItem->product->sku)
+                                                        • <span style="font-family:monospace">{{ $firstItem->product->sku }}</span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <span style="font-size:11px;color:var(--text-muted)">No items</span>
+                                    @endif
                                 </td>
                                 <td style="font-size:12px;color:var(--text-muted);white-space:nowrap">
                                     {{ $ord->created_at ? $ord->created_at->format('d M Y, h:i A') : 'N/A' }}
@@ -162,7 +199,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" style="text-align:center;padding:36px;color:#94A3B8">No orders found matching criteria.</td>
+                                <td colspan="10" style="text-align:center;padding:36px;color:#94A3B8">No orders found matching criteria.</td>
                             </tr>
                         @endforelse
                     </tbody>

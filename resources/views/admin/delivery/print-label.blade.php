@@ -381,7 +381,7 @@
                 <div class="barcode-svg-wrapper">
                     {!! \App\Services\Delivery\BarcodeService::getCode128Svg($barcodeContent, 34, 1.3, false, 8) !!}
                 </div>
-                <div class="awb-code">AWB: {{ $awbCode }}</div>
+                <div class="awb-code">AWB:  {{ $awbCode }}</div>
                 <div style="font-size:8.5px;color:#333;margin-top:1px">
                     Order ID: <strong>#{{ $orderId }}</strong> | Date: {{ $shipment->created_at ? $shipment->created_at->format('d/m/Y') : date('d/m/Y') }}
                 </div>
