@@ -53,6 +53,7 @@ Route::get('/track-order', [FrontController::class, 'trackOrder'])->name('track-
 Route::get('/verify-order/{id?}', [FrontController::class, 'verifyOrder'])->name('verify-order');
 Route::get('/order-verify/{id?}', [FrontController::class, 'verifyOrder']);
 Route::get('/verify/package/{id?}', [FrontController::class, 'verifyOrder']);
+Route::get('/v/{id?}', [FrontController::class, 'verifyOrder'])->name('v');
 
 Route::get('/wishlist', [FrontController::class, 'wishlist'])->name('wishlist');
 Route::post('/wishlist/toggle', [FrontController::class, 'toggleWishlist'])->name('wishlist.toggle');

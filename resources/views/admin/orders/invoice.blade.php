@@ -10,8 +10,16 @@
         $pincode = $order->getDeliveryPincode();
         $isCod = strtoupper($order->payment_method ?? '') === 'CASH_ON_DELIVERY' || ($shipment && strtoupper($shipment->payment_method ?? '') === 'COD');
         $collectAmount = $order->order_amount;
-        // Public Flipkart/Amazon-style Product Verification URL
-        $verifyUrl = url('/verify-order/' . $order->id);
+        // Base domain resolution: If on live domain, use current host; if on localhost, use live domain so phone scans always work!
+        $liveDomain = (!empty(request()->getHost()) && !in_array(request()->getHost(), ['localhost', '127.0.0.1', '::1']))
+            ? request()->getSchemeAndHttpHost()
+            : 'https://touchstains.com';
+        $verifyUrl = "{$liveDomain}/verify-order/{$order->id}";
+
+        // Short URL for 1D Barcode so Google Lens immediately displays product details
+        $shortHost = (!empty(request()->getHost()) && !in_array(request()->getHost(), ['localhost', '127.0.0.1', '::1']))
+            ? (request()->getHost() . '/v/' . $order->id)
+            : ("touchstains.com/v/{$order->id}");
     @endphp
     <title>Tax Invoice — Order #{{ $order->id }} — AWB: {{ $awbCode }}</title>
     <style>
@@ -312,9 +320,11 @@
 
         <!-- Scannable Courier Logistics Strip (Compact Barcode + Phone Scan QR Code) -->
         <div class="courier-scan-strip">
-            <!-- 1D Compact Code 128 Barcode for Laser Scanners -->
-            <div class="scan-barcode-box">
-                {!! \App\Services\Delivery\BarcodeService::getCode128Svg($awbCode, 34, 1.5, false, 10) !!}
+            <!-- 1D Compact Code 128 Barcode for Google Scan & Courier -->
+            <div class="scan-barcode-box" style="text-align:left">
+                <div style="max-width:210px">
+                    {!! \App\Services\Delivery\BarcodeService::getCode128Svg($shortHost, 34, 1.3, false, 8) !!}
+                </div>
                 <div class="scan-barcode-caption">AWB: {{ $awbCode }}</div>
             </div>
 

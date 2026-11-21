@@ -14,8 +14,20 @@
         $isCod = strtoupper($shipment->payment_method ?? '') === 'COD' || ($shipment->cod_amount > 0) || ($order && strtoupper($order->payment_method ?? '') === 'CASH_ON_DELIVERY');
         $collectAmount = $shipment->cod_amount ?: ($order ? $order->order_amount : 0);
         $courierName = $shipment->courier_name ?: 'DELHIVERY SURFACE';
-        // Flipkart/Amazon style public product & order verification URL
-        $verifyUrl = url('/verify-order/' . $orderId);
+
+        // Base domain resolution: If on live domain, use current host; if on localhost, use live domain so phone scans always work!
+        $liveDomain = (!empty(request()->getHost()) && !in_array(request()->getHost(), ['localhost', '127.0.0.1', '::1']))
+            ? request()->getSchemeAndHttpHost()
+            : 'https://touchstains.com';
+        $verifyUrl = "{$liveDomain}/verify-order/{$orderId}";
+
+        // Short URL for 1D Barcode (e.g. touchstains.com/v/1) so Google Lens immediately opens product details
+        $shortHost = (!empty(request()->getHost()) && !in_array(request()->getHost(), ['localhost', '127.0.0.1', '::1']))
+            ? (request()->getHost() . '/v/' . $orderId)
+            : ("touchstains.com/v/{$orderId}");
+
+        $barcodeMode = request('barcode_type', 'smart');
+        $barcodeContent = ($barcodeMode === 'awb') ? $awbCode : $shortHost;
     @endphp
     <title>Shipping Label — AWB: {{ $awbCode }} — Order #{{ $orderId }}</title>
     <style>
@@ -25,7 +37,7 @@
         /* Top Toolbar */
         .no-print-toolbar {
             background: #fff;
-            padding: 10px 20px;
+            padding: 10px 18px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-bottom: 16px;
@@ -40,7 +52,7 @@
             background: #01684B;
             color: #fff;
             border: none;
-            padding: 9px 16px;
+            padding: 8px 16px;
             border-radius: 6px;
             font-size: 13.5px;
             font-weight: 700;
@@ -53,7 +65,7 @@
             background: #2563EB;
             color: #fff;
             border: none;
-            padding: 9px 14px;
+            padding: 8px 14px;
             border-radius: 6px;
             font-size: 12.5px;
             font-weight: 700;
@@ -63,23 +75,13 @@
             align-items: center;
             gap: 6px;
         }
-        .btn-invoice {
-            background: #f1f5f9;
+        .btn-toggle {
+            background: #F1F5F9;
             color: #334155;
-            border: 1px solid #cbd5e1;
-            padding: 8px 12px;
+            border: 1px solid #CBD5E1;
+            padding: 7px 11px;
             border-radius: 6px;
-            font-size: 12.5px;
-            font-weight: 600;
-            text-decoration: none;
-        }
-        .btn-verify {
-            background: #EDE9FE;
-            color: #6D28D9;
-            border: 1px solid #DDD6FE;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 700;
             text-decoration: none;
         }
@@ -87,7 +89,7 @@
             background: #e2e8f0;
             color: #475569;
             border: none;
-            padding: 8px 12px;
+            padding: 7px 11px;
             border-radius: 6px;
             font-size: 12px;
             font-weight: 600;
@@ -95,14 +97,14 @@
             text-decoration: none;
         }
 
-        /* 4x6 inch (approx 100mm x 150mm) Standard Thermal Label Container */
+        /* 4x6 inch (approx 100mm x 150mm) Original Clean Thermal Label Container */
         .shipping-label {
             width: 100mm;
             min-height: 146mm;
             max-height: 148mm;
             background: #fff;
             border: 2px solid #000;
-            padding: 4mm;
+            padding: 5mm;
             box-shadow: 0 4px 14px rgba(0,0,0,0.15);
             display: flex;
             flex-direction: column;
@@ -110,232 +112,195 @@
             overflow: hidden;
         }
 
-        /* Header */
+        /* 1. Header (Original Version) */
         .label-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid #000;
-            padding-bottom: 4px;
-            margin-bottom: 4px;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
         }
         .label-header .brand {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 900;
             letter-spacing: 0.5px;
-            text-transform: uppercase;
         }
         .label-header .courier {
-            font-size: 13px;
-            font-weight: 900;
+            font-size: 14px;
+            font-weight: 800;
             text-align: right;
             text-transform: uppercase;
-            line-height: 1.2;
         }
 
-        /* Primary AWB Barcode Box (Compact & Sharp) */
+        /* 2. Barcode & AWB Row (Separated: Left Barcode, Right Small QR Code) */
         .barcode-section {
-            text-align: center;
-            padding: 3px 0 4px;
-            border-bottom: 2px solid #000;
-            background: #fff;
-        }
-        .barcode-container {
-            width: 100%;
-            margin: 0 auto;
             display: flex;
-            justify-content: center;
             align-items: center;
-            min-height: 40px;
+            justify-content: space-between;
+            padding: 4px 0 5px;
+            border-bottom: 2px solid #000;
+            gap: 10px;
+        }
+        .barcode-left-box {
+            flex: 1;
+            text-align: left;
+        }
+        .barcode-svg-wrapper {
+            max-width: 210px;
+            margin: 0;
             overflow: hidden;
         }
-        .barcode-container svg {
-            width: 95% !important;
-            height: 40px !important;
+        .barcode-svg-wrapper svg {
+            width: 100% !important;
+            height: 35px !important;
             display: block;
-            margin: 0 auto;
             shape-rendering: crispEdges !important;
         }
-        .awb-text-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 2px 6px 0;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 12px;
+        .awb-code {
+            font-size: 13px;
             font-weight: 900;
             letter-spacing: 1px;
+            font-family: 'Courier New', Courier, monospace;
+            margin-top: 2px;
         }
 
-        /* Routing Block (Pincode + Payment + Phone Scan QR Code) */
+        /* Right Side: Small, Separated Smart QR Code */
+        .barcode-right-box {
+            width: 58px;
+            text-align: center;
+            border-left: 1.5px dashed #444;
+            padding-left: 8px;
+            flex-shrink: 0;
+        }
+        .barcode-right-box img {
+            width: 44px;
+            height: 44px;
+            display: block;
+            margin: 0 auto;
+        }
+        .qr-subtext {
+            font-size: 6.5px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #047857;
+            margin-top: 1px;
+            display: block;
+            line-height: 1.1;
+        }
+
+        /* 3. Routing & Payment Block (Original Version) */
         .routing-block {
             display: flex;
             border-bottom: 2px solid #000;
-            margin-bottom: 4px;
-            min-height: 64px;
+            margin-bottom: 5px;
         }
         .routing-pincode {
-            flex: 1.1;
-            padding: 3px 5px;
+            flex: 1.2;
+            padding: 5px 6px;
             border-right: 2px solid #000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
         }
         .routing-pincode .title {
-            font-size: 8px;
+            font-size: 8.5px;
             text-transform: uppercase;
             font-weight: 800;
-            color: #222;
         }
         .routing-pincode .pincode-val {
             font-size: 26px;
             font-weight: 900;
-            letter-spacing: 1.5px;
-            line-height: 1;
-            margin: 2px 0;
+            letter-spacing: 1px;
+            line-height: 1.1;
         }
-        .routing-pincode .hub-text {
-            font-size: 7.5px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #555;
-        }
-
         .routing-payment {
-            flex: 1.4;
-            padding: 3px 5px;
-            border-right: 2px solid #000;
+            flex: 1.8;
+            padding: 5px 8px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             text-align: center;
-            background: #fff;
+            background: #f8f8f8;
         }
         .payment-badge {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .cod-badge {
-            color: #000;
-            border: 1.5px solid #000;
-            padding: 2px 4px;
-            display: inline-block;
-            background: #f8f8f8;
-        }
-        .prepaid-badge {
-            color: #000;
-            border: 1.5px solid #000;
-            padding: 2px 4px;
-            display: inline-block;
-            background: #f8f8f8;
         }
         .cod-amount {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 900;
             color: #000;
             margin-top: 2px;
         }
 
-        .routing-qr {
-            width: 70px;
-            padding: 2px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-        .routing-qr img, .routing-qr canvas {
-            width: 54px;
-            height: 54px;
-            display: block;
-        }
-        .routing-qr .qr-label {
-            font-size: 7px;
-            font-weight: 800;
-            margin-top: 1px;
-            text-transform: uppercase;
-            color: #047857;
-        }
-
-        /* Customer Address Box */
+        /* 4. Ship To / Customer Details (Original Version) */
         .address-box {
-            border-bottom: 2px solid #000;
-            padding-bottom: 4px;
-            margin-bottom: 4px;
-            font-size: 9.5px;
-            line-height: 1.3;
+            border-bottom: 1px solid #000;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+            font-size: 10px;
+            line-height: 1.35;
         }
         .address-box .box-title {
-            font-size: 8px;
+            font-size: 8.5px;
             font-weight: 800;
             text-transform: uppercase;
-            margin-bottom: 1px;
+            margin-bottom: 2px;
             display: block;
-            border-bottom: 1px dashed #666;
-            padding-bottom: 1px;
         }
         .address-box .person-name {
-            font-size: 12px;
-            font-weight: 900;
-            color: #000;
-            margin-bottom: 1px;
+            font-size: 12.5px;
+            font-weight: 800;
         }
 
-        /* Package Details Bar */
+        /* 5. Package Details (Original Version) */
         .package-meta {
             display: flex;
             justify-content: space-between;
-            font-size: 8.5px;
+            font-size: 9px;
             border-bottom: 1px solid #000;
-            padding-bottom: 2px;
-            margin-bottom: 3px;
-            font-weight: 600;
+            padding-bottom: 4px;
+            margin-bottom: 5px;
         }
 
-        /* Items summary table */
+        /* 6. Items Summary Table (Original Version) */
         .items-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 8.5px;
-            margin-bottom: 3px;
+            font-size: 9px;
+            margin-bottom: 5px;
             border-bottom: 1px solid #000;
         }
         .items-table th, .items-table td {
-            padding: 2px 3px;
+            padding: 2.5px 3.5px;
             text-align: left;
         }
         .items-table th {
             border-bottom: 1px solid #000;
             font-weight: 800;
-            font-size: 8px;
-            text-transform: uppercase;
         }
 
-        /* Return / Warehouse Address */
+        /* 7. Return / Ship From Address (Original Version) */
         .return-box {
-            font-size: 8px;
-            line-height: 1.25;
+            font-size: 8.5px;
+            line-height: 1.3;
             border-bottom: 1px dashed #000;
-            padding-bottom: 2px;
-            margin-bottom: 2px;
+            padding-bottom: 3px;
+            margin-bottom: 3px;
         }
-        .return-box .return-title {
-            font-size: 7.5px;
+        .return-box .box-title {
+            font-size: 8px;
             font-weight: 800;
             text-transform: uppercase;
-            color: #222;
+            margin-bottom: 1px;
+            display: block;
         }
 
-        /* Footer */
+        /* 8. Footer (Original Version) */
         .label-footer {
-            font-size: 7px;
+            font-size: 7.5px;
             text-align: center;
-            color: #222;
-            line-height: 1.2;
+            color: #333;
+            line-height: 1.25;
             margin-top: auto;
             padding-top: 2px;
         }
@@ -359,7 +324,7 @@
                 max-height: 148mm;
                 page-break-after: always;
                 page-break-inside: avoid;
-                padding: 3.5mm;
+                padding: 4mm;
                 margin: 0 auto;
                 overflow: hidden;
             }
@@ -380,108 +345,102 @@
         <button class="btn-print" onclick="window.print()">🖨️ Print Label (4x6 / A6)</button>
         @if($shipment->hasRemoteLabelUrl())
             <a href="{{ $shipment->label_url }}" target="_blank" class="btn-carrier-pdf">
-                📄 Carrier PDF Label ↗
+                📄 Carrier PDF ↗
             </a>
         @endif
-        <a href="{{ route('admin.orders.invoice', $orderId) }}" target="_blank" class="btn-invoice">
-            🧾 Tax Invoice
-        </a>
-        <a href="{{ $verifyUrl }}" target="_blank" class="btn-verify" title="Preview Product Details page opened upon scanning barcode">
-            🔍 Preview Scanned Page ↗
+        <a href="{{ $verifyUrl }}" target="_blank" class="btn-toggle" title="View product image, SKU, and specifications">
+            🔍 Product Preview ↗
         </a>
         <a href="{{ url('/admin/delivery') }}" class="btn-close">
             ← Dashboard
         </a>
     </div>
 
-    <!-- Carrier-Grade Shipping Label Container -->
+    <!-- Carrier-Grade Shipping Label Container (Original Layout) -->
     <div class="shipping-label">
         
-        <!-- Header -->
+        <!-- 1. Header -->
         <div class="label-header">
-            <div style="display:flex;align-items:center;gap:6px">
-                <img src="{{ asset('storage/restaurant/touchstains-logo.png') }}?v=2.3" alt="TOUCHSTAINS" style="height:28px;width:auto;object-fit:contain" onerror="this.style.display='none'">
+            <div style="display:flex;align-items:center;gap:7px">
+                <img src="{{ asset('storage/restaurant/touchstains-logo.png') }}?v=2.3" alt="TOUCHSTAINS" style="height:32px;width:auto;object-fit:contain" onerror="this.style.display='none'">
                 <div>
                     <div class="brand">TOUCHSTAINS™</div>
-                    <div style="font-size:7.5px;color:#333;font-weight:600">touchstains.com</div>
+                    <div style="font-size:8px;color:#333">www.touchstains.com</div>
                 </div>
             </div>
             <div class="courier">
                 <div>{{ $courierName }}</div>
-                <div style="font-size:8px;font-weight:700;color:#333">Standard Surface / Air</div>
+                <div style="font-size:8px;font-weight:600">Standard Surface / Air</div>
             </div>
         </div>
 
-        <!-- Primary Compact High-Resolution Barcode (Code 128) -->
+        <!-- 2. Barcode & AWB Row (Separated: Left Barcode, Right Small QR Code) -->
         <div class="barcode-section">
-            <div class="barcode-container" id="primary-barcode">
-                {!! \App\Services\Delivery\BarcodeService::getCode128Svg($awbCode, 40, 1.7, false, 10) !!}
+            <!-- Left Side: Compact Barcode (Width ~200px, Not stretched across page) -->
+            <div class="barcode-left-box">
+                <div class="barcode-svg-wrapper">
+                    {!! \App\Services\Delivery\BarcodeService::getCode128Svg($barcodeContent, 34, 1.3, false, 8) !!}
+                </div>
+                <div class="awb-code">AWB: {{ $awbCode }}</div>
+                <div style="font-size:8.5px;color:#333;margin-top:1px">
+                    Order ID: <strong>#{{ $orderId }}</strong> | Date: {{ $shipment->created_at ? $shipment->created_at->format('d/m/Y') : date('d/m/Y') }}
+                </div>
             </div>
-            <div class="awb-text-row">
-                <span>AWB: {{ $awbCode }}</span>
-                <span>ORD: #{{ $orderId }}</span>
+
+            <!-- Right Side: Small QR Code (Separated far away so camera never confuses them) -->
+            <div class="barcode-right-box">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=60x60&margin=1&data={{ urlencode($verifyUrl) }}" alt="QR" onerror="this.style.display='none'">
+                <span class="qr-subtext">Google Scan</span>
             </div>
         </div>
 
-        <!-- Routing, Pincode & Payment Block -->
+        <!-- 3. Routing & Payment Block (Original Version) -->
         <div class="routing-block">
-            <!-- Destination Pincode -->
             <div class="routing-pincode">
-                <span class="title">Destination Pincode</span>
+                <div class="title">Destination Pincode</div>
                 <div class="pincode-val">{{ $pincode }}</div>
-                <span class="hub-text">Routing Hub Sort</span>
             </div>
-
-            <!-- Payment Type -->
             <div class="routing-payment">
                 @if($isCod)
-                    <div class="payment-badge cod-badge">CASH ON DELIVERY (COD)</div>
+                    <div class="payment-badge" style="color:#B91C1C">CASH ON DELIVERY (COD)</div>
                     <div class="cod-amount">COLLECT: ₹{{ number_format($collectAmount, 2) }}</div>
                 @else
-                    <div class="payment-badge prepaid-badge">PREPAID ORDER</div>
-                    <div style="font-size:9.5px;font-weight:900;margin-top:2px;color:#000">DO NOT COLLECT CASH</div>
+                    <div class="payment-badge" style="color:#047857">PREPAID ORDER</div>
+                    <div style="font-size:10px;font-weight:700;margin-top:2px">DO NOT COLLECT CASH</div>
                 @endif
-            </div>
-
-            <!-- Routing QR Code: Scans directly to Flipkart-style Product Details Page -->
-            <div class="routing-qr">
-                <div id="qrcode-box">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&margin=1&data={{ urlencode($verifyUrl) }}" alt="QR" style="width:54px;height:54px;object-fit:contain" onerror="renderJsQrFallback()">
-                </div>
-                <span class="qr-label">Scan Details</span>
             </div>
         </div>
 
-        <!-- Customer Address (SHIP TO) -->
+        <!-- 4. Ship To / Customer Details (Original Version) -->
         <div class="address-box">
             <span class="box-title">SHIP TO (DELIVERY ADDRESS):</span>
             <div class="person-name">{{ $customerName }}</div>
             <div>{{ $customerAddress }}</div>
-            <div style="margin-top:2px;font-weight:900;font-size:10px">
-                PINCODE: {{ $pincode }} | PHONE: {{ $customerPhone }}
+            <div style="margin-top:2px;font-weight:700">
+                Phone: {{ $customerPhone }} | PIN: {{ $pincode }}
             </div>
         </div>
 
-        <!-- Package Meta -->
+        <!-- 5. Package Details (Original Version) -->
         <div class="package-meta">
             <div>Weight: <strong>{{ number_format($shipment->weight ?: 0.5, 2) }} KG</strong></div>
-            <div>Dims: <strong>{{ $shipment->length ?: 10 }}x{{ $shipment->breadth ?: 10 }}x{{ $shipment->height ?: 5 }} CM</strong></div>
-            <div>Date: <strong>{{ $shipment->created_at ? $shipment->created_at->format('d/m/Y') : date('d/m/Y') }}</strong></div>
+            <div>Dimensions: <strong>{{ $shipment->length ?: 10 }}x{{ $shipment->breadth ?: 10 }}x{{ $shipment->height ?: 5 }} CM</strong></div>
+            <div>Pieces: <strong>1</strong></div>
         </div>
 
-        <!-- Items Summary Table -->
+        <!-- 6. Items Summary Table (Original Version + SKU / ID) -->
         <table class="items-table">
             <thead>
                 <tr>
                     <th>Item Description</th>
-                    <th style="width:100px">SKU / ID</th>
-                    <th style="text-align:center;width:28px">Qty</th>
-                    <th style="text-align:right;width:50px">Total</th>
+                    <th style="width:90px">SKU / ID</th>
+                    <th style="text-align:center;width:30px">Qty</th>
+                    <th style="text-align:right;width:60px">Price</th>
                 </tr>
             </thead>
             <tbody>
                 @if($order && $order->items && count($order->items) > 0)
-                    @foreach($order->items->take(2) as $item)
+                    @foreach($order->items->take(3) as $item)
                         @php
                             $prod = $item->product;
                             $sku = $prod && $prod->sku ? $prod->sku : ('TS-SR-' . ($item->product_id ?: $item->id));
@@ -493,14 +452,14 @@
                             <td style="text-align:right">₹{{ number_format(($item->price ?? 0) * ($item->quantity ?? 1), 2) }}</td>
                         </tr>
                     @endforeach
-                    @if(count($order->items) > 2)
+                    @if(count($order->items) > 3)
                         <tr>
-                            <td colspan="4" style="font-style:italic;color:#444">+ {{ count($order->items) - 2 }} more product(s)</td>
+                            <td colspan="4" style="font-style:italic;color:#555">+ {{ count($order->items) - 3 }} more item(s)</td>
                         </tr>
                     @endif
                 @else
                     <tr>
-                        <td>Touchstains Fabric Stain Remover (250ml)</td>
+                        <td>Touchstains Fabric Stain & Rust Remover (250ml)</td>
                         <td style="font-family:monospace;font-size:8px">TS-SR-250ML</td>
                         <td style="text-align:center;font-weight:700">1</td>
                         <td style="text-align:right">₹{{ number_format($collectAmount ?: 299, 2) }}</td>
@@ -509,39 +468,21 @@
             </tbody>
         </table>
 
-        <!-- Return / Dispatch Address -->
-        <div class="return-box">
-            <span class="return-title">IF UNDELIVERED, RETURN TO:</span>
-            <div style="font-weight:800">{{ $settings->warehouse_name ?: 'TOUCHSTAINS DISPATCH CENTRE' }}</div>
-            <div>{{ $settings->warehouse_address ?: '24 Bharat Mata Society, RC Marg, Rahul Road, Near RNA Park, Chembur East' }}, Mumbai - {{ $settings->warehouse_pincode ?: '400074' }}</div>
-            <div>Contact: {{ $settings->contact_number ?: '+91 7679416294' }}</div>
+        <!-- 7. Return / Ship From Address (Original Version) -->
+        <div class="return-box" style="border-bottom:none;padding-bottom:0;margin-bottom:2px">
+            <span class="box-title">IF UNDELIVERED, RETURN TO:</span>
+            <div style="font-weight:700">{{ $settings->warehouse_name ?? 'TOUCHSTAINS Dispatch Centre' }}</div>
+            <div>{{ $settings->warehouse_address ?: '24 Bharat Mata Society, RC Marg, Rahul Road, Chembur East' }}, Mumbai - {{ $settings->warehouse_pincode ?: '400074' }}</div>
+            <div>Contact: {{ $settings->contact_person ?: 'Support Team' }} (Ph: {{ $settings->contact_number ?: '+91 7679416294' }})</div>
         </div>
 
-        <!-- Footer -->
+        <!-- 8. Footer (Original Version) -->
         <div class="label-footer">
-            Scan QR code to view authenticated product photos, SKU, and live tracking.<br>
-            Verified at: <strong>touchstains.com/verify-order/{{ $orderId }}</strong>
+            This is a computer generated shipping label and does not require a physical signature.<br>
+            Scan barcode or QR code with Google to view authentic product photos, SKU, and live tracking.
         </div>
 
     </div>
 
-    <!-- Client-side Fallback & QR Code Scripts -->
-    <script src="{{ asset('js/qrcode.min.js') }}"></script>
-    <script>
-        function renderJsQrFallback() {
-            var qrBox = document.getElementById('qrcode-box');
-            if (qrBox && typeof QRCode !== 'undefined') {
-                qrBox.innerHTML = '';
-                new QRCode(qrBox, {
-                    text: "{{ $verifyUrl }}",
-                    width: 54,
-                    height: 54,
-                    colorDark: "#000000",
-                    colorLight: "#ffffff",
-                    correctLevel: QRCode.CorrectLevel.M
-                });
-            }
-        }
-    </script>
 </body>
 </html>
