@@ -14,7 +14,8 @@
         $liveDomain = (!empty(request()->getHost()) && !in_array(request()->getHost(), ['localhost', '127.0.0.1', '::1']))
             ? request()->getSchemeAndHttpHost()
             : 'https://touchstains.com';
-        $verifyUrl = "{$liveDomain}/verify-order/{$order->id}";
+        $smartOrderUrl = "{$liveDomain}/scan/order/{$order->getQrToken()}";
+        $verifyUrl = $smartOrderUrl;
 
         // Short URL for 1D Barcode so Google Lens immediately displays product details
         $shortHost = (!empty(request()->getHost()) && !in_array(request()->getHost(), ['localhost', '127.0.0.1', '::1']))
@@ -385,7 +386,7 @@
                 <div>Dispatch From: <strong>TOUCHSTAINS Mumbai Warehouse (400074)</strong></div>
                 <div>Status: <span style="font-weight:800;text-transform:uppercase">{{ $order->order_status }}</span></div>
                 <div>AWB #: <strong>{{ $awbCode }}</strong></div>
-                <div>Scan Verify: <strong>touchstains.com/verify-order/{{ $order->id }}</strong></div>
+                <div>Smart QR: <strong>touchstains.com/scan/order/{{ $order->getQrToken() }}</strong></div>
             </div>
         </div>
 
@@ -407,7 +408,7 @@
                         $prod = $item->product;
                         $prodId = $item->product_id ?: ($prod ? $prod->id : '1');
                         $sku = $prod && $prod->sku ? $prod->sku : ('TS-SR-' . $prodId);
-                        $productScanUrl = "{$liveDomain}/p/{$prodId}?order={$order->id}";
+                        $productScanUrl = "{$liveDomain}/scan/order/{$order->getQrToken()}";
                         $prodImg = $item->product_image;
                         if (!$prodImg && $prod && !empty($prod->images_list)) {
                             $prodImg = $prod->images_list[0];

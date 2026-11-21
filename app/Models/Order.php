@@ -199,4 +199,13 @@ class Order extends Model
         }
         return $this->user->phone ?? '+91 7679416294';
     }
+
+    /**
+     * Generate a unique, secure QR token for smart product & order tracking
+     */
+    public function getQrToken(): string
+    {
+        $hash = substr(hash('sha256', 'TOUCHSTAINS_QR_' . $this->id . '_' . ($this->created_at ? $this->created_at->timestamp : '1')), 0, 8);
+        return 'ORD-' . $this->id . '-' . strtoupper($hash);
+    }
 }

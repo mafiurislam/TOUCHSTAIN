@@ -19,7 +19,8 @@
         $liveDomain = (!empty(request()->getHost()) && !in_array(request()->getHost(), ['localhost', '127.0.0.1', '::1']))
             ? request()->getSchemeAndHttpHost()
             : 'https://touchstains.com';
-        $verifyUrl = "{$liveDomain}/verify-order/{$orderId}";
+        $qrToken = $order ? $order->getQrToken() : ('ORD-' . $orderId . '-9F8A');
+        $verifyUrl = "{$liveDomain}/scan/order/{$qrToken}";
 
         // Short URL for 1D Barcode (e.g. touchstains.com/v/1) so Google Lens immediately opens product details
         $shortHost = (!empty(request()->getHost()) && !in_array(request()->getHost(), ['localhost', '127.0.0.1', '::1']))
