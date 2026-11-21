@@ -1,5 +1,24 @@
 @extends('layouts.app')
 
+@php
+    $prodImg = !empty($product->images_list) ? $product->images_list[0] : (is_array($product->image) ? ($product->image[0] ?? null) : $product->image);
+    $imgUrl = \App\Models\Product::getProductImageUrl($prodImg);
+    $sku = $product->sku ?: ('TS-SR-' . $product->id);
+    $barcodeVal = $product->barcode ?: ('890' . str_pad($product->id, 8, '0', STR_PAD_LEFT));
+@endphp
+
+@section('meta')
+    <meta property="og:title" content="{{ $product->name }} — TOUCHSTAINS Verified Product">
+    <meta property="og:description" content="Verified Genuine Authentic Product • Product ID: #PRD-{{ $product->id }} • SKU: {{ $sku }} • Price: ₹{{ number_format($product->price, 2) }}">
+    <meta property="og:image" content="{{ $imgUrl }}">
+    <meta property="og:image:secure_url" content="{{ $imgUrl }}">
+    <meta property="og:type" content="product">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $product->name }}">
+    <meta name="twitter:description" content="Verified Authentic Product. Product ID: #PRD-{{ $product->id }}, SKU: {{ $sku }}">
+    <meta name="twitter:image" content="{{ $imgUrl }}">
+@endsection
+
 @section('content')
 @php
     $shipment = $order ? $order->shipment : null;
@@ -8,11 +27,6 @@
     $pincode = $order ? $order->getDeliveryPincode() : '400074';
     $isCod = $order && (strtoupper($order->payment_method ?? '') === 'CASH_ON_DELIVERY' || ($shipment && strtoupper($shipment->payment_method ?? '') === 'COD'));
     $totalAmount = $order ? $order->order_amount : $product->price;
-
-    $prodImg = !empty($product->images_list) ? $product->images_list[0] : (is_array($product->image) ? ($product->image[0] ?? null) : $product->image);
-    $imgUrl = \App\Models\Product::getProductImageUrl($prodImg);
-    $sku = $product->sku ?: ('TS-SR-' . $product->id);
-    $barcodeVal = $product->barcode ?: ('890' . str_pad($product->id, 8, '0', STR_PAD_LEFT));
 @endphp
 
 <main class="container" style="max-width:860px;margin:24px auto;padding:0 16px">

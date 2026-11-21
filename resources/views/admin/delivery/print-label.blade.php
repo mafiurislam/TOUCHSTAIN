@@ -379,7 +379,7 @@
             <!-- Left Side: Compact Barcode (Width ~200px, Not stretched across page) -->
             <div class="barcode-left-box">
                 <div class="barcode-svg-wrapper">
-                    {!! \App\Services\Delivery\BarcodeService::getCode128Svg($barcodeContent, 34, 1.3, false, 8) !!}
+                    {!! \App\Services\Delivery\BarcodeService::getCode128Svg($awbCode, 44, 1.8, false, 10) !!}
                 </div>
                 <div class="awb-code">AWB:  {{ $awbCode }}</div>
                 <div style="font-size:8.5px;color:#333;margin-top:1px">
@@ -388,9 +388,9 @@
             </div>
 
             <!-- Right Side: Small QR Code (Separated far away so camera never confuses them) -->
-            <div class="barcode-right-box">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=60x60&margin=1&data={{ urlencode($verifyUrl) }}" alt="QR" onerror="this.style.display='none'">
-                <span class="qr-subtext">Google Scan</span>
+            <div class="barcode-right-box" style="width:65px">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&margin=1&data={{ urlencode($verifyUrl) }}" alt="QR" style="width:50px;height:50px;display:block;margin:0 auto;border:1px solid #111;border-radius:4px" onerror="this.style.display='none'">
+                <span class="qr-subtext" style="font-size:7px">📷 SCAN DETAILS</span>
             </div>
         </div>
 

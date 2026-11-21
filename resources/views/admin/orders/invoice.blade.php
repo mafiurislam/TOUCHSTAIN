@@ -138,8 +138,24 @@
             text-align: center;
         }
         .scan-barcode-box svg {
-            width: 96% !important;
-            height: 34px !important;
+            max-width: 100%;
+            height: 44px !important;
+            display: block;
+            margin: 0 auto;
+            shape-rendering: crispEdges !important;
+        }
+        .item-barcode-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #ffffff;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            padding: 4px 8px;
+            text-align: center;
+        }
+        .item-barcode-svg-wrap svg {
+            height: 42px !important;
             display: block;
             margin: 0 auto;
             shape-rendering: crispEdges !important;
@@ -323,10 +339,10 @@
             <!-- 1D Compact Code 128 Barcode for Google Scan & Courier matching user reference design -->
             <div class="scan-barcode-box" style="text-align:left">
                 <div style="display:inline-block;background:#fff;border:1px solid #CBD5E1;border-radius:6px;padding:4px 10px;text-align:center">
-                    <div style="max-width:210px;margin:0 auto">
-                        {!! \App\Services\Delivery\BarcodeService::getCode128Svg($shortHost, 32, 1.2, false, 8) !!}
+                    <div style="margin:0 auto">
+                        {!! \App\Services\Delivery\BarcodeService::getCode128Svg($awbCode, 44, 1.8, false, 10) !!}
                     </div>
-                    <div style="font-family:'Courier New',Courier,monospace;font-weight:700;font-size:11.5px;color:#000;letter-spacing:0.8px;margin-top:2px">
+                    <div style="font-family:'Courier New',Courier,monospace;font-weight:900;font-size:12px;color:#000;letter-spacing:1px;margin-top:2px">
                         AWB:  {{ $awbCode }}
                     </div>
                 </div>
@@ -338,11 +354,11 @@
                 <div>Dest PIN: <strong style="font-size:13px;letter-spacing:1px">{{ $pincode }}</strong></div>
                 <div style="margin-top:2px">
                     @if($isCod)
-                        <span style="background:#000;color:#fff;padding:1px 5px;font-size:9.5px;font-weight:900;border-radius:3px">
+                        <span style="background:#000;color:#fff;padding:2px 6px;font-size:10px;font-weight:900;border-radius:3px">
                             COD: COLLECT ₹{{ number_format($collectAmount, 2) }}
                         </span>
                     @else
-                        <span style="background:#059669;color:#fff;padding:1px 5px;font-size:9.5px;font-weight:900;border-radius:3px">
+                        <span style="background:#059669;color:#fff;padding:2px 6px;font-size:10px;font-weight:900;border-radius:3px">
                             PREPAID — DO NOT COLLECT
                         </span>
                     @endif
@@ -350,9 +366,9 @@
             </div>
 
             <!-- 2D QR Code (Scans directly to Flipkart-style Product Details Page) -->
-            <div class="scan-qr-box">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=60x60&margin=1&data={{ urlencode($verifyUrl) }}" alt="QR" onerror="this.style.display='none'">
-                <span class="scan-qr-label">Scan Details</span>
+            <div class="scan-qr-box" style="width:75px">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&margin=2&data={{ urlencode($verifyUrl) }}" alt="QR" style="width:58px;height:58px;display:block;margin:0 auto;border:1px solid #000;border-radius:4px" onerror="this.style.display='none'">
+                <span class="scan-qr-label" style="font-size:8px">📷 SCAN DETAILS</span>
             </div>
         </div>
 
@@ -379,7 +395,7 @@
                 <tr>
                     <th style="width:25px">#</th>
                     <th>Product & Item Details</th>
-                    <th style="width:190px;text-align:center">Product Barcode (Scan for Details)</th>
+                    <th style="width:310px;text-align:center">Product Barcode & QR (Scan for Details)</th>
                     <th style="text-align:center;width:40px">Qty</th>
                     <th style="text-align:right;width:75px">Rate (₹)</th>
                     <th style="text-align:right;width:80px">Total (₹)</th>
@@ -391,7 +407,7 @@
                         $prod = $item->product;
                         $prodId = $item->product_id ?: ($prod ? $prod->id : '1');
                         $sku = $prod && $prod->sku ? $prod->sku : ('TS-SR-' . $prodId);
-                        $productScanUrl = "touchstains.com/p/{$prodId}?order={$order->id}";
+                        $productScanUrl = "{$liveDomain}/p/{$prodId}?order={$order->id}";
                         $prodImg = $item->product_image;
                         if (!$prodImg && $prod && !empty($prod->images_list)) {
                             $prodImg = $prod->images_list[0];
@@ -403,21 +419,35 @@
                         <td>{{ $idx + 1 }}</td>
                         <td>
                             <div style="display:flex;align-items:center;gap:8px">
-                                <img src="{{ $imgUrl }}" alt="{{ $item->product_name }}" style="width:34px;height:34px;object-fit:contain;border:1px solid #e2e8f0;border-radius:4px;background:#fff;flex-shrink:0" onerror="this.src='{{ asset('storage/restaurant/touchstains-logo.png') }}'">
+                                <img src="{{ $imgUrl }}" alt="{{ $item->product_name }}" style="width:36px;height:36px;object-fit:contain;border:1px solid #e2e8f0;border-radius:4px;background:#fff;flex-shrink:0" onerror="this.src='{{ asset('storage/restaurant/touchstains-logo.png') }}'">
                                 <div>
-                                    <strong style="font-size:11px;color:#0F172A;display:block">{{ $item->product_name }}</strong>
+                                    <strong style="font-size:11.5px;color:#0F172A;display:block">{{ $item->product_name }}</strong>
                                     <span style="font-size:9.5px;color:#64748B">SKU: <span style="font-family:monospace">{{ $sku }}</span> • Vol: {{ $item->unit ?: '250ml Bottle' }}</span>
                                 </div>
                             </div>
                         </td>
-                        <td style="text-align:center;vertical-align:middle;padding:4px">
-                            <!-- Styled barcode card matching user uploaded image -->
-                            <div style="display:inline-block;background:#fff;border:1px solid #CBD5E1;border-radius:6px;padding:3px 8px;text-align:center;max-width:185px">
-                                <div style="display:block;margin:0 auto">
-                                    {!! \App\Services\Delivery\BarcodeService::getCode128Svg($productScanUrl, 26, 0.85, false, 6) !!}
+                        <td style="text-align:center;vertical-align:middle;padding:4px 6px">
+                            <!-- Dual Scan Card: 1D Barcode + 2D Instant QR Code -->
+                            <div class="item-barcode-card">
+                                <!-- 1D Barcode matching user reference image -->
+                                <div style="text-align:center">
+                                    <div class="item-barcode-svg-wrap">
+                                        {!! \App\Services\Delivery\BarcodeService::getCode128Svg($itemAwb, 42, 1.6, false, 8) !!}
+                                    </div>
+                                    <div style="font-family:'Courier New',Courier,monospace;font-weight:900;font-size:11px;color:#000;letter-spacing:0.8px;margin-top:2px;white-space:nowrap">
+                                        AWB:  {{ $itemAwb }}
+                                    </div>
                                 </div>
-                                <div style="font-family:'Courier New',Courier,monospace;font-weight:700;font-size:10px;color:#000;letter-spacing:0.6px;margin-top:2px;white-space:nowrap">
-                                    AWB:  {{ $itemAwb }}
+
+                                <!-- Vertical Divider -->
+                                <div style="width:1px;height:46px;background:#CBD5E1"></div>
+
+                                <!-- 2D QR Code for Instant Google Lens & Phone Camera Scan -->
+                                <div style="text-align:center;width:58px;flex-shrink:0">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&margin=2&data={{ urlencode($productScanUrl) }}" alt="QR" style="width:52px;height:52px;display:block;margin:0 auto;border:1px solid #111;border-radius:4px" onerror="this.style.display='none'">
+                                    <span style="font-size:7px;font-weight:900;text-transform:uppercase;color:#047857;display:block;margin-top:2px;letter-spacing:0.3px;white-space:nowrap">
+                                        📷 SCAN DETAILS
+                                    </span>
                                 </div>
                             </div>
                         </td>

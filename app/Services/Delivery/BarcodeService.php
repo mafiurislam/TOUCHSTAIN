@@ -138,7 +138,7 @@ class BarcodeService
         $rectsHtml = implode("\n", $rects);
 
         return <<<SVG
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {$totalWidthPx} {$height}" width="100%" height="{$height}" style="display:block;margin:0 auto;background:#ffffff;max-width:{$totalWidthPx}px;shape-rendering:crispEdges;">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {$totalWidthPx} {$height}" width="{$totalWidthPx}" height="{$height}" style="display:block;margin:0 auto;background:#ffffff;max-width:100%;height:{$height}px;shape-rendering:crispEdges;">
 <rect width="100%" height="100%" fill="#ffffff"/>
 {$rectsHtml}
 {$textElement}

@@ -1172,6 +1172,30 @@ class FrontController extends Controller
             if (!$product) {
                 $product = Product::where('barcode', $identifier)->first();
             }
+
+            // 4. Try checking if identifier is an Order ID
+            if (!$product && is_numeric($identifier)) {
+                $matchedOrder = Order::with(['items.product', 'shipment.trackingEvents', 'user'])->find($identifier);
+                if ($matchedOrder && $matchedOrder->items->isNotEmpty()) {
+                    $order = $matchedOrder;
+                    $firstItem = $order->items->first();
+                    $product = $firstItem->product ?: Product::find($firstItem->product_id);
+                }
+            }
+
+            // 5. Try checking if identifier is an AWB number
+            if (!$product) {
+                $matchedShipment = Shipment::where('awb_number', $identifier)
+                    ->orWhere('shiprocket_order_id', $identifier)
+                    ->first();
+                if ($matchedShipment) {
+                    $order = Order::with(['items.product', 'shipment.trackingEvents', 'user'])->find($matchedShipment->order_id);
+                    if ($order && $order->items->isNotEmpty()) {
+                        $firstItem = $order->items->first();
+                        $product = $firstItem->product ?: Product::find($firstItem->product_id);
+                    }
+                }
+            }
         }
 
         // Check if an order query param is provided (e.g. /p/1?order=12)

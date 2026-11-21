@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $pageTitle ?? 'TOUCHSTAINS — Fabric Stain & Rust Remover' }}</title>
     <meta name="description" content="TOUCHSTAINS — Professional Fabric Stain & Rust Remover for all clothes. Certified ISO 9001:2015. Fast Delivery across India.">
+    @yield('meta')
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}?v=2.3">
     <link rel="apple-touch-icon" href="{{ asset('icons/Icon-192.png') }}?v=2.3">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}?v={{ time() }}">
