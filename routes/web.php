@@ -50,6 +50,9 @@ Route::get('/orders', [FrontController::class, 'orders'])->name('orders');
 Route::get('/order-details/{id?}', [FrontController::class, 'orderDetails'])->name('order-details');
 Route::post('/orders/{id}/cancel', [FrontController::class, 'cancelOrder'])->name('orders.cancel');
 Route::get('/track-order', [FrontController::class, 'trackOrder'])->name('track-order');
+Route::get('/verify-order/{id?}', [FrontController::class, 'verifyOrder'])->name('verify-order');
+Route::get('/order-verify/{id?}', [FrontController::class, 'verifyOrder']);
+Route::get('/verify/package/{id?}', [FrontController::class, 'verifyOrder']);
 
 Route::get('/wishlist', [FrontController::class, 'wishlist'])->name('wishlist');
 Route::post('/wishlist/toggle', [FrontController::class, 'toggleWishlist'])->name('wishlist.toggle');

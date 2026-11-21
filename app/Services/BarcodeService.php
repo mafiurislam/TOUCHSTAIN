@@ -132,4 +132,9 @@ class BarcodeService
         $encoded = urlencode(trim($data));
         return "https://api.qrserver.com/v1/create-qr-code/?size={$size}x{$size}&margin=2&data={$encoded}";
     }
+
+    public static function getCode128Svg(string $text, int $height = 45, float|int $moduleWidth = 1.8, bool $showText = true, int $quietZone = 12): string
+    {
+        return \App\Services\Delivery\BarcodeService::getCode128Svg($text, $height, $moduleWidth, $showText, $quietZone);
+    }
 }

@@ -39,10 +39,10 @@ class BarcodeService
      */
     public static function getCode128Svg(
         string $text,
-        int $height = 65,
-        int $moduleWidth = 2,
+        int $height = 45,
+        float|int $moduleWidth = 1.8,
         bool $showText = true,
-        int $quietZone = 14
+        int $quietZone = 12
     ): string {
         $cleanText = trim($text);
         if ($cleanText === '') {
@@ -97,10 +97,10 @@ class BarcodeService
 
         $contentModulesCount = count($modules);
         $totalModulesCount = $contentModulesCount + ($quietZone * 2);
-        $totalWidthPx = $totalModulesCount * $moduleWidth;
+        $totalWidthPx = round($totalModulesCount * $moduleWidth, 1);
 
         $textHeight = $showText ? 15 : 0;
-        $barHeight = max(20, $height - $textHeight);
+        $barHeight = max(18, $height - $textHeight);
 
         // Build continuous black rects for minimum SVG element count & crisp edges
         $rects = [];
@@ -115,16 +115,16 @@ class BarcodeService
                 }
             } else {
                 if ($inBar) {
-                    $barWidth = ($i - $barStart) * $moduleWidth;
-                    $x = ($quietZone + $barStart) * $moduleWidth;
+                    $barWidth = round(($i - $barStart) * $moduleWidth, 1);
+                    $x = round(($quietZone + $barStart) * $moduleWidth, 1);
                     $rects[] = "<rect x=\"{$x}\" y=\"0\" width=\"{$barWidth}\" height=\"{$barHeight}\" fill=\"#000000\"/>";
                     $inBar = false;
                 }
             }
         }
         if ($inBar) {
-            $barWidth = ($contentModulesCount - $barStart) * $moduleWidth;
-            $x = ($quietZone + $barStart) * $moduleWidth;
+            $barWidth = round(($contentModulesCount - $barStart) * $moduleWidth, 1);
+            $x = round(($quietZone + $barStart) * $moduleWidth, 1);
             $rects[] = "<rect x=\"{$x}\" y=\"0\" width=\"{$barWidth}\" height=\"{$barHeight}\" fill=\"#000000\"/>";
         }
 

@@ -16,6 +16,7 @@ use App\Models\Coupon;
 use App\Models\Address;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Shipment;
 use App\Models\Wishlist;
 use App\Models\Review;
 use App\Models\Message;
@@ -1061,6 +1062,45 @@ class FrontController extends Controller
             'pageId' => 'track-order',
             'pageTitle' => 'Track Order — TOUCHSTAINS',
             'order' => $order,
+        ]));
+    }
+
+    /**
+     * Public Order & Product Verification Page (Flipkart/Amazon style)
+     * Scanned directly from parcel shipping label or tax invoice QR code
+     */
+    public function verifyOrder(Request $request, $id = null)
+    {
+        $identifier = $id ?: ($request->query('id') ?: $request->query('awb'));
+        $order = null;
+
+        if ($identifier) {
+            // Check by Order ID first
+            $order = Order::with(['items.product', 'shipment.trackingEvents', 'user'])->find($identifier);
+
+            // If not found by ID, check by AWB number
+            if (!$order) {
+                $shipment = Shipment::where('awb_number', $identifier)
+                    ->orWhere('shiprocket_order_id', $identifier)
+                    ->first();
+                if ($shipment) {
+                    $order = Order::with(['items.product', 'shipment.trackingEvents', 'user'])->find($shipment->order_id);
+                }
+            }
+        }
+
+        // If still not found and no specific ID was given, fallback to latest order for preview
+        if (!$order) {
+            $order = Order::with(['items.product', 'shipment.trackingEvents', 'user'])->latest()->first();
+        }
+
+        $shared = $this->getSharedData();
+
+        return view('pages.verify-order', array_merge($shared, [
+            'pageId' => 'verify-order',
+            'pageTitle' => $order ? "Verified Order #{$order->id} — TOUCHSTAINS" : 'Package Verification — TOUCHSTAINS',
+            'order' => $order,
+            'shipment' => $order ? $order->shipment : null,
         ]));
     }
 
