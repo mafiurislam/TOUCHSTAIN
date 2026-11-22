@@ -169,11 +169,14 @@
           : this.state.appliedCoupon.val;
       }
 
-      const freeOver = 69;
-      const deliveryFee = (items.length === 0 || subtotal >= freeOver || this.state.deliveryType === 'self_pickup') ? 0 : 40;
+      const isCod = (this.state.paymentMethod === 'cash_on_delivery');
+      let deliveryFee = 0;
+      if (items.length > 0 && this.state.deliveryType !== 'self_pickup') {
+        deliveryFee = isCod ? 70 : 0;
+      }
       const grandTotal = Math.max(0, subtotal - couponDiscount + deliveryFee);
 
-      return { items, totalQty, mrpTotal, subtotal, totalDiscount, couponDiscount, deliveryFee, freeOver, grandTotal };
+      return { items, totalQty, mrpTotal, subtotal, totalDiscount, couponDiscount, deliveryFee, isCod, grandTotal };
     },
 
     refreshCartUI() {
@@ -340,7 +343,17 @@
         const setTxt = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
         setTxt('chk-subtotal', '₹' + fmt(totals.subtotal));
         setTxt('chk-discount', '- ₹' + fmt(totals.totalDiscount));
-        setTxt('chk-delivery', totals.deliveryFee === 0 ? 'FREE' : '₹' + fmt(totals.deliveryFee));
+        const delEl = document.getElementById('chk-delivery');
+        const delLabelEl = document.getElementById('chk-delivery-label');
+        if (delEl) {
+          if (totals.deliveryFee > 0) {
+            delEl.innerHTML = `<strong style="color:#B45309;font-size:14px">₹${fmt(totals.deliveryFee)}</strong>`;
+            if (delLabelEl) delLabelEl.innerHTML = 'Delivery Charge <span style="font-size:10.5px;color:#92400E;background:#FEF3C7;padding:1px 6px;border-radius:4px;font-weight:700">COD Fee</span>';
+          } else {
+            delEl.innerHTML = `<strong style="color:#047857;font-size:13px">FREE</strong> <span style="font-size:10.5px;color:#047857;background:#DCFCE7;padding:1px 6px;border-radius:4px;font-weight:700">Prepaid Offer</span>`;
+            if (delLabelEl) delLabelEl.textContent = 'Delivery Fee';
+          }
+        }
         setTxt('chk-total', '₹' + fmt(totals.grandTotal));
       }
     },

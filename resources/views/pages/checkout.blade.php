@@ -526,10 +526,10 @@
                                 <div style="flex:1">
                                     <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
                                         <h4 style="margin:0;font-size:15px;font-weight:700;color:#111827">Cash on Delivery</h4>
-                                        <span style="font-size:11px;font-weight:700;background:#FEF3C7;color:#92400E;padding:2px 8px;border-radius:99px;border:1px solid #FDE68A">COD</span>
+                                        <span style="font-size:11px;font-weight:800;background:#FEF3C7;color:#92400E;padding:2px 8px;border-radius:99px;border:1px solid #FDE68A">+₹70 Delivery Charge</span>
                                     </div>
                                     <p style="font-size:12px;color:#4B5563;margin:4px 0 0;line-height:1.4">
-                                        Pay cash or UPI to the delivery executive when your package arrives at your door.
+                                        Pay in cash or UPI upon delivery (+ ₹70 delivery charge added).
                                     </p>
                                 </div>
                             </div>
@@ -605,7 +605,7 @@
                     <span id="chk-subtotal">₹0</span>
                 </div>
                 <div class="summary-row">
-                    <span>Delivery Fee</span>
+                    <span id="chk-delivery-label">Delivery Fee</span>
                     <span id="chk-delivery">FREE</span>
                 </div>
                 <div class="summary-row total">
@@ -630,7 +630,7 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
-let currentPaymentMethod = 'razorpay';
+let currentPaymentMethod = "{{ $defaultPayment }}";
 const RAZORPAY_KEY = "{{ $razorpayKey ?? 'rzp_test_U1cQQReArMfXP9' }}";
 const SERVER_CUSTOMER_REGISTERED = {{ $isReg ? 'true' : 'false' }};
 const REGISTER_CHECKOUT_URL = "{{ url('/register?redirect=checkout') }}";
@@ -805,6 +805,7 @@ function selectCheckoutPayment(method) {
     currentPaymentMethod = method;
     if (window.GetgozoApp) {
         GetgozoApp.state.paymentMethod = method;
+        GetgozoApp.refreshCartUI();
     }
 
     const payUpi = document.getElementById('pay-upi');
@@ -1193,9 +1194,8 @@ async function placeCodOrder(totals, addrData) {
         btn.innerHTML = '⏳ Confirming COD Order...';
     }
 
-    const orderAmount = GetgozoApp.state.deliveryType === 'self_pickup'
-        ? (totals.subtotal - totals.couponDiscount)
-        : totals.grandTotal;
+    const codDeliveryCharge = GetgozoApp.state.deliveryType === 'self_pickup' ? 0 : 70.0;
+    const orderAmount = Math.max(1, (totals.subtotal - (totals.couponDiscount || 0)) + codDeliveryCharge);
 
     const addressPayload = addrData || getCheckoutAddressData();
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || window.LARAVEL_CSRF_TOKEN || '';
@@ -1206,7 +1206,7 @@ async function placeCodOrder(totals, addrData) {
         discount: totals.totalDiscount || 0,
         coupon_discount: totals.couponDiscount || 0,
         coupon_code: GetgozoApp.state.appliedCoupon ? GetgozoApp.state.appliedCoupon.code : null,
-        delivery_charge: GetgozoApp.state.deliveryType === 'self_pickup' ? 0 : totals.deliveryFee,
+        delivery_charge: codDeliveryCharge,
         order_amount: orderAmount,
         payment_method: 'cash_on_delivery',
         order_type: GetgozoApp.state.deliveryType || 'delivery',

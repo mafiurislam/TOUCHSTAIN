@@ -467,9 +467,8 @@ class FrontController extends Controller
         $subtotal = $computedSubtotal > 0 ? round($computedSubtotal, 2) : (float)$request->input('subtotal', 0);
         $discount = 0;
         $couponDiscount = max(0, (float)$request->input('coupon_discount', 0));
-        $freeOver = (float)(Setting::getValue('free_delivery_over_amount', 69) ?: 69);
-        $baseDelivery = (float)(Setting::getValue('delivery_charge', 40) ?: 40);
-        $deliveryCharge = ($request->input('order_type', 'delivery') === 'self_pickup' || $subtotal >= $freeOver) ? 0.0 : $baseDelivery;
+        // Online Prepaid Payment (Razorpay) enjoys 100% FREE Delivery
+        $deliveryCharge = 0.0;
         $totalAmount = round(max(1, $subtotal - $couponDiscount + $deliveryCharge), 2);
 
         // Save or update the customer's delivery address in their account
@@ -786,9 +785,9 @@ class FrontController extends Controller
         $subtotal = $computedSubtotal > 0 ? round($computedSubtotal, 2) : (float)$request->input('subtotal', 0);
         $discount = 0;
         $couponDiscount = max(0, (float)$request->input('coupon_discount', 0));
-        $freeOver = (float)(Setting::getValue('free_delivery_over_amount', 69) ?: 69);
-        $baseDelivery = (float)(Setting::getValue('delivery_charge', 40) ?: 40);
-        $deliveryCharge = ($request->input('order_type', 'delivery') === 'self_pickup' || $subtotal >= $freeOver) ? 0.0 : $baseDelivery;
+        // Cash on Delivery (COD) order delivery charge is strictly ₹70
+        $codDeliveryCharge = (float)(Setting::getValue('delivery_charge_cod', 70) ?: 70);
+        $deliveryCharge = ($request->input('order_type', 'delivery') === 'self_pickup') ? 0.0 : $codDeliveryCharge;
         $totalAmount = round(max(1, $subtotal - $couponDiscount + $deliveryCharge), 2);
         $paymentMethod = 'cash_on_delivery';
 
@@ -988,9 +987,8 @@ class FrontController extends Controller
         $subtotal = $computedSubtotal > 0 ? round($computedSubtotal, 2) : (float)$request->input('subtotal', 0);
         $discount = 0;
         $couponDiscount = max(0, (float)$request->input('coupon_discount', 0));
-        $freeOver = (float)(Setting::getValue('free_delivery_over_amount', 69) ?: 69);
-        $baseDelivery = (float)(Setting::getValue('delivery_charge', 40) ?: 40);
-        $deliveryCharge = ($request->input('order_type', 'delivery') === 'self_pickup' || $subtotal >= $freeOver) ? 0.0 : $baseDelivery;
+        // Online Prepaid Payment (Razorpay) enjoys 100% FREE Delivery
+        $deliveryCharge = 0.0;
         $totalAmount = round(max(1, $subtotal - $couponDiscount + $deliveryCharge), 2);
 
         if ($contactName !== '' && $streetAddress !== '') {
