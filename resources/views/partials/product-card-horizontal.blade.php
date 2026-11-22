@@ -13,7 +13,12 @@
 @endphp
 <div class="gf-hcard" data-product-id="{{ $product->id }}">
     <!-- Left Image Box (114x114) with Bottom-Right Cart Button -->
-    <div class="gf-hcard-imgbox">
+    <div class="gf-hcard-imgbox" style="position:relative">
+        @if(!empty($product->coupon_code))
+            <span style="position:absolute;top:6px;left:6px;background:linear-gradient(135deg,#DC2626,#EF4444);color:#fff;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:800;letter-spacing:0.3px;z-index:2;box-shadow:0 2px 4px rgba(220,38,38,0.3);pointer-events:none">
+                🎟️ {{ $product->coupon_code }}
+            </span>
+        @endif
         <a href="{{ url('/product/' . $product->id) }}" class="gf-hcard-imglink">
             <img src="{{ $imgUrl }}" alt="{{ $product->name }}" loading="lazy" onerror="this.onerror=null;this.src='{{ asset('assets/image/placeholder.png') }}'">
         </a>
@@ -44,6 +49,12 @@
         <a href="{{ url('/product/' . $product->id) }}" class="gf-hcard-title" title="{{ $product->name }}">
             {{ $product->name }}
         </a>
+
+        @if(!empty($product->coupon_code))
+            <div style="background:#FEF3C7;border:1px dashed #F59E0B;color:#92400E;padding:2px 6px;border-radius:5px;font-size:10.5px;font-weight:700;display:inline-flex;align-items:center;gap:4px;margin-bottom:3px">
+                <span>🏷️ Coupon: <strong>{{ $product->coupon_code }}</strong></span>
+            </div>
+        @endif
 
         <div class="gf-unit-text" style="margin:4px 0 6px">{{ $unitText }}</div>
 

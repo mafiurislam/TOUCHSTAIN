@@ -463,7 +463,12 @@
 
       return `
         <div class="gf-vcard product-card" data-product-id="${p.id}">
-          <div class="gf-vcard-imgbox">
+          <div class="gf-vcard-imgbox" style="position:relative">
+            ${p.coupon_code ? `
+              <div class="gf-card-coupon-badge" style="position:absolute;top:8px;left:8px;z-index:3;background:linear-gradient(135deg,#DC2626,#EF4444);color:#ffffff;padding:3px 8px;border-radius:6px;font-size:10.5px;font-weight:800;letter-spacing:0.3px;box-shadow:0 2px 6px rgba(220,38,38,0.4);display:inline-flex;align-items:center;gap:3px;pointer-events:none">
+                <span>🎟️ ${p.coupon_code}</span>
+              </div>
+            ` : ''}
             <div class="gf-vcard-actions">
               <button type="button" class="gf-action-sq ${inWish ? 'active' : ''}" data-wish-btn="${p.id}" onclick="GetgozoApp.toggleWishlist(${p.id}, event)" title="Add to Favourites">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="${inWish ? '#01684B' : 'none'}" stroke="#01684B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -490,6 +495,12 @@
               <span>${ratingVal}</span>
             </div>
             <a href="/product/${p.id}" class="gf-vcard-title">${p.name}</a>
+            ${p.coupon_code ? `
+              <div style="background:#FEF3C7;border:1px dashed #F59E0B;color:#92400E;padding:3px 7px;border-radius:6px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:space-between;margin:4px 0 6px">
+                <span>🏷️ Code: <strong>${p.coupon_code}</strong></span>
+                <span style="font-size:10px;color:#B45309;font-weight:800;background:#FDE68A;padding:1px 5px;border-radius:4px">OFFER</span>
+              </div>
+            ` : ''}
             <div class="gf-vcard-footer">
               <span class="gf-unit-text">${unitText}</span>
               <div class="gf-price-wrap" style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap">

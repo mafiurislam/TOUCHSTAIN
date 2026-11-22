@@ -19,7 +19,42 @@ class Product extends Model
         'total_stock' => 'integer',
         'daily_needs' => 'boolean',
         'is_featured' => 'boolean',
+        'coupon_id' => 'integer',
     ];
+
+    /**
+     * Ensure coupon columns exist on products table (zero-downtime).
+     */
+    public static function ensureCouponColumns(): void
+    {
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasTable('products')) return;
+            $needsId = !\Illuminate\Support\Facades\Schema::hasColumn('products', 'coupon_id');
+            $needsCode = !\Illuminate\Support\Facades\Schema::hasColumn('products', 'coupon_code');
+            if ($needsId || $needsCode) {
+                \Illuminate\Support\Facades\Schema::table('products', function (\Illuminate\Database\Schema\Blueprint $table) use ($needsId, $needsCode) {
+                    if ($needsId) {
+                        $table->unsignedBigInteger('coupon_id')->nullable()->after('status');
+                    }
+                    if ($needsCode) {
+                        $table->string('coupon_code', 50)->nullable()->after('coupon_id');
+                    }
+                });
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Product::ensureCouponColumns failed: ' . $e->getMessage());
+        }
+    }
+
+    protected static function booted()
+    {
+        static::ensureCouponColumns();
+    }
+
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class, 'coupon_id');
+    }
 
     public function category()
     {

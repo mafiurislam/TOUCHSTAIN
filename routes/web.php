@@ -138,6 +138,7 @@ Route::prefix('admin')->middleware([AdminAuthMiddleware::class])->group(function
     Route::post('/products/{id}/update', [ProductController::class, 'update'])->name('admin.products.update');
     Route::post('/products/{id}/delete-image', [ProductController::class, 'deleteImage'])->name('admin.products.delete-image');
     Route::post('/products/{id}/delete-video', [ProductController::class, 'deleteVideo'])->name('admin.products.delete-video');
+    Route::post('/products/{id}/assign-coupon', [ProductController::class, 'assignCoupon'])->name('admin.products.assign-coupon');
     Route::post('/products/{id}/delete', [ProductController::class, 'destroy'])->name('admin.products.delete');
     Route::get('/products/export/csv', [ProductController::class, 'exportCsv'])->name('admin.products.export');
 

@@ -209,6 +209,21 @@
                     <label for="bulk_price">Bulk Special Price (₹)</label>
                     <input type="number" step="0.01" name="bulk_price" id="bulk_price" value="{{ old('bulk_price', $product->bulk_price) }}">
                 </div>
+
+                <div class="form-group" style="grid-column: 1 / -1">
+                    <label for="coupon_id" style="font-weight:700">🎟️ Promotional Offer Coupon (Shown highlighted on this product)</label>
+                    <select name="coupon_id" id="coupon_id" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13.5px;background:#fff">
+                        <option value="">-- No Coupon Assigned --</option>
+                        @foreach($activeCoupons as $coup)
+                            <option value="{{ $coup->id }}" {{ (old('coupon_id', $product->coupon_id) == $coup->id) ? 'selected' : '' }}>
+                                🎟️ {{ $coup->code }} — {{ $coup->title }} ({{ $coup->discount_type === 'percent' ? $coup->discount . '% OFF' : '₹' . $coup->discount . ' OFF' }})
+                            </option>
+                        @endforeach
+                    </select>
+                    <small style="color:var(--text-muted);font-size:11.5px;display:block;margin-top:4px">
+                        When selected, this product will feature an eye-catching coupon badge &amp; discount banner across the website.
+                    </small>
+                </div>
             </div>
 
             <!-- Media & Description -->

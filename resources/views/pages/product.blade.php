@@ -616,6 +616,11 @@
             <!-- Left: Gallery -->
             <div class="prod-gallery-main">
                 <div class="main-img-stage" id="gallery-stage" style="position:relative">
+                    @if(!empty($product->coupon_code))
+                        <div style="position:absolute;top:14px;left:14px;z-index:2;background:linear-gradient(135deg,#DC2626,#EF4444);color:#ffffff;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:800;letter-spacing:0.5px;box-shadow:0 3px 10px rgba(220,38,38,0.4);display:inline-flex;align-items:center;gap:4px">
+                            <span>🎟️ {{ $product->coupon_code }} OFFER</span>
+                        </div>
+                    @endif
                     <img id="prod-main-img" src="{{ $mainImg }}" alt="{{ $product->name }}" onerror="this.src='{{ asset('assets/image/placeholder.png') }}'">
                     @if($product->video)
                         <video id="prod-main-video" controls playsinline poster="{{ $product->video_thumbnail ? $product->video_thumbnail_url : $mainImg }}" style="display:none;max-height:330px;max-width:100%;width:auto;border-radius:10px;outline:none">
@@ -674,6 +679,35 @@
                     @endif
                     <span class="big-price">₹{{ number_format($displayPrice, 2) }}</span>
                 </div>
+
+                @if(!empty($product->coupon_code))
+                    @php
+                        $prodCoupon = $product->coupon ?? \App\Models\Coupon::where('code', $product->coupon_code)->first();
+                    @endphp
+                    <div class="prod-coupon-highlight-box" style="background:linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);border:2px dashed #F59E0B;border-radius:14px;padding:14px 18px;margin:14px 0 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;box-shadow:0 4px 14px rgba(245,158,11,0.18)">
+                        <div style="display:flex;align-items:center;gap:12px">
+                            <div style="font-size:30px;line-height:1">🎟️</div>
+                            <div>
+                                <div style="font-size:11px;font-weight:800;color:#B45309;text-transform:uppercase;letter-spacing:0.5px">Special Product Offer</div>
+                                <div style="font-size:15px;font-weight:800;color:#92400E;margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                                    <span>Use Coupon:</span>
+                                    <span style="background:#FDE68A;color:#78350F;padding:3px 10px;border-radius:6px;font-family:monospace;letter-spacing:1px;border:1px solid #FCD34D">{{ $product->coupon_code }}</span>
+                                    @if($prodCoupon)
+                                        <span style="font-size:13.5px;font-weight:800;color:#047857;background:#D1FAE5;padding:2px 8px;border-radius:6px;border:1px solid #A7F3D0">
+                                            {{ $prodCoupon->discount_type === 'percent' ? $prodCoupon->discount . '% OFF' : '₹' . $prodCoupon->discount . ' OFF' }}
+                                        </span>
+                                    @endif
+                                </div>
+                                <div style="font-size:12px;color:#78350F;margin-top:3px">
+                                    {{ $prodCoupon->title ?? 'Apply code at checkout to claim instant discount!' }}
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" onclick="navigator.clipboard && navigator.clipboard.writeText('{{ $product->coupon_code }}'); window.GetgozoApp && window.GetgozoApp.showToast ? window.GetgozoApp.showToast('📋 Coupon code {{ $product->coupon_code }} copied! Apply at checkout.', 'success') : alert('Copied {{ $product->coupon_code }}')" style="background:#01684B;color:#ffffff;border:none;border-radius:8px;padding:9px 16px;font-size:12.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;box-shadow:0 3px 8px rgba(1,104,75,0.3);flex-shrink:0">
+                            📋 Copy Code
+                        </button>
+                    </div>
+                @endif
 
                 <div class="prod-meta-table">
                     <div class="meta-item">

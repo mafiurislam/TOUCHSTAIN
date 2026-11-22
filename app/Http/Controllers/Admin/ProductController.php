@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Coupon;
 use App\Models\InventoryLog;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -47,8 +48,9 @@ class ProductController extends Controller
         $products = $query->paginate(15)->withQueryString();
         $categories = Category::where('parent_id', 0)->with('children')->get();
         $brands = Brand::where('status', true)->get();
+        $activeCoupons = Coupon::where('status', 1)->orderBy('code')->get();
 
-        return view('admin.products.index', compact('products', 'categories', 'brands'));
+        return view('admin.products.index', compact('products', 'categories', 'brands', 'activeCoupons'));
     }
 
     /**
@@ -58,8 +60,9 @@ class ProductController extends Controller
     {
         $categories = Category::where('parent_id', 0)->with('children')->get();
         $brands = Brand::where('status', true)->get();
+        $activeCoupons = Coupon::where('status', 1)->orderBy('code')->get();
 
-        return view('admin.products.create', compact('categories', 'brands'));
+        return view('admin.products.create', compact('categories', 'brands', 'activeCoupons'));
     }
 
     /**
@@ -148,6 +151,8 @@ class ProductController extends Controller
             'meta_description' => $request->input('meta_description'),
             'bulk_min_qty' => (int)$request->input('bulk_min_qty', 5),
             'bulk_price' => $request->filled('bulk_price') ? (float)$request->input('bulk_price') : null,
+            'coupon_id' => $request->filled('coupon_id') ? (int)$request->input('coupon_id') : null,
+            'coupon_code' => $request->filled('coupon_id') ? (Coupon::where('id', $request->input('coupon_id'))->value('code')) : null,
         ]);
 
         // Record Initial Inventory Log
@@ -173,8 +178,9 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $categories = Category::where('parent_id', 0)->with('children')->get();
         $brands = Brand::where('status', true)->get();
+        $activeCoupons = Coupon::where('status', 1)->orderBy('code')->get();
 
-        return view('admin.products.edit', compact('product', 'categories', 'brands'));
+        return view('admin.products.edit', compact('product', 'categories', 'brands', 'activeCoupons'));
     }
 
     /**
@@ -288,6 +294,8 @@ class ProductController extends Controller
             'meta_description' => $request->input('meta_description'),
             'bulk_min_qty' => (int)$request->input('bulk_min_qty', 5),
             'bulk_price' => $request->filled('bulk_price') ? (float)$request->input('bulk_price') : null,
+            'coupon_id' => $request->filled('coupon_id') ? (int)$request->input('coupon_id') : null,
+            'coupon_code' => $request->filled('coupon_id') ? (Coupon::where('id', $request->input('coupon_id'))->value('code')) : null,
         ]);
 
         // If stock changed manually, log it
@@ -527,5 +535,44 @@ class ProductController extends Controller
             fpassthru($handle);
             fclose($handle);
         }, $filename, ['Content-Type' => 'text/csv']);
+    }
+
+    /**
+     * Assign or remove coupon on a product directly from the product table
+     */
+    public function assignCoupon(Request $request, $id)
+    {
+        Product::ensureCouponColumns();
+        $product = Product::findOrFail($id);
+
+        $couponId = $request->input('coupon_id');
+        if (!empty($couponId)) {
+            $coupon = Coupon::find($couponId);
+            if ($coupon) {
+                $product->coupon_id = $coupon->id;
+                $product->coupon_code = $coupon->code;
+            } else {
+                $product->coupon_id = null;
+                $product->coupon_code = null;
+            }
+        } else {
+            $product->coupon_id = null;
+            $product->coupon_code = null;
+        }
+
+        $product->save();
+
+        try {
+            $action = $product->coupon_code ? "Assigned coupon [{$product->coupon_code}]" : "Removed coupon";
+            AuditLog::record('Products', 'Set Coupon', "{$action} on product [#{$product->id}] {$product->name}");
+        } catch (\Throwable $e) {
+            // Ignore audit log error
+        }
+
+        $msg = $product->coupon_code
+            ? "Coupon '{$product->coupon_code}' assigned to '{$product->name}' successfully! It will now be highlighted on the website."
+            : "Coupon removed from '{$product->name}'.";
+
+        return back()->with('success', $msg);
     }
 }
