@@ -433,7 +433,7 @@
         @if(isset($allProducts))
         window.GETGOZO_DATA.allProducts = @json($allProducts);
         @endif
-        window.LARAVEL_SQLITE_USER = @json($currentUser);
+        window.LARAVEL_SQLITE_USER = @json($currentUser ?? auth()->user() ?? null);
         window.LARAVEL_CSRF_TOKEN = "{{ csrf_token() }}";
     </script>
     <script src="{{ asset('js/laravel-app.js') }}?v={{ time() }}"></script>

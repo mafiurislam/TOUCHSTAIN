@@ -70,31 +70,44 @@
                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
                     <span style="font-size:24px">🧾</span>
                     <div>
-                        <h4 style="margin:0;font-size:15px;font-weight:800;color:#0F172A">Step 2: Upload Payment Receipt / Screenshot <span style="font-size:12px;font-weight:700;color:#059669;background:#DCFCE7;padding:2px 8px;border-radius:6px;border:1px solid #BBF7D0;margin-left:6px">Optional / ঐচ্ছিক</span></h4>
-                        <p style="margin:2px 0 0;font-size:12.5px;color:#64748B">পেমেন্ট সম্পন্ন করার পর স্ক্রিনশট বা রসিদ আপলোড করতে পারেন (না করলেও সরাসরি কনফার্ম করতে পারবেন)</p>
+                        <h4 style="margin:0;font-size:15px;font-weight:800;color:#0F172A">Step 2: Upload Payment Receipt / Screenshot <span style="font-size:12px;font-weight:700;color:#DC2626;background:#FEE2E2;padding:2px 8px;border-radius:6px;border:1px solid #FCA5A5;margin-left:6px">Required / বাধ্যতামূলক</span></h4>
+                        <p style="margin:2px 0 0;font-size:12.5px;color:#64748B">PhonePe, Google Pay বা Paytm-এ পেমেন্ট সম্পন্ন করার পর স্ক্রিনশট বা রসিদ আপলোড করুন</p>
                     </div>
                 </div>
 
-                <form action="{{ route('order.upi-payment.confirm', $order->id) }}" method="POST" enctype="multipart/form-data" id="upi-confirm-form" onsubmit="handleUpiConfirmSubmit(event)">
+                @if(session('error'))
+                    <div style="margin-bottom:14px;background:#FEF2F2;border:1.5px solid #EF4444;border-radius:10px;padding:12px 14px;color:#B91C1C;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px">
+                        <span style="font-size:18px">⚠️</span>
+                        <span>{{ session('error') }}</span>
+                    </div>
+                @endif
+
+                <!-- Dynamic Red Error Alert -->
+                <div id="receipt-error-msg" style="display:none;margin-bottom:14px;background:#FEF2F2;border:1.5px solid #EF4444;border-radius:10px;padding:12px 14px;color:#B91C1C;font-size:13px;font-weight:700;align-items:center;gap:8px;box-shadow:0 2px 8px rgba(239,68,68,0.15)">
+                    <span style="font-size:18px">⚠️</span>
+                    <span id="receipt-error-text">অনুগ্রহ করে পেমেন্ট করার পর প্রাপ্ত স্লিপ বা স্ক্রিনশটটি আপলোড করুন। পেমেন্ট স্লিপ আপলোড না করলে অর্ডার ফাইনাল করা যাবে না।</span>
+                </div>
+
+                <form action="{{ route('order.upi-payment.confirm', $order->id) }}" method="POST" enctype="multipart/form-data" id="upi-confirm-form" onsubmit="return handleUpiConfirmSubmit(event)">
                     @csrf
                     <div style="margin-bottom:16px">
                         <!-- Click / Drag & Drop Upload Card -->
                         <div id="drop-zone" onclick="document.getElementById('receipt-input').click()" style="border:2px dashed #CBD5E1;border-radius:14px;padding:24px 16px;text-align:center;background:#fff;cursor:pointer;transition:all 0.2s">
-                            <div style="width:50px;height:50px;border-radius:50%;background:#EDE9FE;color:#5B21B6;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:24px">
-                                📁
+                            <div style="width:52px;height:52px;border-radius:50%;background:#ECFDF5;color:#059669;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:26px;border:1.5px solid #A7F3D0">
+                                🧾
                             </div>
-                            <strong style="display:block;font-size:14.5px;color:#1E293B;margin-bottom:4px">
-                                Upload Payment Slip / Screenshot <span style="font-weight:500;color:#64748B;font-size:12px">(Optional)</span>
+                            <strong style="display:block;font-size:15px;color:#1E293B;margin-bottom:4px">
+                                Upload Payment Slip / Screenshot <span style="color:#EF4444">*</span>
                             </strong>
-                            <p style="font-size:12px;color:#64748B;margin:0 0 12px;line-height:1.4">
-                                PhonePe, Google Pay, বা Paytm পেমেন্ট সম্পন্ন করার পর প্রাপ্ত রসিদ বা স্ক্রিনশটটি এখানে আপলোড করতে পারেন (ঐচ্ছিক)
+                            <p style="font-size:12.5px;color:#64748B;margin:0 0 12px;line-height:1.4">
+                                PhonePe, Google Pay, বা Paytm পেমেন্ট সম্পন্ন করার পর প্রাপ্ত রসিদ বা স্ক্রিনশটের ছবি এখানে আপলোড করুন (JPG, PNG, WebP)
                             </p>
-                            <span class="btn-secondary" style="display:inline-block;padding:8px 20px;font-size:12.5px;font-weight:700;border-radius:8px">
-                                📷 Choose File / ফটো সিলেক্ট করুন (Optional)
+                            <span class="btn-secondary" style="display:inline-block;padding:9px 22px;font-size:13px;font-weight:700;border-radius:8px;background:#059669;color:#fff;border-color:#059669">
+                                📷 Choose Payment Slip / রসিদ সিলেক্ট করুন
                             </span>
                         </div>
 
-                        <!-- Hidden File Input (Optional) -->
+                        <!-- Hidden File Input -->
                         <input type="file" name="payment_screenshot" id="receipt-input" accept="image/*,.pdf" style="display:none" onchange="previewReceiptFile(event)">
 
                         <!-- Live File Preview Box -->
@@ -160,6 +173,10 @@ function previewReceiptFile(event) {
     const file = event.target.files && event.target.files[0];
     if (!file) return;
 
+    // Clear any previous error
+    const errorMsg = document.getElementById('receipt-error-msg');
+    if (errorMsg) errorMsg.style.display = 'none';
+
     const previewBox = document.getElementById('receipt-preview-box');
     const previewImg = document.getElementById('receipt-preview-img');
     const pdfIcon = document.getElementById('receipt-pdf-icon');
@@ -203,11 +220,36 @@ function clearReceiptFile() {
 function handleUpiConfirmSubmit(event) {
     const input = document.getElementById('receipt-input');
     const hasFile = input && input.files && input.files.length > 0;
+    const errorMsg = document.getElementById('receipt-error-msg');
+    const dropZone = document.getElementById('drop-zone');
     const btn = document.getElementById('btn-submit-confirm');
+
+    if (!hasFile) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        if (errorMsg) {
+            errorMsg.style.display = 'flex';
+            errorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        if (dropZone) {
+            dropZone.style.borderColor = '#EF4444';
+            dropZone.style.background = '#FEF2F2';
+        }
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<span>✓ Confirm Payment &amp; Finalize Order</span>';
+        }
+        return false;
+    }
+
+    if (errorMsg) errorMsg.style.display = 'none';
     if (btn) {
         btn.disabled = true;
-        btn.innerHTML = hasFile ? '⏳ Uploading Receipt &amp; Finalizing Order...' : '⏳ Finalizing Order...';
+        btn.innerHTML = '⏳ Uploading Receipt &amp; Finalizing Order...';
     }
+    return true;
 }
 </script>
 @endsection

@@ -1141,6 +1141,10 @@ class FrontController extends Controller
     {
         $order = Order::with('items')->findOrFail($id);
 
+        if (!$request->hasFile('payment_screenshot') && empty($order->payment_screenshot)) {
+            return back()->with('error', 'অনুগ্রহ করে পেমেন্ট করার পর প্রাপ্ত স্লিপ বা স্ক্রিনশটটি আপলোড করুন। পেমেন্ট স্লিপ আপলোড না করলে অর্ডার ফাইনাল করা যাবে না।');
+        }
+
         $screenshotPath = null;
         if ($request->hasFile('payment_screenshot')) {
             $file = $request->file('payment_screenshot');
