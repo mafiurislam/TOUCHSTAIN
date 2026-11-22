@@ -59,7 +59,7 @@ class ApiController extends Controller
 
     public function categoryProducts($id)
     {
-        $products = Product::where('status', 1)->get()->filter(function ($p) use ($id) {
+        $products = Product::where('status', 1)->orderByDesc('id')->get()->filter(function ($p) use ($id) {
             $cIds = is_array($p->category_ids) ? $p->category_ids : [];
             foreach ($cIds as $c) {
                 if ((string)($c['id'] ?? '') === (string)$id) {
@@ -81,7 +81,7 @@ class ApiController extends Controller
     {
         $limit = (int)$request->query('limit', 240);
         $offset = (int)$request->query('offset', 1);
-        $products = Product::where('status', 1)->get();
+        $products = Product::where('status', 1)->orderByDesc('id')->get();
         return response()->json([
             'total_size' => $products->count(),
             'limit' => $limit,
@@ -92,7 +92,7 @@ class ApiController extends Controller
 
     public function dailyNeeds(Request $request)
     {
-        $products = Product::where('status', 1)->where('daily_needs', 1)->get();
+        $products = Product::where('status', 1)->where('daily_needs', 1)->orderByDesc('id')->get();
         return response()->json([
             'total_size' => $products->count(),
             'limit' => 20,
@@ -103,7 +103,7 @@ class ApiController extends Controller
 
     public function featuredProducts(Request $request)
     {
-        $products = Product::where('status', 1)->where('is_featured', 1)->get();
+        $products = Product::where('status', 1)->where('is_featured', 1)->orderByDesc('id')->get();
         return response()->json([
             'total_size' => $products->count(),
             'limit' => 20,
@@ -114,7 +114,7 @@ class ApiController extends Controller
 
     public function mostReviewed(Request $request)
     {
-        $products = Product::where('status', 1)->orderByDesc('popularity_count')->take(24)->get();
+        $products = Product::where('status', 1)->orderByDesc('id')->take(24)->get();
         return response()->json([
             'total_size' => $products->count(),
             'limit' => 24,

@@ -72,7 +72,7 @@
                 </div>
                 <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
                     <select id="shop-sort-select" class="sort-select" onchange="GetgozoApp.applyShopFilters()">
-                        <option value="default">Sort by: Default</option>
+                        <option value="default">Sort by: Newest First (Default)</option>
                         <option value="popularity">Sort by: Most Popular</option>
                         <option value="price_asc">Price: Low to High</option>
                         <option value="price_desc">Price: High to Low</option>

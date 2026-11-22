@@ -547,6 +547,7 @@
       else if (sort === 'popularity') list.sort((a, b) => (b.popularity_count || 0) - (a.popularity_count || 0));
       else if (sort === 'discount') list.sort((a, b) => (b.discount || 0) - (a.discount || 0));
       else if (sort === 'name_asc') list.sort((a, b) => a.name.localeCompare(b.name));
+      else list.sort((a, b) => (Number(b.id) || 0) - (Number(a.id) || 0));
 
       const countEl = document.getElementById('shop-result-count');
       if (countEl) countEl.textContent = `Showing ${list.length} products`;

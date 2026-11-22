@@ -116,7 +116,7 @@ class FrontController extends Controller
             ->orderBy('priority')
             ->get();
 
-        $allProducts = Product::where('status', 1)->get();
+        $allProducts = Product::where('status', 1)->orderByDesc('id')->get();
 
         // Compute product count per parent and child category
         $catCounts = [];
@@ -175,37 +175,35 @@ class FrontController extends Controller
     public function home()
     {
         $shared = $this->getSharedData();
-        $allById = $shared['allProducts']->keyBy('id');
 
-        // Load exact API ordering from full_site_data.json if present, backed by SQLite Product models
-        $jsonPath = database_path('seeders/full_site_data.json');
-        $raw = file_exists($jsonPath) ? json_decode(file_get_contents($jsonPath), true) : [];
+        // Always prioritize newest products (highest ID first) so any newly created product appears at the top
+        $dailyNeeds = Product::where('status', 1)
+            ->where(function ($q) {
+                $q->where('daily_needs', 1)->orWhere('discount', '>', 0);
+            })
+            ->orderByDesc('id')
+            ->take(15)
+            ->get();
+        if ($dailyNeeds->isEmpty()) {
+            $dailyNeeds = $shared['allProducts']->take(15);
+        }
 
-        $mapIdsToModels = function (array $items, $fallbackQuery) use ($allById) {
-            $models = collect();
-            foreach ($items as $item) {
-                $pid = $item['id'] ?? null;
-                if ($pid && $allById->has($pid)) {
-                    $models->push($allById->get($pid));
-                }
-            }
-            return $models->count() > 0 ? $models : $fallbackQuery();
-        };
+        $featuredProducts = Product::where('status', 1)
+            ->where('is_featured', 1)
+            ->orderByDesc('id')
+            ->take(15)
+            ->get();
+        if ($featuredProducts->isEmpty()) {
+            $featuredProducts = $shared['allProducts']->take(15);
+        }
 
-        $dailyNeeds = $mapIdsToModels(
-            $raw['dailyNeedsProducts'] ?? ($raw['daily_needs']['products'] ?? []),
-            fn() => Product::where('status', 1)->where('daily_needs', 1)->orderByDesc('id')->take(15)->get()
-        )->take(15);
-
-        $featuredProducts = $mapIdsToModels(
-            $raw['featuredProducts'] ?? ($raw['featured']['products'] ?? []),
-            fn() => Product::where('status', 1)->where('is_featured', 1)->orderByDesc('id')->take(15)->get()
-        )->take(15);
-
-        $mostReviewed = $mapIdsToModels(
-            $raw['mostReviewedProducts'] ?? ($raw['most_reviewed']['products'] ?? []),
-            fn() => Product::where('status', 1)->orderByDesc('popularity_count')->take(15)->get()
-        )->take(15);
+        $mostReviewed = Product::where('status', 1)
+            ->orderByDesc('id')
+            ->take(15)
+            ->get();
+        if ($mostReviewed->isEmpty()) {
+            $mostReviewed = $shared['allProducts']->take(15);
+        }
 
         DemoVideo::ensureTableAndSeed();
         $demoVideos = DemoVideo::where('status', true)
