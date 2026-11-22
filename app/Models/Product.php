@@ -8,6 +8,15 @@ class Product extends Model
 {
     protected $guarded = [];
 
+    protected $appends = [
+        'first_image',
+        'image_url',
+        'average_rating',
+        'reviews_count',
+        'coupon_title',
+        'coupon_discount_label',
+    ];
+
     protected $casts = [
         'image' => 'array',
         'category_ids' => 'array',
@@ -54,6 +63,46 @@ class Product extends Model
     public function coupon()
     {
         return $this->belongsTo(Coupon::class, 'coupon_id');
+    }
+
+    public function getAssignedCouponAttribute(): ?Coupon
+    {
+        if ($this->relationLoaded('coupon') && $this->coupon) {
+            return $this->coupon;
+        }
+        if ($this->coupon_id) {
+            $coupon = $this->coupon;
+            if ($coupon) return $coupon;
+        }
+        if (!empty($this->coupon_code)) {
+            return Coupon::where('code', $this->coupon_code)->first();
+        }
+        return null;
+    }
+
+    public function getCouponTitleAttribute(): ?string
+    {
+        $c = $this->assigned_coupon;
+        if ($c && !empty($c->title)) {
+            return $c->title;
+        }
+        if (!empty($this->coupon_code)) {
+            return 'Special Offer';
+        }
+        return null;
+    }
+
+    public function getCouponDiscountLabelAttribute(): ?string
+    {
+        $c = $this->assigned_coupon;
+        if ($c && (float)$c->discount > 0) {
+            $val = ((int)$c->discount == $c->discount) ? (int)$c->discount : $c->discount;
+            return ($c->discount_type === 'percent') ? ($val . '% OFF') : ('₹' . $val . ' OFF');
+        }
+        if (!empty($this->coupon_code)) {
+            return 'OFFER';
+        }
+        return null;
     }
 
     public function category()

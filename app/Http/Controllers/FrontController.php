@@ -116,7 +116,7 @@ class FrontController extends Controller
             ->orderBy('priority')
             ->get();
 
-        $allProducts = Product::where('status', 1)->orderByDesc('id')->get();
+        $allProducts = Product::where('status', 1)->with('coupon')->orderByDesc('id')->get();
 
         // Compute product count per parent and child category
         $catCounts = [];
@@ -178,6 +178,7 @@ class FrontController extends Controller
 
         // Always prioritize newest products (highest ID first) so any newly created product appears at the top
         $dailyNeeds = Product::where('status', 1)
+            ->with('coupon')
             ->where(function ($q) {
                 $q->where('daily_needs', 1)->orWhere('discount', '>', 0);
             })
@@ -189,6 +190,7 @@ class FrontController extends Controller
         }
 
         $featuredProducts = Product::where('status', 1)
+            ->with('coupon')
             ->where('is_featured', 1)
             ->orderByDesc('id')
             ->take(15)
@@ -198,6 +200,7 @@ class FrontController extends Controller
         }
 
         $mostReviewed = Product::where('status', 1)
+            ->with('coupon')
             ->orderByDesc('id')
             ->take(15)
             ->get();

@@ -131,7 +131,7 @@
             });
             localStorage.setItem('getgozo_cart_v2', JSON.stringify(this.state.cart));
           }
-        } catch (e) {}
+        } catch (e) { }
       }
 
       const items = [];
@@ -448,7 +448,7 @@
           },
           body: JSON.stringify({ product_id: pid })
         });
-      } catch (e) {}
+      } catch (e) { }
     },
 
     refreshWishlistUI() {
@@ -477,9 +477,9 @@
       return `
         <div class="gf-vcard product-card" data-product-id="${p.id}">
           <div class="gf-vcard-imgbox" style="position:relative">
-            ${p.coupon_code ? `
+            ${(p.coupon_discount_label || (!p.coupon_discount_label && p.coupon_code)) ? `
               <div class="gf-card-coupon-badge" style="position:absolute;top:8px;left:8px;z-index:3;background:linear-gradient(135deg,#DC2626,#EF4444);color:#ffffff;padding:3px 8px;border-radius:6px;font-size:10.5px;font-weight:800;letter-spacing:0.3px;box-shadow:0 2px 6px rgba(220,38,38,0.4);display:inline-flex;align-items:center;gap:3px;pointer-events:none">
-                <span>🎟️ ${p.coupon_code}</span>
+                <span>🎟️ ${p.coupon_discount_label || 'OFFER'}</span>
               </div>
             ` : ''}
             <div class="gf-vcard-actions">
@@ -508,10 +508,10 @@
               <span>${ratingVal}</span>
             </div>
             <a href="/product/${p.id}" class="gf-vcard-title">${p.name}</a>
-            ${p.coupon_code ? `
-              <div style="background:#FEF3C7;border:1px dashed #F59E0B;color:#92400E;padding:3px 7px;border-radius:6px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:space-between;margin:4px 0 6px">
-                <span>🏷️ Code: <strong>${p.coupon_code}</strong></span>
-                <span style="font-size:10px;color:#B45309;font-weight:800;background:#FDE68A;padding:1px 5px;border-radius:4px">OFFER</span>
+            ${(p.coupon_title || p.coupon_discount_label || p.coupon_code) ? `
+              <div style="background:#FEF3C7;border:1px dashed #F59E0B;color:#92400E;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:space-between;gap:6px;margin:4px 0 6px" title="${p.coupon_title || ''}">
+                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:72%">🏷️ ${p.coupon_title || 'Special Offer'}</span>
+                ${p.coupon_discount_label ? `<span style="font-size:10px;color:#047857;font-weight:800;background:#D1FAE5;border:1px solid #A7F3D0;padding:1px 6px;border-radius:4px;white-space:nowrap">${p.coupon_discount_label}</span>` : ''}
               </div>
             ` : ''}
             <div class="gf-vcard-footer">

@@ -14,9 +14,13 @@
 <div class="gf-hcard" data-product-id="{{ $product->id }}">
     <!-- Left Image Box (114x114) with Bottom-Right Cart Button -->
     <div class="gf-hcard-imgbox" style="position:relative">
-        @if(!empty($product->coupon_code))
+        @if(!empty($product->coupon_discount_label))
             <span style="position:absolute;top:6px;left:6px;background:linear-gradient(135deg,#DC2626,#EF4444);color:#fff;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:800;letter-spacing:0.3px;z-index:2;box-shadow:0 2px 4px rgba(220,38,38,0.3);pointer-events:none">
-                🎟️ {{ $product->coupon_code }}
+                🎟️ {{ $product->coupon_discount_label }}
+            </span>
+        @elseif(!empty($product->coupon_code))
+            <span style="position:absolute;top:6px;left:6px;background:linear-gradient(135deg,#DC2626,#EF4444);color:#fff;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:800;letter-spacing:0.3px;z-index:2;box-shadow:0 2px 4px rgba(220,38,38,0.3);pointer-events:none">
+                🎟️ OFFER
             </span>
         @endif
         <a href="{{ url('/product/' . $product->id) }}" class="gf-hcard-imglink">
@@ -50,9 +54,12 @@
             {{ $product->name }}
         </a>
 
-        @if(!empty($product->coupon_code))
-            <div style="background:#FEF3C7;border:1px dashed #F59E0B;color:#92400E;padding:2px 6px;border-radius:5px;font-size:10.5px;font-weight:700;display:inline-flex;align-items:center;gap:4px;margin-bottom:3px">
-                <span>🏷️ Coupon: <strong>{{ $product->coupon_code }}</strong></span>
+        @if(!empty($product->coupon_title) || !empty($product->coupon_discount_label) || !empty($product->coupon_code))
+            <div style="background:#FEF3C7;border:1px dashed #F59E0B;color:#92400E;padding:2px 7px;border-radius:5px;font-size:10.5px;font-weight:700;display:inline-flex;align-items:center;gap:6px;margin-bottom:3px;max-width:100%" title="{{ $product->coupon_title ?? 'Special Offer' }}">
+                <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:130px">🏷️ {{ $product->coupon_title ?: 'Special Offer' }}</span>
+                @if(!empty($product->coupon_discount_label))
+                    <span style="font-size:9.5px;color:#047857;font-weight:800;background:#D1FAE5;border:1px solid #A7F3D0;padding:1px 5px;border-radius:4px;white-space:nowrap">{{ $product->coupon_discount_label }}</span>
+                @endif
             </div>
         @endif
 
