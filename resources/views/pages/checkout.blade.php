@@ -153,63 +153,79 @@
                 </div>
 
                 <div class="option-cards-grid" style="grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px">
-                    <!-- Option 1: Online Payment (Razorpay) -->
-                    <div class="option-card selected" id="pay-razorpay" onclick="selectCheckoutPayment('razorpay')">
-                        <div style="display:flex;align-items:flex-start;gap:12px">
-                            <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg, #0C2340 0%, #1A365D 100%);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(12,35,64,0.25);flex-shrink:0">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M22 6L11 20H4L12 8H7L12 2H18L13 6H22Z" fill="#38BDF8"/>
-                                </svg>
-                            </div>
-                            <div style="flex:1">
-                                <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
-                                    <h4 style="margin:0;font-size:15px;font-weight:700;color:#111827">Online Payment (Razorpay)</h4>
-                                    <span style="font-size:11px;font-weight:700;background:#DCFCE7;color:#166534;padding:2px 8px;border-radius:99px;border:1px solid #BBF7D0">Instant</span>
+                    @if($isRazorpayActive)
+                        <!-- Option 1: Online Payment (Razorpay) -->
+                        <div class="option-card {{ $defaultPayment === 'razorpay' ? 'selected' : '' }}" id="pay-razorpay" onclick="selectCheckoutPayment('razorpay')">
+                            <div style="display:flex;align-items:flex-start;gap:12px">
+                                <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg, #0C2340 0%, #1A365D 100%);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(12,35,64,0.25);flex-shrink:0">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M22 6L11 20H4L12 8H7L12 2H18L13 6H22Z" fill="#38BDF8"/>
+                                    </svg>
                                 </div>
-                                <p style="font-size:12px;color:#4B5563;margin:4px 0 8px;line-height:1.4">
-                                    UPI (Google Pay, PhonePe, Paytm, BHIM), Cards, NetBanking, Wallets
-                                </p>
-                                <div style="display:flex;flex-wrap:wrap;gap:6px">
-                                    <span style="font-size:10.5px;font-weight:700;background:#F3F4F6;color:#374151;padding:2px 8px;border-radius:4px;border:1px solid #E5E7EB">📱 UPI</span>
-                                    <span style="font-size:10.5px;font-weight:700;background:#F3F4F6;color:#374151;padding:2px 8px;border-radius:4px;border:1px solid #E5E7EB">💳 Cards</span>
-                                    <span style="font-size:10.5px;font-weight:700;background:#F3F4F6;color:#374151;padding:2px 8px;border-radius:4px;border:1px solid #E5E7EB">🏦 NetBanking</span>
-                                    <span style="font-size:10.5px;font-weight:700;background:#F3F4F6;color:#374151;padding:2px 8px;border-radius:4px;border:1px solid #E5E7EB">👛 Wallets</span>
+                                <div style="flex:1">
+                                    <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+                                        <h4 style="margin:0;font-size:15px;font-weight:700;color:#111827">Online Payment (Razorpay)</h4>
+                                        <span style="font-size:11px;font-weight:700;background:#DCFCE7;color:#166534;padding:2px 8px;border-radius:99px;border:1px solid #BBF7D0">Instant</span>
+                                    </div>
+                                    <p style="font-size:12px;color:#4B5563;margin:4px 0 8px;line-height:1.4">
+                                        UPI (Google Pay, PhonePe, Paytm, BHIM), Cards, NetBanking, Wallets
+                                    </p>
+                                    <div style="display:flex;flex-wrap:wrap;gap:6px">
+                                        <span style="font-size:10.5px;font-weight:700;background:#F3F4F6;color:#374151;padding:2px 8px;border-radius:4px;border:1px solid #E5E7EB">📱 UPI</span>
+                                        <span style="font-size:10.5px;font-weight:700;background:#F3F4F6;color:#374151;padding:2px 8px;border-radius:4px;border:1px solid #E5E7EB">💳 Cards</span>
+                                        <span style="font-size:10.5px;font-weight:700;background:#F3F4F6;color:#374151;padding:2px 8px;border-radius:4px;border:1px solid #E5E7EB">🏦 NetBanking</span>
+                                        <span style="font-size:10.5px;font-weight:700;background:#F3F4F6;color:#374151;padding:2px 8px;border-radius:4px;border:1px solid #E5E7EB">👛 Wallets</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
 
-                    <!-- Option 2: Cash on Delivery -->
-                    <div class="option-card" id="pay-cod" onclick="selectCheckoutPayment('cash_on_delivery')">
-                        <div style="display:flex;align-items:flex-start;gap:12px">
-                            <div style="width:40px;height:40px;border-radius:10px;background:#F0FDF4;border:1.5px solid #86EFAC;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">
-                                💵
-                            </div>
-                            <div style="flex:1">
-                                <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
-                                    <h4 style="margin:0;font-size:15px;font-weight:700;color:#111827">Cash on Delivery</h4>
-                                    <span style="font-size:11px;font-weight:700;background:#FEF3C7;color:#92400E;padding:2px 8px;border-radius:99px;border:1px solid #FDE68A">COD</span>
+                    @if($isCodActive)
+                        <!-- Option 2: Cash on Delivery -->
+                        <div class="option-card {{ $defaultPayment === 'cash_on_delivery' ? 'selected' : '' }}" id="pay-cod" onclick="selectCheckoutPayment('cash_on_delivery')">
+                            <div style="display:flex;align-items:flex-start;gap:12px">
+                                <div style="width:40px;height:40px;border-radius:10px;background:#F0FDF4;border:1.5px solid #86EFAC;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">
+                                    💵
                                 </div>
-                                <p style="font-size:12px;color:#4B5563;margin:4px 0 0;line-height:1.4">
-                                    Pay cash or UPI to the delivery executive when your package arrives at your door.
-                                </p>
+                                <div style="flex:1">
+                                    <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+                                        <h4 style="margin:0;font-size:15px;font-weight:700;color:#111827">Cash on Delivery</h4>
+                                        <span style="font-size:11px;font-weight:700;background:#FEF3C7;color:#92400E;padding:2px 8px;border-radius:99px;border:1px solid #FDE68A">COD</span>
+                                    </div>
+                                    <p style="font-size:12px;color:#4B5563;margin:4px 0 0;line-height:1.4">
+                                        Pay cash or UPI to the delivery executive when your package arrives at your door.
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
+
+                    @if(!$isRazorpayActive && !$isCodActive)
+                        <div style="grid-column: 1 / -1;background:#FEF2F2;border:1.5px solid #FCA5A5;border-radius:10px;padding:16px;text-align:center">
+                            <div style="font-size:24px;margin-bottom:6px">⚠️</div>
+                            <strong style="color:#991B1B;font-size:14px;display:block">Online Checkout Temporarily Paused</strong>
+                            <p style="color:#7F1D1D;font-size:12px;margin:4px 0 0">
+                                We are temporarily updating our payment systems. Please call/WhatsApp support at <strong>+91 7679416294</strong> to place your order directly.
+                            </p>
+                        </div>
+                    @endif
                 </div>
 
-                <!-- Razorpay Security Box -->
-                <div id="razorpay-info-box" style="margin-top:16px;background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:12px;padding:14px 18px">
-                    <div style="display:flex;align-items:center;gap:12px">
-                        <div style="font-size:22px">🛡️</div>
-                        <div style="flex:1">
-                            <strong style="color:#0F172A;font-size:13px;display:block">Razorpay Trusted Payment Gateway</strong>
-                            <span style="font-size:12px;color:#475569">
-                                Seamlessly pay with any UPI App (GPay, PhonePe, Paytm), Credit/Debit Card (Visa, MasterCard, RuPay), NetBanking (SBI, HDFC, ICICI, Axis), or Cred. Instant verification with zero extra charge!
-                            </span>
+                @if($isRazorpayActive)
+                    <!-- Razorpay Security Box -->
+                    <div id="razorpay-info-box" style="margin-top:16px;background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:12px;padding:14px 18px;display:{{ $defaultPayment === 'razorpay' ? 'block' : 'none' }}">
+                        <div style="display:flex;align-items:center;gap:12px">
+                            <div style="font-size:22px">🛡️</div>
+                            <div style="flex:1">
+                                <strong style="color:#0F172A;font-size:13px;display:block">Razorpay Trusted Payment Gateway</strong>
+                                <span style="font-size:12px;color:#475569">
+                                    Seamlessly pay with any UPI App (GPay, PhonePe, Paytm), Credit/Debit Card (Visa, MasterCard, RuPay), NetBanking (SBI, HDFC, ICICI, Axis), or Cred. Instant verification with zero extra charge!
+                                </span>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
 
                 <!-- Order Note -->
                 <div class="form-group" style="margin-top:16px;margin-bottom:0">
@@ -441,25 +457,42 @@ function selectCheckoutPayment(method) {
         payCod?.classList.remove('selected');
         if (rzpBox) rzpBox.style.display = 'block';
         if (btn) {
+            btn.disabled = false;
             btn.innerHTML = '⚡ Pay Now via Razorpay';
             btn.style.background = '#01684B';
             btn.style.borderColor = '#01684B';
             btn.style.boxShadow = '0 4px 14px rgba(1,104,75,0.3)';
         }
-    } else {
+    } else if (method === 'cash_on_delivery') {
         payCod?.classList.add('selected');
         payRzp?.classList.remove('selected');
         if (rzpBox) rzpBox.style.display = 'none';
         if (btn) {
+            btn.disabled = false;
             btn.innerHTML = '✓ Confirm Order (Cash on Delivery)';
             btn.style.background = '#2563EB';
             btn.style.borderColor = '#2563EB';
             btn.style.boxShadow = '0 4px 14px rgba(37,99,235,0.3)';
         }
+    } else {
+        payRzp?.classList.remove('selected');
+        payCod?.classList.remove('selected');
+        if (rzpBox) rzpBox.style.display = 'none';
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '⚠️ Checkout Temporarily Unavailable';
+            btn.style.background = '#94A3B8';
+            btn.style.borderColor = '#94A3B8';
+            btn.style.boxShadow = 'none';
+        }
     }
 }
 
 async function handleCheckoutSubmit() {
+    if (currentPaymentMethod === 'none' || (!document.getElementById('pay-razorpay') && !document.getElementById('pay-cod'))) {
+        GetgozoApp.showToast('Online checkout is currently paused. Please contact customer support.', 'error');
+        return;
+    }
     // 1. Ensure customer is registered/logged in via global Auth Modal
     if (!isCustomerAccountRegistered()) {
         if (window.TouchstainsAuth) {
@@ -505,10 +538,17 @@ async function handleCheckoutSubmit() {
         }
     }
 
+    if (currentPaymentMethod === 'none' || !currentPaymentMethod) {
+        GetgozoApp.showToast('No payment method is currently available for checkout. Please contact support.', 'error');
+        return;
+    }
+
     if (currentPaymentMethod === 'razorpay') {
         await initiateRazorpayPayment(totals, addrData);
-    } else {
+    } else if (currentPaymentMethod === 'cash_on_delivery') {
         await placeCodOrder(totals, addrData);
+    } else {
+        GetgozoApp.showToast('Please select a valid payment method.', 'error');
     }
 }
 
@@ -759,7 +799,7 @@ async function placeCodOrder(totals, addrData) {
 
 document.addEventListener('DOMContentLoaded', () => {
     hydrateRegisteredCustomerAddress();
-    selectCheckoutPayment('razorpay');
+    selectCheckoutPayment('{{ $defaultPayment }}');
 });
 </script>
 @endpush

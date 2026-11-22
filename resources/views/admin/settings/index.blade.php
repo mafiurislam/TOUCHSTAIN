@@ -49,6 +49,52 @@
                     <input type="number" name="free_delivery_over_amount" value="{{ $settings['free_delivery_over_amount'] ?? 69 }}" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px">
                 </div>
 
+                <!-- Payment Methods On / Off Switch (User Requested Feature) -->
+                <div style="grid-column: 1 / -1;background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:12px;padding:18px;margin-top:6px">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                        <div>
+                            <h3 style="margin:0;font-size:15px;font-weight:800;color:#0F172A">💳 Payment Methods (On / Off Controls)</h3>
+                            <p style="margin:2px 0 0;font-size:12px;color:#64748B">Turn online Razorpay or Cash on Delivery ON or OFF. Disabled methods are automatically hidden on checkout.</p>
+                        </div>
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                        <!-- Razorpay Online Toggle -->
+                        <div style="background:#fff;border:1.5px solid {{ ($settings['payment_razorpay_active'] ?? '1') !== '0' ? '#86EFAC' : '#FCA5A5' }};border-radius:10px;padding:14px">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                                <strong style="font-size:13.5px;color:#0F172A">⚡ Online Payment (Razorpay)</strong>
+                                <span style="font-size:11px;font-weight:800;padding:2px 8px;border-radius:6px;background:{{ ($settings['payment_razorpay_active'] ?? '1') !== '0' ? '#DCFCE7' : '#FEE2E2' }};color:{{ ($settings['payment_razorpay_active'] ?? '1') !== '0' ? '#166534' : '#991B1B' }}">
+                                    {{ ($settings['payment_razorpay_active'] ?? '1') !== '0' ? '● ACTIVE (ON)' : '○ DISABLED (OFF)' }}
+                                </span>
+                            </div>
+                            <p style="font-size:11.5px;color:#64748B;margin:0 0 10px;line-height:1.4">
+                                Accept instant online payments via UPI (Google Pay, PhonePe, Paytm), Debit/Credit Cards, and NetBanking.
+                            </p>
+                            <select name="payment_razorpay_active" style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:12.5px;font-weight:700">
+                                <option value="1" {{ ($settings['payment_razorpay_active'] ?? '1') !== '0' ? 'selected' : '' }}>🟢 Enabled (ON) — Show on Checkout</option>
+                                <option value="0" {{ ($settings['payment_razorpay_active'] ?? '1') === '0' ? 'selected' : '' }}>🔴 Disabled (OFF) — Hide on Checkout</option>
+                            </select>
+                        </div>
+
+                        <!-- COD Toggle -->
+                        <div style="background:#fff;border:1.5px solid {{ ($settings['payment_cod_active'] ?? '1') !== '0' ? '#86EFAC' : '#FCA5A5' }};border-radius:10px;padding:14px">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                                <strong style="font-size:13.5px;color:#0F172A">💵 Cash on Delivery (COD)</strong>
+                                <span style="font-size:11px;font-weight:800;padding:2px 8px;border-radius:6px;background:{{ ($settings['payment_cod_active'] ?? '1') !== '0' ? '#DCFCE7' : '#FEE2E2' }};color:{{ ($settings['payment_cod_active'] ?? '1') !== '0' ? '#166534' : '#991B1B' }}">
+                                    {{ ($settings['payment_cod_active'] ?? '1') !== '0' ? '● ACTIVE (ON)' : '○ DISABLED (OFF)' }}
+                                </span>
+                            </div>
+                            <p style="font-size:11.5px;color:#64748B;margin:0 0 10px;line-height:1.4">
+                                Allow customers to pay in cash or via rider UPI upon package delivery at their doorstep.
+                            </p>
+                            <select name="payment_cod_active" style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:12.5px;font-weight:700">
+                                <option value="1" {{ ($settings['payment_cod_active'] ?? '1') !== '0' ? 'selected' : '' }}>🟢 Enabled (ON) — Show on Checkout</option>
+                                <option value="0" {{ ($settings['payment_cod_active'] ?? '1') === '0' ? 'selected' : '' }}>🔴 Disabled (OFF) — Hide on Checkout</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 <div>
                     <label style="font-size:12.5px;font-weight:700;display:block;margin-bottom:6px">Razorpay API Key ID *</label>
                     <input type="text" name="razorpay_key_id" value="{{ $settings['razorpay_key_id'] ?? config('services.razorpay.key_id', 'rzp_test_U1cQQReArMfXP9') }}" required style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:monospace">

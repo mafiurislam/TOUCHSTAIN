@@ -373,6 +373,10 @@ class FrontController extends Controller
             ? $shared['settings']['razorpay_key_id']
             : config('services.razorpay.key', env('RAZORPAY_KEY', 'rzp_test_U1cQQReArMfXP9'));
 
+        $isRazorpayActive = ($shared['settings']['payment_razorpay_active'] ?? '1') !== '0';
+        $isCodActive = ($shared['settings']['payment_cod_active'] ?? '1') !== '0';
+        $defaultPayment = $isRazorpayActive ? 'razorpay' : ($isCodActive ? 'cash_on_delivery' : 'none');
+
         return view('pages.checkout', array_merge($shared, [
             'pageId' => 'checkout',
             'pageTitle' => 'Checkout — TOUCHSTAINS',
@@ -382,6 +386,9 @@ class FrontController extends Controller
             'registeredAddress' => $registeredAddress,
             'razorpayKey' => $razorpayKey,
             'razorpayKeyId' => $razorpayKey,
+            'isRazorpayActive' => $isRazorpayActive,
+            'isCodActive' => $isCodActive,
+            'defaultPayment' => $defaultPayment,
         ]));
     }
 
@@ -390,6 +397,13 @@ class FrontController extends Controller
      */
     public function createRazorpayOrder(Request $request, RazorpayService $razorpayService)
     {
+        if (Setting::getValue('payment_razorpay_active', '1') === '0') {
+            return response()->json([
+                'status' => false,
+                'message' => 'Online Payment (Razorpay) is currently disabled by store admin. Please choose Cash on Delivery.',
+            ], 422);
+        }
+
         $this->ensureAddressColumns();
         $user = $this->currentUser();
         $items = $request->input('items', []);
@@ -695,6 +709,16 @@ class FrontController extends Controller
      */
     public function placeOrder(Request $request)
     {
+        if (Setting::getValue('payment_cod_active', '1') === '0') {
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Cash on Delivery (COD) is currently disabled by store admin. Please choose Online Payment.',
+                ], 422);
+            }
+            return back()->with('error', 'Cash on Delivery is currently disabled.');
+        }
+
         $this->ensureAddressColumns();
         $user = $this->currentUser();
         $items = $request->input('items', []);

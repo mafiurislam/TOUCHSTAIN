@@ -175,6 +175,7 @@ Route::prefix('admin')->middleware([AdminAuthMiddleware::class])->group(function
 
     // Payments & AU Bank Transfer Reconcile
     Route::get('/payments', [PaymentController::class, 'index'])->name('admin.payments');
+    Route::post('/payments/toggle-method', [PaymentController::class, 'toggleMethod'])->name('admin.payments.toggle-method');
     Route::post('/payments/{id}/approve', [PaymentController::class, 'approve'])->name('admin.payments.approve');
     Route::post('/payments/{id}/reject', [PaymentController::class, 'reject'])->name('admin.payments.reject');
     Route::post('/bank-transfers/{id}/approve', [PaymentController::class, 'approve'])->name('admin.bank-transfers.approve');

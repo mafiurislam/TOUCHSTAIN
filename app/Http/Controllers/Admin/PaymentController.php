@@ -7,6 +7,7 @@ use App\Models\AuditLog;
 use App\Models\BankAccount;
 use App\Models\BankTransfer;
 use App\Models\Order;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -32,7 +33,34 @@ class PaymentController extends Controller
             'rejected' => BankTransfer::where('status', 'payment_rejected')->count(),
         ];
 
-        return view('admin.payments.index', compact('transfers', 'bankAccount', 'stats'));
+        $isRazorpayActive = Setting::getValue('payment_razorpay_active', '1') !== '0';
+        $isCodActive = Setting::getValue('payment_cod_active', '1') !== '0';
+
+        return view('admin.payments.index', compact('transfers', 'bankAccount', 'stats', 'isRazorpayActive', 'isCodActive'));
+    }
+
+    /**
+     * Quick Toggle for Payment Methods (Razorpay / Cash on Delivery)
+     */
+    public function toggleMethod(Request $request)
+    {
+        $method = $request->input('method'); // 'razorpay' or 'cod'
+        $status = $request->input('status'); // '1' or '0'
+
+        if ($method === 'razorpay') {
+            Setting::setValue('payment_razorpay_active', $status ? '1' : '0');
+            $label = 'Online Payment (Razorpay)';
+        } elseif ($method === 'cod') {
+            Setting::setValue('payment_cod_active', $status ? '1' : '0');
+            $label = 'Cash on Delivery (COD)';
+        } else {
+            return back()->with('error', 'Invalid payment method specified.');
+        }
+
+        $stateText = $status ? 'ENABLED (ON)' : 'DISABLED (OFF)';
+        AuditLog::record('Payments', 'Toggle Payment Method', "{$label} set to {$stateText}");
+
+        return back()->with('success', "✓ {$label} is now {$stateText} on checkout!");
     }
 
     /**

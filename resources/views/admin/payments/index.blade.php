@@ -24,16 +24,63 @@
         </div>
     </div>
 
-    <!-- Active Razorpay Gateway Ribbon -->
-    <div style="background:linear-gradient(135deg, #02042B, #1D4ED8);color:#fff;border-radius:12px;padding:16px 20px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
-        <div>
-            <div style="font-size:11.5px;text-transform:uppercase;letter-spacing:1px;opacity:0.85">Active Payment Methods</div>
-            <div style="font-size:16px;font-weight:800;margin-top:2px">◆ Razorpay Payment Gateway &amp; Cash on Delivery (COD)</div>
-            <div style="font-size:12.5px;opacity:0.9;margin-top:2px">
-                Razorpay API Key ID: <code style="background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:4px;font-weight:700">{{ config('services.razorpay.key_id', 'rzp_test_U1cQQReArMfXP9') }}</code>
+    <!-- Payment Methods On / Off Switch Panel -->
+    <div style="background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:20px;margin-bottom:24px;box-shadow:0 2px 10px rgba(0,0,0,0.04)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+            <div>
+                <h2 style="font-size:16px;font-weight:800;color:#0F172A;margin:0">🎛️ Payment Methods Control Panel</h2>
+                <p style="font-size:12px;color:var(--text-muted);margin:2px 0 0">Turn online payments (Razorpay) or Cash on Delivery ON or OFF. Disabled methods are instantly hidden from checkout.</p>
+            </div>
+            <a href="{{ route('admin.settings') }}" class="btn-secondary" style="padding:6px 14px;font-size:12px">⚙️ All Store Settings</a>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:16px">
+            <!-- 1. Razorpay Gateway Card -->
+            <div style="background:{{ $isRazorpayActive ? '#F0FDF4' : '#FEF2F2' }};border:1.5px solid {{ $isRazorpayActive ? '#86EFAC' : '#FCA5A5' }};border-radius:12px;padding:16px;display:flex;justify-content:space-between;align-items:center;gap:14px">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px">
+                        <span style="font-size:20px">⚡</span>
+                        <strong style="font-size:14.5px;color:#0F172A">Razorpay Online Payment</strong>
+                    </div>
+                    <div style="font-size:12px;color:{{ $isRazorpayActive ? '#166534' : '#991B1B' }};font-weight:700;margin-top:4px">
+                        {{ $isRazorpayActive ? '● Status: ENABLED (ON)' : '○ Status: DISABLED (OFF)' }}
+                    </div>
+                    <div style="font-size:11px;color:#64748B;margin-top:2px">UPI, Cards, NetBanking, Wallets</div>
+                </div>
+
+                <form action="{{ route('admin.payments.toggle-method') }}" method="POST" style="margin:0">
+                    @csrf
+                    <input type="hidden" name="method" value="razorpay">
+                    <input type="hidden" name="status" value="{{ $isRazorpayActive ? '0' : '1' }}">
+                    <button type="submit" class="btn-theme" style="padding:7px 16px;font-size:12px;background:{{ $isRazorpayActive ? '#DC2626' : '#059669' }};border-color:{{ $isRazorpayActive ? '#DC2626' : '#059669' }}">
+                        {{ $isRazorpayActive ? '🔴 Turn OFF' : '🟢 Turn ON' }}
+                    </button>
+                </form>
+            </div>
+
+            <!-- 2. Cash on Delivery (COD) Card -->
+            <div style="background:{{ $isCodActive ? '#F0FDF4' : '#FEF2F2' }};border:1.5px solid {{ $isCodActive ? '#86EFAC' : '#FCA5A5' }};border-radius:12px;padding:16px;display:flex;justify-content:space-between;align-items:center;gap:14px">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px">
+                        <span style="font-size:20px">💵</span>
+                        <strong style="font-size:14.5px;color:#0F172A">Cash on Delivery (COD)</strong>
+                    </div>
+                    <div style="font-size:12px;color:{{ $isCodActive ? '#166534' : '#991B1B' }};font-weight:700;margin-top:4px">
+                        {{ $isCodActive ? '● Status: ENABLED (ON)' : '○ Status: DISABLED (OFF)' }}
+                    </div>
+                    <div style="font-size:11px;color:#64748B;margin-top:2px">Pay cash or rider UPI upon delivery</div>
+                </div>
+
+                <form action="{{ route('admin.payments.toggle-method') }}" method="POST" style="margin:0">
+                    @csrf
+                    <input type="hidden" name="method" value="cod">
+                    <input type="hidden" name="status" value="{{ $isCodActive ? '0' : '1' }}">
+                    <button type="submit" class="btn-theme" style="padding:7px 16px;font-size:12px;background:{{ $isCodActive ? '#DC2626' : '#059669' }};border-color:{{ $isCodActive ? '#DC2626' : '#059669' }}">
+                        {{ $isCodActive ? '🔴 Turn OFF' : '🟢 Turn ON' }}
+                    </button>
+                </form>
             </div>
         </div>
-        <span class="status-badge status-success" style="background:#ECFDF5;color:#065F46">● Razorpay &amp; COD Active</span>
     </div>
 
     <div class="admin-card">
