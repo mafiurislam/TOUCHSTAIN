@@ -82,7 +82,7 @@ class DeliveryController extends Controller
         ];
 
         // Orders pending shipment creation
-        $ordersPendingShipment = Order::whereNotIn('order_status', ['delivered', 'canceled'])
+        $ordersPendingShipment = Order::whereNotIn('order_status', ['delivered', 'canceled', 'unconfirmed'])
             ->whereDoesntHave('shipment', function ($q) {
                 $q->whereNotIn('status', ['cancelled']);
             })

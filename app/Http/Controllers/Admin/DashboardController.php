@@ -19,17 +19,17 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        // 1. KPI Statistics from actual database records
-        $totalOrders = Order::count();
+        // 1. KPI Statistics from actual database records (only finalized/confirmed orders)
+        $totalOrders = Order::whereNotIn('order_status', ['unconfirmed'])->count();
         $completedOrders = Order::where('order_status', 'delivered')->count();
         $pendingOrders = Order::where('order_status', 'pending')->count();
         $totalCustomers = User::where('role', 'customer')->count();
-        $totalRevenue = Order::where('order_status', '!=', 'canceled')->sum('order_amount');
-        $monthlyRevenue = Order::where('order_status', '!=', 'canceled')
+        $totalRevenue = Order::whereNotIn('order_status', ['canceled', 'unconfirmed'])->sum('order_amount');
+        $monthlyRevenue = Order::whereNotIn('order_status', ['canceled', 'unconfirmed'])
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->sum('order_amount');
-        $todayRevenue = Order::where('order_status', '!=', 'canceled')
+        $todayRevenue = Order::whereNotIn('order_status', ['canceled', 'unconfirmed'])
             ->whereDate('created_at', now()->toDateString())
             ->sum('order_amount');
 
@@ -45,7 +45,7 @@ class DashboardController extends Controller
         $dailyRevenueData = [];
         for ($d = 1; $d <= min(now()->day, $daysInMonth); $d++) {
             $dailyLabels[] = "Day " . $d;
-            $daySum = Order::where('order_status', '!=', 'canceled')
+            $daySum = Order::whereNotIn('order_status', ['canceled', 'unconfirmed'])
                 ->whereYear('created_at', now()->year)
                 ->whereMonth('created_at', now()->month)
                 ->whereDay('created_at', $d)
@@ -76,8 +76,9 @@ class DashboardController extends Controller
         $locationLabels = ['Mumbai', 'Surat', 'Ahmedabad', 'Pune', 'Vadodara', 'Delhi', 'Kolkata'];
         $locationData = [35, 18, 15, 12, 10, 8, 2];
 
-        // 5. Current Orders Table
-        $currentOrders = Order::with(['items', 'user', 'shipment'])
+        // 5. Current Orders Table (only finalized/confirmed orders)
+        $currentOrders = Order::whereNotIn('order_status', ['unconfirmed'])
+            ->with(['items', 'user', 'shipment'])
             ->orderByDesc('id')
             ->take(8)
             ->get();

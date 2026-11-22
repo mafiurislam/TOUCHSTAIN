@@ -527,7 +527,7 @@ class FrontController extends Controller
             'delivery_charge' => $deliveryCharge,
             'payment_method' => 'razorpay',
             'payment_status' => 'unpaid',
-            'order_status' => 'pending',
+            'order_status' => 'unconfirmed',
             'order_type' => $request->input('order_type', 'delivery'),
             'time_slot' => $request->input('time_slot', 'Today, 09:00 AM - 11:00 PM'),
             'delivery_date' => now()->format('Y-m-d'),
@@ -1047,7 +1047,7 @@ class FrontController extends Controller
             'delivery_charge' => $deliveryCharge,
             'payment_method' => 'upi',
             'payment_status' => 'unpaid',
-            'order_status' => 'pending',
+            'order_status' => 'unconfirmed',
             'order_type' => $request->input('order_type', 'delivery'),
             'time_slot' => $request->input('time_slot', 'Today, 09:00 AM - 11:00 PM'),
             'delivery_date' => now()->format('Y-m-d'),
@@ -1071,31 +1071,15 @@ class FrontController extends Controller
                 'discount_on_product' => 0,
                 'quantity' => $vi['qty'],
             ]);
-
-            if ($prod) {
-                $newStock = max(0, (int)$prod->total_stock - (int)$vi['qty']);
-                $prod->update(['total_stock' => $newStock]);
-                $prod->increment('popularity_count', (int)$vi['qty']);
-                try {
-                    InventoryLog::create([
-                        'product_id' => $prod->id,
-                        'type' => 'stock_out',
-                        'quantity' => (int)$vi['qty'],
-                        'current_stock' => $newStock,
-                        'notes' => "UPI Order #{$order->id} initiated",
-                        'user_id' => $user->id,
-                    ]);
-                } catch (\Throwable $e) {}
-            }
         }
 
-        // Record pending payment in BankTransfer table for admin reconciliation
+        // Record pending payment in BankTransfer table
         try {
             BankTransfer::create([
                 'order_id' => $order->id,
                 'user_id' => $user->id,
                 'amount' => $totalAmount,
-                'status' => 'verification_pending',
+                'status' => 'initiated',
             ]);
         } catch (\Throwable $e) {}
 
@@ -1151,11 +1135,11 @@ class FrontController extends Controller
     }
 
     /**
-     * Confirm UPI Payment by Customer (Upload Payment Slip / Screenshot)
+     * Confirm UPI Payment by Customer (Upload Payment Slip / Screenshot - Optional)
      */
     public function confirmUpiPayment(Request $request, $id)
     {
-        $order = Order::findOrFail($id);
+        $order = Order::with('items')->findOrFail($id);
 
         $screenshotPath = null;
         if ($request->hasFile('payment_screenshot')) {
@@ -1174,8 +1158,10 @@ class FrontController extends Controller
 
         $utr = trim((string)$request->input('utr_number', ''));
         if ($utr === '') {
-            $utr = 'UPI-SLIP-' . $order->id . '-' . strtoupper(substr(md5(time() . $order->id), 0, 6));
+            $utr = 'UPI-' . $order->id . '-' . strtoupper(substr(md5(time() . $order->id), 0, 6));
         }
+
+        $wasUnconfirmed = $order->payment_status !== 'paid' || $order->order_status === 'unconfirmed';
 
         $order->update([
             'payment_status' => 'paid',
@@ -1184,6 +1170,28 @@ class FrontController extends Controller
             'payment_screenshot' => $screenshotPath ?: $order->payment_screenshot,
             'transaction_date' => now()->format('Y-m-d'),
         ]);
+
+        // Decrement stock & record inventory logs on confirmed payment
+        if ($wasUnconfirmed) {
+            foreach ($order->items as $oi) {
+                $prod = Product::find($oi->product_id);
+                if ($prod) {
+                    $newStock = max(0, (int)$prod->total_stock - (int)$oi->quantity);
+                    $prod->update(['total_stock' => $newStock]);
+                    $prod->increment('popularity_count', (int)$oi->quantity);
+                    try {
+                        InventoryLog::create([
+                            'product_id' => $prod->id,
+                            'type' => 'stock_out',
+                            'quantity' => (int)$oi->quantity,
+                            'current_stock' => $newStock,
+                            'notes' => "UPI Order #{$order->id} payment finalized",
+                            'user_id' => $order->user_id,
+                        ]);
+                    } catch (\Throwable $e) {}
+                }
+            }
+        }
 
         // Update BankTransfer record
         $transfer = BankTransfer::where('order_id', $order->id)->first();
@@ -1194,16 +1202,27 @@ class FrontController extends Controller
                 'status' => 'payment_confirmed',
                 'approved_at' => now(),
             ]);
+        } else {
+            try {
+                BankTransfer::create([
+                    'order_id' => $order->id,
+                    'user_id' => $order->user_id,
+                    'amount' => $order->order_amount,
+                    'utr_number' => $utr,
+                    'screenshot_path' => $screenshotPath,
+                    'status' => 'payment_confirmed',
+                ]);
+            } catch (\Throwable $e) {}
         }
 
         try {
-            AuditLog::record('Payments', 'UPI Slip Uploaded', "Order #{$order->id} confirmed with payment receipt image");
+            AuditLog::record('Payments', 'UPI Payment Confirmed', "Order #{$order->id} confirmed and finalized via UPI");
         } catch (\Throwable $e) {}
 
         // Trigger auto-shipment if active
         $this->triggerShiprocketAutoDispatch($order);
 
-        return redirect('/order-success?id=' . $order->id)->with('success', '✓ Payment receipt uploaded successfully! Order confirmed.');
+        return redirect('/order-success?id=' . $order->id)->with('success', '✓ Payment confirmed! Order #' . $order->id . ' has been finalized successfully.');
     }
 
     public function submitBankTransfer(Request $request)
@@ -1303,6 +1322,7 @@ class FrontController extends Controller
         $shared = $this->getSharedData();
         $orders = Auth::check()
             ? Order::where('user_id', Auth::id())
+                ->whereNotIn('order_status', ['unconfirmed'])
                 ->with(['items', 'bankTransfer', 'shipment'])
                 ->orderByDesc('id')
                 ->get()

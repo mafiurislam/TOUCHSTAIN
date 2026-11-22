@@ -22,6 +22,9 @@ class OrderController extends Controller
 
         if ($request->filled('status')) {
             $query->where('order_status', $request->input('status'));
+        } else {
+            // Exclude unconfirmed checkout attempts from default view
+            $query->whereNotIn('order_status', ['unconfirmed']);
         }
 
         if ($request->filled('payment_status')) {
@@ -52,7 +55,7 @@ class OrderController extends Controller
         $orders = $query->paginate(20)->withQueryString();
 
         $statusCounts = [
-            'all' => Order::count(),
+            'all' => Order::whereNotIn('order_status', ['unconfirmed'])->count(),
             'pending' => Order::where('order_status', 'pending')->count(),
             'confirmed' => Order::where('order_status', 'confirmed')->count(),
             'processing' => Order::where('order_status', 'processing')->count(),
@@ -60,6 +63,7 @@ class OrderController extends Controller
             'delivered' => Order::where('order_status', 'delivered')->count(),
             'canceled' => Order::where('order_status', 'canceled')->count(),
             'returned' => Order::where('order_status', 'returned')->count(),
+            'unconfirmed' => Order::where('order_status', 'unconfirmed')->count(),
         ];
 
         return view('admin.orders.index', compact('orders', 'statusCounts'));

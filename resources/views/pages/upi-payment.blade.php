@@ -70,8 +70,8 @@
                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
                     <span style="font-size:24px">🧾</span>
                     <div>
-                        <h4 style="margin:0;font-size:15px;font-weight:800;color:#0F172A">Step 2: Upload Payment Receipt / Screenshot</h4>
-                        <p style="margin:2px 0 0;font-size:12.5px;color:#64748B">পেমেন্ট করার পর ট্রানজাকশন স্লিপ বা স্ক্রিনশট আপলোড করে কনফার্ম করুন</p>
+                        <h4 style="margin:0;font-size:15px;font-weight:800;color:#0F172A">Step 2: Upload Payment Receipt / Screenshot <span style="font-size:12px;font-weight:700;color:#059669;background:#DCFCE7;padding:2px 8px;border-radius:6px;border:1px solid #BBF7D0;margin-left:6px">Optional / ঐচ্ছিক</span></h4>
+                        <p style="margin:2px 0 0;font-size:12.5px;color:#64748B">পেমেন্ট সম্পন্ন করার পর স্ক্রিনশট বা রসিদ আপলোড করতে পারেন (না করলেও সরাসরি কনফার্ম করতে পারবেন)</p>
                     </div>
                 </div>
 
@@ -84,18 +84,18 @@
                                 📁
                             </div>
                             <strong style="display:block;font-size:14.5px;color:#1E293B;margin-bottom:4px">
-                                Upload Payment Slip / Screenshot
+                                Upload Payment Slip / Screenshot <span style="font-weight:500;color:#64748B;font-size:12px">(Optional)</span>
                             </strong>
                             <p style="font-size:12px;color:#64748B;margin:0 0 12px;line-height:1.4">
-                                PhonePe, Google Pay, বা Paytm পেমেন্ট সম্পন্ন করার পর প্রাপ্ত রসিদ বা স্ক্রিনশটটি এখানে আপলোড করুন (JPG, PNG, WEBP, PDF)
+                                PhonePe, Google Pay, বা Paytm পেমেন্ট সম্পন্ন করার পর প্রাপ্ত রসিদ বা স্ক্রিনশটটি এখানে আপলোড করতে পারেন (ঐচ্ছিক)
                             </p>
                             <span class="btn-secondary" style="display:inline-block;padding:8px 20px;font-size:12.5px;font-weight:700;border-radius:8px">
-                                📷 Choose File / ফটো সিলেক্ট করুন
+                                📷 Choose File / ফটো সিলেক্ট করুন (Optional)
                             </span>
                         </div>
 
-                        <!-- Hidden File Input -->
-                        <input type="file" name="payment_screenshot" id="receipt-input" accept="image/*,.pdf" required style="display:none" onchange="previewReceiptFile(event)">
+                        <!-- Hidden File Input (Optional) -->
+                        <input type="file" name="payment_screenshot" id="receipt-input" accept="image/*,.pdf" style="display:none" onchange="previewReceiptFile(event)">
 
                         <!-- Live File Preview Box -->
                         <div id="receipt-preview-box" style="display:none;margin-top:12px;background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:12px;padding:12px 16px;align-items:center;justify-content:space-between">
@@ -202,15 +202,11 @@ function clearReceiptFile() {
 
 function handleUpiConfirmSubmit(event) {
     const input = document.getElementById('receipt-input');
-    if (!input || !input.files || input.files.length === 0) {
-        event.preventDefault();
-        alert('অনুগ্রহ করে পেমেন্ট করার পর প্রাপ্ত স্লিপ বা স্ক্রিনশটটি আপলোড করুন।');
-        return false;
-    }
+    const hasFile = input && input.files && input.files.length > 0;
     const btn = document.getElementById('btn-submit-confirm');
     if (btn) {
         btn.disabled = true;
-        btn.innerHTML = '⏳ Uploading Slip &amp; Confirming Order...';
+        btn.innerHTML = hasFile ? '⏳ Uploading Receipt &amp; Finalizing Order...' : '⏳ Finalizing Order...';
     }
 }
 </script>

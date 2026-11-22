@@ -41,6 +41,11 @@
             <a href="{{ route('admin.orders', ['status' => 'canceled']) }}" class="btn-secondary" style="{{ $currStatus === 'canceled' ? 'background:#EF4444;color:#fff;font-weight:700' : '' }}">
                 ✕ Canceled ({{ $statusCounts['canceled'] }})
             </a>
+            @if(($statusCounts['unconfirmed'] ?? 0) > 0)
+                <a href="{{ route('admin.orders', ['status' => 'unconfirmed']) }}" class="btn-secondary" style="{{ $currStatus === 'unconfirmed' ? 'background:#64748B;color:#fff;font-weight:700' : '' }}">
+                    ⏸️ Incomplete Checkout ({{ $statusCounts['unconfirmed'] }})
+                </a>
+            @endif
         </div>
 
         <!-- Filter Ribbon -->

@@ -19,7 +19,7 @@ class ReportController extends Controller
         $dateFrom = $request->input('date_from', now()->startOfMonth()->toDateString());
         $dateTo = $request->input('date_to', now()->toDateString());
 
-        $ordersQuery = Order::where('order_status', '!=', 'canceled')
+        $ordersQuery = Order::whereNotIn('order_status', ['canceled', 'unconfirmed'])
             ->whereDate('created_at', '>=', $dateFrom)
             ->whereDate('created_at', '<=', $dateTo);
 
@@ -32,7 +32,7 @@ class ReportController extends Controller
         $netProfit = max(0, $totalSales - $estimatedCost - $discountsGiven);
 
         // Daily breakdown
-        $dailyReports = Order::where('order_status', '!=', 'canceled')
+        $dailyReports = Order::whereNotIn('order_status', ['canceled', 'unconfirmed'])
             ->whereDate('created_at', '>=', $dateFrom)
             ->whereDate('created_at', '<=', $dateTo)
             ->select(

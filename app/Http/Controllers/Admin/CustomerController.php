@@ -34,7 +34,7 @@ class CustomerController extends Controller
 
         // Calculate total spend per customer
         foreach ($customers as $c) {
-            $c->total_spent = (float) $c->orders()->where('order_status', '!=', 'canceled')->sum('order_amount');
+            $c->total_spent = (float) $c->orders()->whereNotIn('order_status', ['canceled', 'unconfirmed'])->sum('order_amount');
             $c->is_vip = $c->total_spent >= 2500 || $c->orders_count >= 5;
         }
 
@@ -127,7 +127,7 @@ class CustomerController extends Controller
         fputcsv($handle, ['ID', 'Name', 'Phone', 'Email', 'Total Orders', 'Total Spent (INR)', 'Status', 'Registered Date']);
 
         foreach ($customers as $c) {
-            $spent = (float) $c->orders()->where('order_status', '!=', 'canceled')->sum('order_amount');
+            $spent = (float) $c->orders()->whereNotIn('order_status', ['canceled', 'unconfirmed'])->sum('order_amount');
             fputcsv($handle, [
                 $c->id,
                 $c->name,

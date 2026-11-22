@@ -24,14 +24,14 @@ class AdminController extends Controller
             'total_products' => Product::count(),
             'total_categories' => Category::where('parent_id', 0)->count(),
             'total_subcategories' => Category::where('parent_id', '>', 0)->count(),
-            'total_orders' => Order::count(),
+            'total_orders' => Order::whereNotIn('order_status', ['unconfirmed'])->count(),
             'pending_orders' => Order::where('order_status', 'pending')->count(),
             'delivered_orders' => Order::where('order_status', 'delivered')->count(),
-            'total_revenue' => Order::where('order_status', '!=', 'canceled')->sum('order_amount'),
+            'total_revenue' => Order::whereNotIn('order_status', ['canceled', 'unconfirmed'])->sum('order_amount'),
             'total_customers' => User::where('role', 'customer')->count(),
         ];
 
-        $recentOrders = Order::with(['user', 'items', 'shipment'])->orderByDesc('id')->take(25)->get();
+        $recentOrders = Order::whereNotIn('order_status', ['unconfirmed'])->with(['user', 'items', 'shipment'])->orderByDesc('id')->take(25)->get();
         $products = Product::orderByDesc('id')->take(40)->get();
         $categories = Category::where('parent_id', 0)->with('children')->orderBy('priority')->get();
         $coupons = Coupon::orderByDesc('id')->get();
