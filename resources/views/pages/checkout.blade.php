@@ -1,8 +1,317 @@
 @extends('layouts.app')
 
 @section('content')
-<main class="gf-container container" style="max-width:1100px;width:100%;margin:0 auto;padding:20px 24px 56px;box-sizing:border-box">
-    <div class="breadcrumb">
+<style>
+/* Checkout Page Responsive Modern Layout */
+.checkout-page-container {
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px 24px 56px;
+    box-sizing: border-box;
+}
+
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr 370px;
+    gap: 24px;
+    margin: 12px 0 40px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.checkout-section {
+    background: var(--bg-card, #FFFFFF);
+    border: 1px solid var(--border, #E2E8F0);
+    border-radius: 14px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    box-sizing: border-box;
+    width: 100%;
+}
+.checkout-section h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border, #E2E8F0);
+    color: var(--text-main, #0F172A);
+}
+
+.option-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.option-cards-grid.payment-methods-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+}
+.option-cards-grid.timeslot-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.option-card {
+    border: 1.5px solid var(--border, #E2E8F0);
+    border-radius: 12px;
+    padding: 14px;
+    cursor: pointer;
+    background: #F8FAFC;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+.option-card:hover {
+    border-color: var(--primary, #01684B);
+    background: #FFFFFF;
+}
+.option-card.selected {
+    border-color: var(--primary, #01684B);
+    background: #FFFFFF;
+    box-shadow: 0 4px 14px rgba(1, 104, 75, 0.12);
+}
+.option-card.selected#pay-upi {
+    border-color: #7C3AED;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.15);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.form-group label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--text-secondary, #334155);
+}
+.form-group .form-control {
+    width: 100%;
+    height: 44px;
+    border: 1.5px solid var(--border, #CBD5E1);
+    border-radius: 8px;
+    padding: 0 12px;
+    font-size: 13.5px;
+    box-sizing: border-box;
+    background: #FFFFFF;
+    color: var(--text-main, #0F172A);
+}
+.form-group .form-control:focus {
+    border-color: var(--primary, #01684B);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(1, 104, 75, 0.12);
+}
+
+.summary-card {
+    background: var(--bg-card, #FFFFFF);
+    border: 1px solid var(--border, #E2E8F0);
+    border-radius: 14px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 90px;
+    box-sizing: border-box;
+    width: 100%;
+}
+.summary-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border, #E2E8F0);
+}
+
+/* UPI Payment Info Box */
+.upi-info-card {
+    margin-top: 16px;
+    background: #FAF5FF;
+    border: 1.5px solid #E9D5FF;
+    border-radius: 14px;
+    padding: 16px;
+    box-sizing: border-box;
+    width: 100%;
+}
+.upi-info-flex {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.upi-qr-card {
+    background: #FFFFFF;
+    padding: 6px;
+    border-radius: 10px;
+    border: 1.5px solid #DDD6FE;
+    text-align: center;
+    width: 115px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+.upi-qr-card img {
+    width: 102px;
+    height: 102px;
+    object-fit: contain;
+    border-radius: 6px;
+    display: block;
+    margin: 0 auto;
+}
+.upi-qr-card span {
+    display: block;
+    font-size: 9px;
+    font-weight: 800;
+    color: #6D28D9;
+    margin-top: 4px;
+}
+.upi-info-details {
+    flex: 1;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* ============================================================================
+ * MOBILE SCREEN OPTIMIZATIONS (< 768px)
+ * Zero Horizontal Overflow - Everything 100% Full-Width & Stacked Cleanly
+ * ============================================================================ */
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden !important;
+        max-width: 100vw !important;
+    }
+    .checkout-page-container {
+        padding: 12px 14px 60px !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+    }
+    .checkout-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 14px !important;
+        margin: 8px 0 24px !important;
+        width: 100% !important;
+    }
+    .checkout-section {
+        padding: 16px 14px !important;
+        margin-bottom: 14px !important;
+        border-radius: 12px !important;
+        width: 100% !important;
+    }
+    .checkout-section h3 {
+        font-size: 15px !important;
+        margin-bottom: 12px !important;
+        padding-bottom: 8px !important;
+    }
+
+    /* All Option Cards Stack 100% Full-Width on Mobile */
+    .option-cards-grid,
+    .option-cards-grid.payment-methods-grid,
+    .option-cards-grid.timeslot-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        width: 100% !important;
+    }
+    .option-card {
+        width: 100% !important;
+        min-width: 0 !important;
+        padding: 12px 14px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Address Form Rows Stack Vertically */
+    .form-row {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        margin-bottom: 10px !important;
+        width: 100% !important;
+    }
+    .form-group {
+        width: 100% !important;
+    }
+    .form-group .form-control {
+        width: 100% !important;
+        height: 44px !important;
+        font-size: 14px !important;
+    }
+    #btn-save-checkout-address {
+        width: 100% !important;
+        height: 46px !important;
+        font-size: 14px !important;
+        justify-content: center !important;
+        border-radius: 10px !important;
+    }
+
+    /* UPI Box on Mobile: Stack QR Code & Info Centered */
+    .upi-info-card {
+        padding: 14px 12px !important;
+        border-radius: 12px !important;
+        width: 100% !important;
+    }
+    .upi-info-flex {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+    .upi-qr-card {
+        margin: 0 auto !important;
+        width: 120px !important;
+    }
+    .upi-info-details {
+        min-width: 0 !important;
+        width: 100% !important;
+        text-align: center !important;
+    }
+    .upi-info-details .upi-id-row {
+        justify-content: center !important;
+        flex-wrap: wrap !important;
+    }
+    .upi-info-details code {
+        word-break: break-all !important;
+        font-size: 13px !important;
+    }
+
+    /* Summary Card Stacks Statically at Bottom on Mobile */
+    .summary-card {
+        position: static !important;
+        width: 100% !important;
+        padding: 16px 14px !important;
+        border-radius: 12px !important;
+        box-sizing: border-box !important;
+    }
+    #btn-confirm-order {
+        width: 100% !important;
+        height: 50px !important;
+        font-size: 15px !important;
+        font-weight: 700 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 10px !important;
+    }
+}
+</style>
+
+<main class="gf-container container checkout-page-container">
+    <div class="breadcrumb" style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:12px 0;font-size:13px">
         <a href="{{ url('/') }}">Home</a> &gt; <span>Checkout</span>
     </div>
 
@@ -240,18 +549,18 @@
 
                 @if($isUpiActive)
                     <!-- UPI Details & QR Box -->
-                    <div id="upi-info-box" style="margin-top:16px;background:#FAF5FF;border:1.5px solid #E9D5FF;border-radius:14px;padding:16px;display:{{ $defaultPayment === 'upi' ? 'block' : 'none' }}">
-                        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-                            <div style="background:#fff;padding:6px;border-radius:10px;border:1.5px solid #DDD6FE;text-align:center;width:115px;flex-shrink:0">
-                                <img src="{{ asset('storage/' . ($upiQrImage ?? 'payment/upi_phonepe_qr.jpg')) }}?v=1" alt="UPI QR" style="width:102px;height:102px;object-fit:contain;border-radius:6px;display:block;margin:0 auto">
-                                <span style="display:block;font-size:9px;font-weight:800;color:#6D28D9;margin-top:4px">SCAN &amp; PAY</span>
+                    <div id="upi-info-box" class="upi-info-card" style="margin-top:16px;background:#FAF5FF;border:1.5px solid #E9D5FF;border-radius:14px;padding:16px;display:{{ $defaultPayment === 'upi' ? 'block' : 'none' }}">
+                        <div class="upi-info-flex">
+                            <div class="upi-qr-card">
+                                <img src="{{ asset('storage/' . ($upiQrImage ?? 'payment/upi_phonepe_qr.jpg')) }}?v=1" alt="UPI QR">
+                                <span>SCAN &amp; PAY</span>
                             </div>
-                            <div style="flex:1;min-width:200px">
+                            <div class="upi-info-details">
                                 <div style="display:inline-flex;align-items:center;gap:6px;background:#EDE9FE;color:#5B21B6;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:800;margin-bottom:6px">
                                     <span>⚡ Official PhonePe / UPI Payment</span>
                                 </div>
                                 <h4 style="margin:0 0 4px;font-size:14.5px;font-weight:800;color:#1E1B4B">{{ $upiName ?? 'Naushad Ali Meher Ali' }}</h4>
-                                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                                <div class="upi-id-row" style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
                                     <span style="font-size:12px;color:#6B7280">UPI ID:</span>
                                     <code style="background:#fff;border:1px solid #C4B5FD;color:#6D28D9;padding:2px 8px;border-radius:6px;font-size:12.5px;font-weight:800">{{ $upiId ?? '7039214465-3@ybl' }}</code>
                                 </div>

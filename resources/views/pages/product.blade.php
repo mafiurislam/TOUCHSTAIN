@@ -11,8 +11,601 @@
     $unitText = $capFmt . ' ' . ($product->unit ?? 'ml');
     $inWish = in_array($product->id, $wishlistIds ?? []);
 @endphp
-<main class="container">
-    <div class="breadcrumb">
+
+<style>
+/* Product Detail Page Mobile & Desktop Refined Styles */
+.product-detail-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 48px;
+    box-sizing: border-box;
+}
+
+.prod-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-muted, #64748B);
+    padding: 14px 0;
+}
+.prod-breadcrumb a {
+    color: var(--text-secondary, #475569);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+.prod-breadcrumb a:hover {
+    color: var(--primary, #01684B);
+}
+.prod-breadcrumb span#prod-breadcrumb-name {
+    color: var(--text-main, #0F172A);
+    font-weight: 600;
+    max-width: 380px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.product-detail-card {
+    background: var(--bg-card, #FFFFFF);
+    border: 1px solid var(--border, #E2E8F0);
+    border-radius: 16px;
+    padding: 28px;
+    margin: 6px 0 32px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.product-detail-grid {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 36px;
+    align-items: start;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.prod-gallery-main {
+    width: 100%;
+    box-sizing: border-box;
+}
+.main-img-stage {
+    height: 380px;
+    border: 1.5px solid var(--border, #E2E8F0);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #F8FAFC;
+    padding: 20px;
+    margin-bottom: 14px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.main-img-stage img {
+    max-height: 330px;
+    max-width: 100%;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+.thumb-row {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+}
+.thumb-box {
+    width: 66px;
+    height: 66px;
+    flex: 0 0 66px;
+    border: 2px solid var(--border, #E2E8F0);
+    border-radius: 10px;
+    padding: 4px;
+    cursor: pointer;
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+.thumb-box.active,
+.thumb-box:hover {
+    border-color: var(--primary, #01684B);
+    box-shadow: 0 2px 8px rgba(1, 104, 75, 0.2);
+}
+.thumb-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.prod-info-col {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+.prod-badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.stock-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 99px;
+    background: #DCFCE7;
+    color: #15803D;
+    border: 1px solid #BBF7D0;
+}
+.stock-pill.out {
+    background: #FEE2E2;
+    color: #B91C1C;
+    border-color: #FECACA;
+}
+.stock-pill.stock-loyalty {
+    background: #FEF3C7;
+    color: #B45309;
+    border-color: #FDE68A;
+}
+
+.prod-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text-main, #0F172A);
+    line-height: 1.35;
+    margin: 8px 0;
+    word-break: break-word;
+}
+
+.rating-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    margin-bottom: 12px;
+}
+.rating-row .stars {
+    color: #F59E0B;
+    letter-spacing: 1px;
+}
+.rating-row .rating-text {
+    color: var(--text-secondary, #64748B);
+    font-weight: 500;
+}
+
+.prod-detail-price {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+.prod-detail-price .original-price {
+    color: #DC2626;
+    text-decoration: line-through;
+    font-size: 18px;
+    font-weight: 700;
+}
+.prod-detail-price .big-price {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--primary, #01684B);
+}
+
+.prod-meta-table {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 16px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+.prod-meta-table .meta-item {
+    background: #F8FAFC;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border, #E2E8F0);
+    box-sizing: border-box;
+}
+.prod-meta-table .meta-item .label {
+    color: var(--text-muted, #64748B);
+    font-size: 11.5px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.prod-meta-table .meta-item .val {
+    font-weight: 700;
+    font-size: 13.5px;
+    color: var(--text-main, #0F172A);
+    word-break: break-word;
+}
+
+/* Live Quantity Stepper & Price Box */
+.prod-qty-price-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 14px;
+    padding: 14px 18px;
+    background: #F8FAFC;
+    border: 1.5px solid var(--border, #E2E8F0);
+    border-radius: 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.prod-qty-col .prod-qty-label,
+.prod-total-col .prod-total-label {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--text-muted, #64748B);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.qty-stepper {
+    display: inline-flex;
+    align-items: center;
+    background: var(--primary, #01684B);
+    border-radius: 8px;
+    height: 44px;
+    padding: 0 8px;
+}
+.qty-stepper button {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 800;
+    width: 32px;
+    height: 100%;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.qty-stepper input {
+    width: 44px;
+    text-align: center;
+    border: none;
+    background: transparent;
+    color: #fff;
+    font-weight: 800;
+    font-size: 16px;
+}
+.prod-total-col {
+    text-align: right;
+    padding-left: 14px;
+    border-left: 1px solid var(--border, #CBD5E1);
+}
+.prod-total-wrap {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.live-total-amt {
+    font-size: 24px;
+    font-weight: 800;
+    color: #01684B;
+}
+.live-total-formula {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748B;
+}
+
+/* Action Buttons Row */
+.prod-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.prod-actions-row .btn-add-bag {
+    height: 48px;
+    padding: 0 26px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 10px;
+    background: var(--primary, #01684B);
+    color: #ffffff;
+    border: 1.5px solid var(--primary, #01684B);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(1, 104, 75, 0.25);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.prod-actions-row .btn-add-bag:hover {
+    background: var(--primary-dark, #00523B);
+    border-color: var(--primary-dark, #00523B);
+    transform: translateY(-1px);
+}
+.prod-actions-row .btn-buy-now {
+    height: 48px;
+    padding: 0 26px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 10px;
+    background: #F59E0B;
+    color: #FFFFFF;
+    border: 1.5px solid #D97706;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.prod-actions-row .btn-buy-now:hover {
+    background: #D97706;
+    border-color: #B45309;
+    transform: translateY(-1px);
+}
+.prod-actions-row .btn-detail-wish {
+    position: static;
+    width: 48px;
+    height: 48px;
+    font-size: 22px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border, #CBD5E1);
+    background: #FFFFFF;
+    color: #EF4444;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+.prod-actions-row .btn-detail-wish.active,
+.prod-actions-row .btn-detail-wish:hover {
+    background: #FEE2E2;
+    border-color: #F87171;
+}
+
+.prod-desc-box {
+    margin-top: 18px;
+    padding: 14px 16px;
+    background: var(--primary-lighter, #F4F9F8);
+    border: 1px solid rgba(1, 104, 75, 0.15);
+    border-radius: 10px;
+    font-size: 13.5px;
+    color: var(--text-secondary, #334155);
+    line-height: 1.55;
+    box-sizing: border-box;
+}
+
+/* Reviews Section & Form */
+.prod-reviews-section {
+    margin-top: 32px;
+    background: var(--bg-card, #FFFFFF);
+    border: 1px solid var(--border, #E2E8F0);
+    border-radius: 16px;
+    padding: 24px;
+    box-sizing: border-box;
+    width: 100%;
+}
+.prod-review-form {
+    background: #F8FAFC;
+    border: 1px solid var(--border, #E2E8F0);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    width: 100%;
+}
+.prod-review-grid {
+    display: grid;
+    grid-template-columns: 180px 1fr auto;
+    gap: 12px;
+    align-items: end;
+    width: 100%;
+    box-sizing: border-box;
+}
+.prod-review-grid label {
+    font-size: 12px;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-main, #0F172A);
+}
+.prod-review-grid .form-control {
+    width: 100%;
+    height: 42px;
+    border: 1.5px solid var(--border, #CBD5E1);
+    border-radius: 8px;
+    padding: 0 12px;
+    font-size: 13.5px;
+    box-sizing: border-box;
+    background: #FFFFFF;
+}
+.prod-review-grid .btn-submit-review {
+    height: 42px;
+    padding: 0 22px;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 8px;
+    white-space: nowrap;
+}
+
+/* ============================================================================
+ * MOBILE SCREEN OPTIMIZATIONS (< 768px and < 480px)
+ * 100% Zero Horizontal Overflow - Perfectly Stacked Controls & Buttons
+ * ============================================================================ */
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden !important;
+        max-width: 100vw !important;
+    }
+    .product-detail-container {
+        padding: 0 12px 48px !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+    }
+    .prod-breadcrumb {
+        padding: 10px 0 !important;
+        font-size: 12px !important;
+        gap: 6px !important;
+    }
+    .prod-breadcrumb span#prod-breadcrumb-name {
+        max-width: 190px !important;
+    }
+
+    .product-detail-card {
+        padding: 16px 14px !important;
+        margin: 6px 0 20px !important;
+        border-radius: 14px !important;
+    }
+    .product-detail-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+        width: 100% !important;
+    }
+    .main-img-stage {
+        height: 270px !important;
+        padding: 12px !important;
+        border-radius: 12px !important;
+    }
+    .main-img-stage img {
+        max-height: 240px !important;
+    }
+    .thumb-box {
+        width: 54px !important;
+        height: 54px !important;
+        flex: 0 0 54px !important;
+    }
+
+    .prod-title {
+        font-size: 19px !important;
+        line-height: 1.35 !important;
+        margin: 6px 0 8px !important;
+    }
+    .prod-detail-price .big-price {
+        font-size: 24px !important;
+    }
+    .prod-detail-price .original-price {
+        font-size: 16px !important;
+    }
+
+    .prod-meta-table {
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+        margin: 12px 0 !important;
+    }
+    .prod-meta-table .meta-item {
+        padding: 8px 12px !important;
+    }
+
+    .prod-qty-price-box {
+        padding: 12px 14px !important;
+        border-radius: 12px !important;
+        gap: 10px !important;
+    }
+    .qty-stepper {
+        height: 40px !important;
+        padding: 0 6px !important;
+    }
+    .qty-stepper button {
+        width: 28px !important;
+        font-size: 18px !important;
+    }
+    .qty-stepper input {
+        width: 36px !important;
+        font-size: 15px !important;
+    }
+    .live-total-amt {
+        font-size: 21px !important;
+    }
+
+    /* Mobile Button Arrangement: Clean 2-Row Stack */
+    .prod-actions-row {
+        display: grid !important;
+        grid-template-columns: 1fr auto !important;
+        gap: 10px !important;
+        margin-top: 14px !important;
+        width: 100% !important;
+    }
+    .prod-actions-row .btn-add-bag {
+        grid-column: 1 / 2 !important;
+        width: 100% !important;
+        height: 48px !important;
+        font-size: 14px !important;
+        padding: 0 10px !important;
+    }
+    .prod-actions-row .btn-detail-wish {
+        grid-column: 2 / 3 !important;
+        width: 48px !important;
+        height: 48px !important;
+    }
+    .prod-actions-row .btn-buy-now {
+        grid-column: 1 / -1 !important;
+        width: 100% !important;
+        height: 50px !important;
+        font-size: 15px !important;
+        padding: 0 14px !important;
+    }
+
+    /* Customer Reviews Mobile Stack */
+    .prod-reviews-section {
+        padding: 16px 14px !important;
+        margin-top: 20px !important;
+        border-radius: 14px !important;
+    }
+    .prod-review-form {
+        padding: 14px !important;
+    }
+    .prod-review-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+    .prod-review-grid > div,
+    .prod-review-grid .review-rating-col,
+    .prod-review-grid .review-comment-col,
+    .prod-review-grid select,
+    .prod-review-grid input,
+    .prod-review-grid .btn-submit-review {
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .prod-review-grid .btn-submit-review {
+        height: 46px !important;
+        font-size: 15px !important;
+    }
+}
+</style>
+
+<main class="container product-detail-container">
+    <div class="breadcrumb prod-breadcrumb">
         <a href="{{ url('/') }}">Home</a> <span>›</span>
         <a href="{{ url('/shop') }}">Shop</a> <span>›</span>
         <span id="prod-breadcrumb-name">{{ $product->name }}</span>
@@ -41,19 +634,19 @@
                     <span class="stock-pill {{ $product->total_stock > 0 ? '' : 'out' }}">
                         {{ $product->total_stock > 0 ? '✓ In Stock (' . $product->total_stock . ' available)' : 'Out of Stock' }}
                     </span>
-                    <span class="stock-pill" style="background:#FEF3C7;color:#D97706">⭐ Earn {{ max(1, floor($displayPrice * 0.05)) }} Loyalty Pts</span>
+                    <span class="stock-pill stock-loyalty">⭐ Earn {{ max(1, floor($displayPrice * 0.05)) }} Loyalty Pts</span>
                 </div>
 
-                <h1>{{ $product->name }}</h1>
+                <h1 class="prod-title">{{ $product->name }}</h1>
 
-                <div class="rating-row" style="font-size:14px">
+                <div class="rating-row">
                     <span class="stars">★★★★★</span>
-                    <span style="color:var(--text-secondary)">4.8 Rating • {{ $product->popularity_count ?: 12 }} Verified Purchases</span>
+                    <span class="rating-text">4.8 Rating • {{ $product->popularity_count ?: 12 }} Verified Purchases</span>
                 </div>
 
-                <div class="prod-detail-price" style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+                <div class="prod-detail-price">
                     @if($originalPrice > $displayPrice)
-                        <span style="color:#DC2626;text-decoration:line-through;font-size:19px;font-weight:700">₹{{ number_format($originalPrice, 2) }}</span>
+                        <span class="original-price">₹{{ number_format($originalPrice, 2) }}</span>
                     @endif
                     <span class="big-price">₹{{ number_format($displayPrice, 2) }}</span>
                 </div>
@@ -69,7 +662,7 @@
                     </div>
                     <div class="meta-item">
                         <span class="label">Delivery Charge</span>
-                        <span class="val" style="color:var(--primary)">FREE on orders over ₹{{ $settings['free_delivery_over_amount'] ?? 299 }}</span>
+                        <span class="val" style="color:var(--primary, #01684B)">FREE on orders over ₹{{ $settings['free_delivery_over_amount'] ?? 299 }}</span>
                     </div>
                     <div class="meta-item">
                         <span class="label">Order Quantity</span>
@@ -78,36 +671,37 @@
                 </div>
 
                 <!-- Live Quantity Stepper & Live Total Amount -->
-                <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:12px;padding:14px 16px;background:#F8FAFC;border:1px solid var(--border);border-radius:12px">
-                    <div>
-                        <div style="font-size:11.5px;font-weight:700;color:var(--text-muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.3px">Quantity</div>
-                        <div class="qty-stepper" style="height:44px;padding:0 8px">
+                <div class="prod-qty-price-box">
+                    <div class="prod-qty-col">
+                        <div class="prod-qty-label">Quantity</div>
+                        <div class="qty-stepper">
                             <button type="button" onclick="updateDetailQty(-1)" aria-label="Decrease quantity">−</button>
-                            <input type="number" id="detail-qty-input" value="1" min="1" max="{{ max(1, (int)($product->total_stock ?: 99)) }}" style="width:45px;text-align:center;border:none;background:transparent;color:#fff;font-weight:800;font-size:16px" readonly>
+                            <input type="number" id="detail-qty-input" value="1" min="1" max="{{ max(1, (int)($product->total_stock ?: 99)) }}" readonly>
                             <button type="button" onclick="updateDetailQty(1)" aria-label="Increase quantity">+</button>
                         </div>
                     </div>
 
-                    <div style="padding-left:14px;border-left:1px solid var(--border)">
-                        <div style="font-size:11.5px;font-weight:700;color:var(--text-muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.3px">Total Amount</div>
-                        <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
-                            <span id="detail-live-total" style="font-size:24px;font-weight:800;color:#01684B">₹{{ number_format($displayPrice, 2) }}</span>
-                            <span id="detail-live-formula" style="font-size:12px;font-weight:600;color:#64748B">(1 × ₹{{ number_format($displayPrice, 2) }})</span>
+                    <div class="prod-total-col">
+                        <div class="prod-total-label">Total Amount</div>
+                        <div class="prod-total-wrap">
+                            <span id="detail-live-total" class="live-total-amt">₹{{ number_format($displayPrice, 2) }}</span>
+                            <span id="detail-live-formula" class="live-total-formula">(1 × ₹{{ number_format($displayPrice, 2) }})</span>
                         </div>
                     </div>
                 </div>
 
-                <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px">
-                    <button type="button" class="btn-primary" style="height:46px;padding:0 26px;font-size:15px" onclick="GetgozoApp.addToCart({{ $product->id }}, getDetailQty(), event)">
+                <!-- Product Action Buttons -->
+                <div class="prod-actions-row">
+                    <button type="button" class="btn-primary btn-add-bag" onclick="GetgozoApp.addToCart({{ $product->id }}, getDetailQty(), event)">
                         🛒 Add to Shopping Bag
                     </button>
 
-                    <button type="button" class="btn-outline" id="detail-buy-now-btn" style="height:46px;padding:0 24px;font-size:15px;font-weight:700" onclick="GetgozoApp.buyNow({{ $product->id }}, getDetailQty(), event)">
-                        ⚡ Buy Now (₹{{ number_format($displayPrice, 2) }})
+                    <button type="button" class="btn-detail-wish {{ $inWish ? 'active' : '' }}" data-wish-btn="{{ $product->id }}" onclick="GetgozoApp.toggleWishlist({{ $product->id }}, event)" aria-label="Toggle Wishlist">
+                        {{ $inWish ? '♥' : '♡' }}
                     </button>
 
-                    <button type="button" class="wish-btn {{ $inWish ? 'active' : '' }}" data-wish-btn="{{ $product->id }}" style="position:static;width:46px;height:46px;font-size:20px" onclick="GetgozoApp.toggleWishlist({{ $product->id }}, event)">
-                        {{ $inWish ? '♥' : '♡' }}
+                    <button type="button" class="btn-buy-now" id="detail-buy-now-btn" onclick="GetgozoApp.buyNow({{ $product->id }}, getDetailQty(), event)">
+                        ⚡ Buy Now (₹{{ number_format($displayPrice, 2) }})
                     </button>
                 </div>
 
@@ -136,23 +730,23 @@
                     })();
                 </script>
 
-                <div style="margin-top:16px;padding:14px;background:var(--primary-lighter);border-radius:var(--radius-sm);font-size:13px;color:var(--text-secondary)">
-                    <strong>Description:</strong> {{ $product->description ?: ($product->name . ' (' . $unitText . ') — Fresh quality guaranteed by Getgozo Jadupur.') }}
+                <div class="prod-desc-box">
+                    <strong>Description:</strong> {{ $product->description ?: ($product->name . ' (' . $unitText . ') — Premium fabric stain remover formulated for instant rust, oil, grease and ink removal.') }}
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Customer Ratings & Reviews (SQLite) -->
-    <section class="section-block" style="margin-top:32px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:24px">
+    <section class="section-block prod-reviews-section">
         <h2 style="font-size:18px;font-weight:800;margin-bottom:16px">⭐ Customer Ratings &amp; Reviews ({{ isset($reviews) ? $reviews->count() : 0 }})</h2>
 
-        <form action="{{ url('/product/' . $product->id . '/review') }}" method="POST" style="background:#F8FAFC;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:20px">
+        <form action="{{ url('/product/' . $product->id . '/review') }}" method="POST" class="prod-review-form">
             @csrf
-            <div style="display:grid;grid-template-columns:180px 1fr auto;gap:12px;align-items:end;flex-wrap:wrap">
-                <div>
-                    <label style="font-size:12px;font-weight:700;display:block;margin-bottom:5px">Your Rating</label>
-                    <select name="rating" class="form-control" style="padding:9px 10px">
+            <div class="prod-review-grid">
+                <div class="review-rating-col">
+                    <label>Your Rating</label>
+                    <select name="rating" class="form-control">
                         <option value="5">★★★★★ (5 - Excellent)</option>
                         <option value="4">★★★★☆ (4 - Very Good)</option>
                         <option value="3">★★★☆☆ (3 - Good)</option>
@@ -160,28 +754,28 @@
                         <option value="1">★☆☆☆☆ (1 - Poor)</option>
                     </select>
                 </div>
-                <div>
-                    <label style="font-size:12px;font-weight:700;display:block;margin-bottom:5px">Write a Review</label>
+                <div class="review-comment-col">
+                    <label>Write a Review</label>
                     <input type="text" name="comment" class="form-control" placeholder="Share your experience with this product..." required>
                 </div>
-                <button type="submit" class="btn-primary" style="padding:10px 20px;height:42px">Submit Review</button>
+                <button type="submit" class="btn-primary btn-submit-review">Submit Review</button>
             </div>
         </form>
 
         @if(isset($reviews) && $reviews->count() > 0)
             <div style="display:grid;gap:12px">
                 @foreach($reviews as $rev)
-                    <div style="padding:14px;border:1px solid var(--border);border-radius:10px">
+                    <div style="padding:14px;border:1px solid var(--border, #E2E8F0);border-radius:10px;background:#FFFFFF">
                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
                             <strong style="font-size:13.5px">{{ $rev->user->name ?? 'Verified Customer' }}</strong>
                             <span style="color:#F59E0B;font-size:13px">{{ str_repeat('★', (int)$rev->rating) }}{{ str_repeat('☆', max(0, 5 - (int)$rev->rating)) }}</span>
                         </div>
-                        <p style="font-size:13px;color:var(--text-secondary);margin:0">{{ $rev->comment }}</p>
+                        <p style="font-size:13px;color:var(--text-secondary, #475569);margin:0">{{ $rev->comment }}</p>
                     </div>
                 @endforeach
             </div>
         @else
-            <p style="font-size:13px;color:var(--text-muted);margin:0">No reviews yet. Be the first to review {{ $product->name }}!</p>
+            <p style="font-size:13px;color:var(--text-muted, #94A3B8);margin:0">No reviews yet. Be the first to review {{ $product->name }}!</p>
         @endif
     </section>
 
@@ -201,4 +795,3 @@
     </section>
 </main>
 @endsection
-
