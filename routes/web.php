@@ -40,6 +40,9 @@ Route::post('/coupon/apply', [FrontController::class, 'applyCoupon'])->name('cou
 Route::get('/checkout', [FrontController::class, 'checkout'])->name('checkout');
 Route::post('/checkout/razorpay/create-order', [FrontController::class, 'createRazorpayOrder'])->name('checkout.razorpay.create-order');
 Route::post('/checkout/place-order', [FrontController::class, 'placeOrder'])->name('checkout.place-order');
+Route::post('/checkout/place-upi-order', [FrontController::class, 'placeUpiOrder'])->name('checkout.place-upi-order');
+Route::get('/order-upi-payment/{id}', [FrontController::class, 'upiPaymentPage'])->name('order.upi-payment');
+Route::post('/order-upi-payment/{id}/confirm', [FrontController::class, 'confirmUpiPayment'])->name('order.upi-payment.confirm');
 Route::post('/checkout/create-razorpay-order', [FrontController::class, 'createRazorpayOrder'])->name('checkout.create-razorpay-order');
 Route::post('/checkout/verify-razorpay-payment', [FrontController::class, 'verifyRazorpayPayment'])->name('checkout.verify-razorpay-payment');
 Route::post('/checkout/razorpay/webhook', [FrontController::class, 'handleRazorpayWebhook'])->name('razorpay.webhook');
@@ -176,6 +179,8 @@ Route::prefix('admin')->middleware([AdminAuthMiddleware::class])->group(function
     // Payments & AU Bank Transfer Reconcile
     Route::get('/payments', [PaymentController::class, 'index'])->name('admin.payments');
     Route::post('/payments/toggle-method', [PaymentController::class, 'toggleMethod'])->name('admin.payments.toggle-method');
+    Route::post('/payments/update-upi', [PaymentController::class, 'updateUpiSettings'])->name('admin.payments.update-upi');
+    Route::post('/payments/delete-upi-qr', [PaymentController::class, 'deleteUpiQr'])->name('admin.payments.delete-upi-qr');
     Route::post('/payments/{id}/approve', [PaymentController::class, 'approve'])->name('admin.payments.approve');
     Route::post('/payments/{id}/reject', [PaymentController::class, 'reject'])->name('admin.payments.reject');
     Route::post('/bank-transfers/{id}/approve', [PaymentController::class, 'approve'])->name('admin.bank-transfers.approve');

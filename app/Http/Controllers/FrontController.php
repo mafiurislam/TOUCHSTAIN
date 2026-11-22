@@ -375,7 +375,11 @@ class FrontController extends Controller
 
         $isRazorpayActive = ($shared['settings']['payment_razorpay_active'] ?? '1') !== '0';
         $isCodActive = ($shared['settings']['payment_cod_active'] ?? '1') !== '0';
-        $defaultPayment = $isRazorpayActive ? 'razorpay' : ($isCodActive ? 'cash_on_delivery' : 'none');
+        $isUpiActive = ($shared['settings']['payment_upi_active'] ?? '1') !== '0';
+        $upiId = $shared['settings']['payment_upi_id'] ?? Setting::getValue('payment_upi_id', '7039214465-3@ybl');
+        $upiName = $shared['settings']['payment_upi_name'] ?? Setting::getValue('payment_upi_name', 'Naushad Ali Meher Ali');
+        $upiQrImage = $shared['settings']['payment_upi_qr_image'] ?? Setting::getValue('payment_upi_qr_image', 'payment/upi_phonepe_qr.jpg');
+        $defaultPayment = $isUpiActive ? 'upi' : ($isRazorpayActive ? 'razorpay' : ($isCodActive ? 'cash_on_delivery' : 'none'));
 
         return view('pages.checkout', array_merge($shared, [
             'pageId' => 'checkout',
@@ -388,6 +392,10 @@ class FrontController extends Controller
             'razorpayKeyId' => $razorpayKey,
             'isRazorpayActive' => $isRazorpayActive,
             'isCodActive' => $isCodActive,
+            'isUpiActive' => $isUpiActive,
+            'upiId' => $upiId,
+            'upiName' => $upiName,
+            'upiQrImage' => $upiQrImage,
             'defaultPayment' => $defaultPayment,
         ]));
     }
@@ -915,6 +923,272 @@ class FrontController extends Controller
         }
 
         return redirect('/order-success?id=' . $order->id);
+    }
+
+    /**
+     * Place Order via Direct UPI Payment
+     */
+    public function placeUpiOrder(Request $request)
+    {
+        if (Setting::getValue('payment_upi_active', '1') === '0') {
+            return response()->json([
+                'status' => false,
+                'message' => 'UPI Payment is currently disabled by store admin. Please choose another payment method.',
+            ], 422);
+        }
+
+        $this->ensureAddressColumns();
+        $user = $this->currentUser();
+        $items = $request->input('items', []);
+        if (is_string($items)) {
+            $items = json_decode($items, true) ?: [];
+        }
+
+        if (empty($items)) {
+            return response()->json(['status' => false, 'message' => 'Your shopping bag is empty.'], 422);
+        }
+
+        $contactName = trim((string)$request->input('contact_person_name', ''));
+        $contactPhone = trim((string)$request->input('contact_person_number', ''));
+        $streetAddress = trim((string)$request->input('address', ''));
+        $addressType = trim((string)$request->input('address_type', 'Home')) ?: 'Home';
+        $landmarkRoad = trim((string)$request->input('road', ''));
+        $houseNo = trim((string)$request->input('house', ''));
+
+        if ($request->input('order_type', 'delivery') !== 'self_pickup' && ($contactName === '' || $contactPhone === '' || $streetAddress === '')) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Please fill in your Delivery Address details (Contact Person Name, Phone Number, and Full Delivery Address).',
+            ], 422);
+        }
+
+        $computedSubtotal = 0.0;
+        $verifiedItems = [];
+        foreach ($items as $item) {
+            $qty = max(1, (int)($item['qty'] ?? $item['quantity'] ?? 1));
+            $prod = Product::find($item['id'] ?? 0);
+            if ($prod) {
+                if ($prod->total_stock > 0 && $qty > $prod->total_stock) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => "Only {$prod->total_stock} units of '{$prod->name}' are currently in stock.",
+                    ], 422);
+                }
+                $unitPrice = (float)$prod->price;
+            } else {
+                $unitPrice = (float)($item['price'] ?? 50);
+            }
+            $computedSubtotal += ($unitPrice * $qty);
+            $verifiedItems[] = [
+                'product' => $prod,
+                'item' => $item,
+                'qty' => $qty,
+                'unit_price' => $unitPrice,
+            ];
+        }
+
+        $subtotal = $computedSubtotal > 0 ? round($computedSubtotal, 2) : (float)$request->input('subtotal', 0);
+        $discount = 0;
+        $couponDiscount = max(0, (float)$request->input('coupon_discount', 0));
+        $freeOver = (float)(Setting::getValue('free_delivery_over_amount', 69) ?: 69);
+        $baseDelivery = (float)(Setting::getValue('delivery_charge', 40) ?: 40);
+        $deliveryCharge = ($request->input('order_type', 'delivery') === 'self_pickup' || $subtotal >= $freeOver) ? 0.0 : $baseDelivery;
+        $totalAmount = round(max(1, $subtotal - $couponDiscount + $deliveryCharge), 2);
+
+        if ($contactName !== '' && $streetAddress !== '') {
+            Address::where('user_id', $user->id)->update(['is_default' => false]);
+            $addressObj = Address::updateOrCreate(
+                [
+                    'user_id' => $user->id,
+                    'address' => $streetAddress,
+                ],
+                [
+                    'address_type' => $addressType,
+                    'contact_person_name' => $contactName,
+                    'contact_person_number' => $contactPhone,
+                    'road' => $landmarkRoad,
+                    'house' => $houseNo,
+                    'latitude' => '19.0434',
+                    'longitude' => '72.8633',
+                    'is_default' => true,
+                ]
+            );
+        } else {
+            $addressId = $request->input('address_id');
+            $addressObj = $addressId ? Address::find($addressId) : Address::where('user_id', $user->id)->orderByDesc('is_default')->first();
+        }
+
+        $fullFormattedAddress = $streetAddress;
+        if ($houseNo !== '') {
+            $fullFormattedAddress = $houseNo . ', ' . $fullFormattedAddress;
+        }
+        if ($landmarkRoad !== '') {
+            $fullFormattedAddress .= ' (Landmark/Road: ' . $landmarkRoad . ')';
+        }
+
+        $deliveryAddress = [
+            'address_type' => $addressType,
+            'contact_person_name' => $contactName ?: ($addressObj->contact_person_name ?? trim(($user->f_name ?? '') . ' ' . ($user->l_name ?? ''))),
+            'contact_person_number' => $contactPhone ?: ($addressObj->contact_person_number ?? ($user->phone ?? '')),
+            'address' => $fullFormattedAddress ?: ($addressObj->address ?? ''),
+            'road' => $landmarkRoad ?: ($addressObj->road ?? ''),
+            'house' => $houseNo ?: ($addressObj->house ?? ''),
+        ];
+
+        $earnedPoints = (int)floor($totalAmount * 0.05);
+        $order = Order::create([
+            'user_id' => $user->id,
+            'branch_id' => 1,
+            'order_amount' => $totalAmount,
+            'subtotal' => $subtotal,
+            'product_discount' => $discount,
+            'coupon_discount_amount' => $couponDiscount,
+            'coupon_code' => $request->input('coupon_code'),
+            'delivery_charge' => $deliveryCharge,
+            'payment_method' => 'upi',
+            'payment_status' => 'unpaid',
+            'order_status' => 'pending',
+            'order_type' => $request->input('order_type', 'delivery'),
+            'time_slot' => $request->input('time_slot', 'Today, 09:00 AM - 11:00 PM'),
+            'delivery_date' => now()->format('Y-m-d'),
+            'delivery_address' => $deliveryAddress,
+            'contact_person_name' => $deliveryAddress['contact_person_name'] ?? $user->name,
+            'contact_person_number' => $deliveryAddress['contact_person_number'] ?? $user->phone,
+            'earned_loyalty_points' => $earnedPoints,
+            'order_note' => $request->input('order_note'),
+        ]);
+
+        foreach ($verifiedItems as $vi) {
+            $prod = $vi['product'];
+            $item = $vi['item'];
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $prod ? $prod->id : ($item['id'] ?? 1),
+                'product_name' => $prod ? $prod->name : ($item['name'] ?? 'Item'),
+                'product_image' => $item['image'] ?? ($prod && !empty($prod->image) ? $prod->image[0] : ''),
+                'unit' => $item['unit'] ?? (($prod->capacity ?? 1) . ' ' . ($prod->unit ?? 'pc')),
+                'price' => $vi['unit_price'],
+                'discount_on_product' => 0,
+                'quantity' => $vi['qty'],
+            ]);
+
+            if ($prod) {
+                $newStock = max(0, (int)$prod->total_stock - (int)$vi['qty']);
+                $prod->update(['total_stock' => $newStock]);
+                $prod->increment('popularity_count', (int)$vi['qty']);
+                try {
+                    InventoryLog::create([
+                        'product_id' => $prod->id,
+                        'type' => 'stock_out',
+                        'quantity' => (int)$vi['qty'],
+                        'current_stock' => $newStock,
+                        'notes' => "UPI Order #{$order->id} initiated",
+                        'user_id' => $user->id,
+                    ]);
+                } catch (\Throwable $e) {}
+            }
+        }
+
+        // Record pending payment in BankTransfer table for admin reconciliation
+        try {
+            BankTransfer::create([
+                'order_id' => $order->id,
+                'user_id' => $user->id,
+                'bank_account_id' => 1,
+                'amount' => $totalAmount,
+                'payment_method' => 'upi',
+                'status' => 'verification_pending',
+            ]);
+        } catch (\Throwable $e) {}
+
+        $upiId = Setting::getValue('payment_upi_id', '7039214465-3@ybl');
+        $upiName = Setting::getValue('payment_upi_name', 'Naushad Ali Meher Ali');
+        $amtFormatted = number_format($totalAmount, 2, '.', '');
+        $txnNote = "Order #{$order->id} TOUCHSTAINS";
+        $upiIntentUrl = "upi://pay?pa=" . urlencode($upiId) . "&pn=" . urlencode($upiName) . "&am=" . $amtFormatted . "&cu=INR&tn=" . urlencode($txnNote) . "&mc=0000&mode=02&purpose=00";
+
+        try {
+            AuditLog::record('Order', 'UPI Order Placed', "Order #{$order->id} placed via UPI ({$amtFormatted})");
+        } catch (\Throwable $e) {}
+
+        return response()->json([
+            'status' => true,
+            'message' => 'UPI Order initiated! Redirecting to payment screen...',
+            'order_id' => $order->id,
+            'amount' => $totalAmount,
+            'upi_id' => $upiId,
+            'upi_name' => $upiName,
+            'upi_intent_url' => $upiIntentUrl,
+            'redirect_url' => route('order.upi-payment', ['id' => $order->id]),
+        ]);
+    }
+
+    /**
+     * Dedicated UPI Payment Gateway & QR Screen
+     */
+    public function upiPaymentPage($id)
+    {
+        $shared = $this->getSharedData();
+        $order = Order::with(['items', 'user'])->findOrFail($id);
+
+        if ($order->payment_status === 'paid') {
+            return redirect('/order-success?id=' . $order->id)->with('success', 'Order payment already verified!');
+        }
+
+        $upiId = Setting::getValue('payment_upi_id', '7039214465-3@ybl');
+        $upiName = Setting::getValue('payment_upi_name', 'Naushad Ali Meher Ali');
+        $upiQrImage = Setting::getValue('payment_upi_qr_image', 'payment/upi_phonepe_qr.jpg');
+        $amtFormatted = number_format($order->order_amount, 2, '.', '');
+        $txnNote = "Order #{$order->id} TOUCHSTAINS";
+        $upiIntentUrl = "upi://pay?pa=" . urlencode($upiId) . "&pn=" . urlencode($upiName) . "&am=" . $amtFormatted . "&cu=INR&tn=" . urlencode($txnNote) . "&mc=0000&mode=02&purpose=00";
+
+        return view('pages.upi-payment', array_merge($shared, [
+            'order' => $order,
+            'upiId' => $upiId,
+            'upiName' => $upiName,
+            'upiQrImage' => $upiQrImage,
+            'upiIntentUrl' => $upiIntentUrl,
+            'pageTitle' => 'Complete UPI Payment — Order #' . $order->id,
+        ]));
+    }
+
+    /**
+     * Confirm UPI Payment by Customer (Submit UTR / Ref Number)
+     */
+    public function confirmUpiPayment(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+        $utr = trim((string)$request->input('utr_number', ''));
+
+        if ($utr === '') {
+            $utr = 'UPI-' . strtoupper(substr(md5(time() . $order->id), 0, 10));
+        }
+
+        $order->update([
+            'payment_status' => 'paid',
+            'order_status' => 'confirmed',
+            'utr_number' => $utr,
+            'transaction_date' => now()->format('Y-m-d'),
+        ]);
+
+        // Update BankTransfer record
+        $transfer = BankTransfer::where('order_id', $order->id)->first();
+        if ($transfer) {
+            $transfer->update([
+                'utr_number' => $utr,
+                'status' => 'payment_confirmed',
+                'approved_at' => now(),
+            ]);
+        }
+
+        try {
+            AuditLog::record('Payments', 'UPI Payment Confirmed', "Order #{$order->id} payment confirmed via UPI UTR {$utr}");
+        } catch (\Throwable $e) {}
+
+        // Trigger auto-shipment if active
+        $this->triggerShiprocketAutoDispatch($order);
+
+        return redirect('/order-success?id=' . $order->id)->with('success', '✓ Payment confirmed successfully! Order placed.');
     }
 
     public function submitBankTransfer(Request $request)

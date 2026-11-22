@@ -153,8 +153,34 @@
                 </div>
 
                 <div class="option-cards-grid" style="grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px">
+                    @if($isUpiActive)
+                        <!-- Option 1: Direct UPI Payment (PhonePe / GPay / Paytm / QR) -->
+                        <div class="option-card {{ $defaultPayment === 'upi' ? 'selected' : '' }}" id="pay-upi" onclick="selectCheckoutPayment('upi')">
+                            <div style="display:flex;align-items:flex-start;gap:12px">
+                                <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg, #5B21B6 0%, #7C3AED 100%);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(91,33,182,0.25);flex-shrink:0">
+                                    <span style="font-size:20px;color:#fff">📱</span>
+                                </div>
+                                <div style="flex:1">
+                                    <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+                                        <h4 style="margin:0;font-size:15px;font-weight:700;color:#111827">UPI Payment</h4>
+                                        <span style="font-size:11px;font-weight:800;background:#EDE9FE;color:#6D28D9;padding:2px 8px;border-radius:99px;border:1px solid #DDD6FE">FAST QR</span>
+                                    </div>
+                                    <p style="font-size:12px;color:#4B5563;margin:4px 0 8px;line-height:1.4">
+                                        PhonePe, Google Pay, Paytm, BHIM &amp; Direct UPI QR
+                                    </p>
+                                    <div style="display:flex;flex-wrap:wrap;gap:6px">
+                                        <span style="font-size:10.5px;font-weight:700;background:#EDE9FE;color:#5B21B6;padding:2px 8px;border-radius:4px;border:1px solid #DDD6FE">🟣 PhonePe</span>
+                                        <span style="font-size:10.5px;font-weight:700;background:#EDE9FE;color:#5B21B6;padding:2px 8px;border-radius:4px;border:1px solid #DDD6FE">🟢 GPay</span>
+                                        <span style="font-size:10.5px;font-weight:700;background:#EDE9FE;color:#5B21B6;padding:2px 8px;border-radius:4px;border:1px solid #DDD6FE">🔵 Paytm</span>
+                                        <span style="font-size:10.5px;font-weight:700;background:#EDE9FE;color:#5B21B6;padding:2px 8px;border-radius:4px;border:1px solid #DDD6FE">📷 Scan QR</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     @if($isRazorpayActive)
-                        <!-- Option 1: Online Payment (Razorpay) -->
+                        <!-- Option 2: Online Payment (Razorpay) -->
                         <div class="option-card {{ $defaultPayment === 'razorpay' ? 'selected' : '' }}" id="pay-razorpay" onclick="selectCheckoutPayment('razorpay')">
                             <div style="display:flex;align-items:flex-start;gap:12px">
                                 <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg, #0C2340 0%, #1A365D 100%);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(12,35,64,0.25);flex-shrink:0">
@@ -182,7 +208,7 @@
                     @endif
 
                     @if($isCodActive)
-                        <!-- Option 2: Cash on Delivery -->
+                        <!-- Option 3: Cash on Delivery -->
                         <div class="option-card {{ $defaultPayment === 'cash_on_delivery' ? 'selected' : '' }}" id="pay-cod" onclick="selectCheckoutPayment('cash_on_delivery')">
                             <div style="display:flex;align-items:flex-start;gap:12px">
                                 <div style="width:40px;height:40px;border-radius:10px;background:#F0FDF4;border:1.5px solid #86EFAC;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">
@@ -201,7 +227,7 @@
                         </div>
                     @endif
 
-                    @if(!$isRazorpayActive && !$isCodActive)
+                    @if(!$isRazorpayActive && !$isCodActive && !$isUpiActive)
                         <div style="grid-column: 1 / -1;background:#FEF2F2;border:1.5px solid #FCA5A5;border-radius:10px;padding:16px;text-align:center">
                             <div style="font-size:24px;margin-bottom:6px">⚠️</div>
                             <strong style="color:#991B1B;font-size:14px;display:block">Online Checkout Temporarily Paused</strong>
@@ -211,6 +237,31 @@
                         </div>
                     @endif
                 </div>
+
+                @if($isUpiActive)
+                    <!-- UPI Details & QR Box -->
+                    <div id="upi-info-box" style="margin-top:16px;background:#FAF5FF;border:1.5px solid #E9D5FF;border-radius:14px;padding:16px;display:{{ $defaultPayment === 'upi' ? 'block' : 'none' }}">
+                        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+                            <div style="background:#fff;padding:6px;border-radius:10px;border:1.5px solid #DDD6FE;text-align:center;width:115px;flex-shrink:0">
+                                <img src="{{ asset('storage/' . ($upiQrImage ?? 'payment/upi_phonepe_qr.jpg')) }}?v=1" alt="UPI QR" style="width:102px;height:102px;object-fit:contain;border-radius:6px;display:block;margin:0 auto">
+                                <span style="display:block;font-size:9px;font-weight:800;color:#6D28D9;margin-top:4px">SCAN &amp; PAY</span>
+                            </div>
+                            <div style="flex:1;min-width:200px">
+                                <div style="display:inline-flex;align-items:center;gap:6px;background:#EDE9FE;color:#5B21B6;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:800;margin-bottom:6px">
+                                    <span>⚡ Official PhonePe / UPI Payment</span>
+                                </div>
+                                <h4 style="margin:0 0 4px;font-size:14.5px;font-weight:800;color:#1E1B4B">{{ $upiName ?? 'Naushad Ali Meher Ali' }}</h4>
+                                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                                    <span style="font-size:12px;color:#6B7280">UPI ID:</span>
+                                    <code style="background:#fff;border:1px solid #C4B5FD;color:#6D28D9;padding:2px 8px;border-radius:6px;font-size:12.5px;font-weight:800">{{ $upiId ?? '7039214465-3@ybl' }}</code>
+                                </div>
+                                <p style="font-size:12px;color:#581C87;margin:0;line-height:1.4">
+                                    Order confirm করার সাথে সাথে এই QR কোড এবং আপনার UPI অ্যাপে (PhonePe / GPay / Paytm) রিডাইরেক্ট হয়ে অ্যামাউন্ট পৌঁছে যাবে।
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
                 @if($isRazorpayActive)
                     <!-- Razorpay Security Box -->
@@ -447,15 +498,32 @@ function selectCheckoutPayment(method) {
         GetgozoApp.state.paymentMethod = method;
     }
 
+    const payUpi = document.getElementById('pay-upi');
     const payRzp = document.getElementById('pay-razorpay');
     const payCod = document.getElementById('pay-cod');
+    const upiBox = document.getElementById('upi-info-box');
     const rzpBox = document.getElementById('razorpay-info-box');
     const btn = document.getElementById('btn-confirm-order');
 
-    if (method === 'razorpay') {
+    if (method === 'upi') {
+        payUpi?.classList.add('selected');
+        payRzp?.classList.remove('selected');
+        payCod?.classList.remove('selected');
+        if (upiBox) upiBox.style.display = 'block';
+        if (rzpBox) rzpBox.style.display = 'none';
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '⚡ UPI Order (Pay via UPI)';
+            btn.style.background = '#5B21B6';
+            btn.style.borderColor = '#5B21B6';
+            btn.style.boxShadow = '0 4px 14px rgba(91,33,182,0.35)';
+        }
+    } else if (method === 'razorpay') {
         payRzp?.classList.add('selected');
+        payUpi?.classList.remove('selected');
         payCod?.classList.remove('selected');
         if (rzpBox) rzpBox.style.display = 'block';
+        if (upiBox) upiBox.style.display = 'none';
         if (btn) {
             btn.disabled = false;
             btn.innerHTML = '⚡ Pay Now via Razorpay';
@@ -465,8 +533,10 @@ function selectCheckoutPayment(method) {
         }
     } else if (method === 'cash_on_delivery') {
         payCod?.classList.add('selected');
+        payUpi?.classList.remove('selected');
         payRzp?.classList.remove('selected');
         if (rzpBox) rzpBox.style.display = 'none';
+        if (upiBox) upiBox.style.display = 'none';
         if (btn) {
             btn.disabled = false;
             btn.innerHTML = '✓ Confirm Order (Cash on Delivery)';
@@ -475,9 +545,11 @@ function selectCheckoutPayment(method) {
             btn.style.boxShadow = '0 4px 14px rgba(37,99,235,0.3)';
         }
     } else {
+        payUpi?.classList.remove('selected');
         payRzp?.classList.remove('selected');
         payCod?.classList.remove('selected');
         if (rzpBox) rzpBox.style.display = 'none';
+        if (upiBox) upiBox.style.display = 'none';
         if (btn) {
             btn.disabled = true;
             btn.innerHTML = '⚠️ Checkout Temporarily Unavailable';
@@ -489,7 +561,7 @@ function selectCheckoutPayment(method) {
 }
 
 async function handleCheckoutSubmit() {
-    if (currentPaymentMethod === 'none' || (!document.getElementById('pay-razorpay') && !document.getElementById('pay-cod'))) {
+    if (currentPaymentMethod === 'none' || (!document.getElementById('pay-upi') && !document.getElementById('pay-razorpay') && !document.getElementById('pay-cod'))) {
         GetgozoApp.showToast('Online checkout is currently paused. Please contact customer support.', 'error');
         return;
     }
@@ -543,12 +615,99 @@ async function handleCheckoutSubmit() {
         return;
     }
 
-    if (currentPaymentMethod === 'razorpay') {
+    if (currentPaymentMethod === 'upi') {
+        await placeUpiOrder(totals, addrData);
+    } else if (currentPaymentMethod === 'razorpay') {
         await initiateRazorpayPayment(totals, addrData);
     } else if (currentPaymentMethod === 'cash_on_delivery') {
         await placeCodOrder(totals, addrData);
     } else {
         GetgozoApp.showToast('Please select a valid payment method.', 'error');
+    }
+}
+
+/**
+ * Handle Direct UPI Payment Flow
+ */
+async function placeUpiOrder(totals, addrData) {
+    const btn = document.getElementById('btn-confirm-order');
+    const origHtml = btn ? btn.innerHTML : '';
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '⏳ Initializing UPI Order...';
+    }
+
+    const orderAmount = GetgozoApp.state.deliveryType === 'self_pickup' 
+        ? (totals.subtotal - totals.couponDiscount) 
+        : totals.grandTotal;
+
+    const addressPayload = addrData || getCheckoutAddressData();
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || window.LARAVEL_CSRF_TOKEN || '';
+
+    const payload = {
+        items: totals.items,
+        subtotal: totals.subtotal,
+        discount: totals.totalDiscount || 0,
+        coupon_discount: totals.couponDiscount || 0,
+        coupon_code: GetgozoApp.state.appliedCoupon ? GetgozoApp.state.appliedCoupon.code : null,
+        delivery_charge: GetgozoApp.state.deliveryType === 'self_pickup' ? 0 : totals.deliveryFee,
+        order_amount: orderAmount,
+        payment_method: 'upi',
+        order_type: GetgozoApp.state.deliveryType || 'delivery',
+        time_slot: GetgozoApp.state.selectedTimeSlot || 'Express Delivery (Today within 45 - 60 Mins)',
+        address_id: GetgozoApp.state.selectedAddressId || null,
+        order_note: document.getElementById('checkout-order-note')?.value || '',
+        address_type: addressPayload.address_type || 'Home',
+        contact_person_name: addressPayload.contact_person_name || '',
+        contact_person_number: addressPayload.contact_person_number || '',
+        address: addressPayload.address || '',
+        road: addressPayload.road || '',
+        house: addressPayload.house || ''
+    };
+
+    try {
+        const res = await fetch("{{ route('checkout.place-upi-order') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data && data.status) {
+            GetgozoApp.state.cart = {};
+            GetgozoApp.state.appliedCoupon = null;
+            localStorage.setItem('getgozo_cart_v2', '{}');
+            localStorage.removeItem('getgozo_cart');
+            GetgozoApp.showToast('✓ UPI Order created! Redirecting...', 'success');
+
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            if (isMobile && data.upi_intent_url) {
+                window.location.href = data.upi_intent_url;
+                setTimeout(() => {
+                    window.location.href = data.redirect_url;
+                }, 800);
+            } else {
+                window.location.href = data.redirect_url;
+            }
+        } else {
+            GetgozoApp.showToast((data && data.message) || 'Failed to place UPI order.', 'error');
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = origHtml;
+            }
+        }
+    } catch (e) {
+        console.error('UPI order error:', e);
+        GetgozoApp.showToast('Unable to connect to server. Please try again.', 'error');
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = origHtml;
+        }
     }
 }
 

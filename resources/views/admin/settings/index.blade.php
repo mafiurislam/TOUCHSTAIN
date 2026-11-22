@@ -58,17 +58,34 @@
                         </div>
                     </div>
 
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));gap:16px">
+                        <!-- UPI Direct Toggle -->
+                        <div style="background:#fff;border:1.5px solid {{ ($settings['payment_upi_active'] ?? '1') !== '0' ? '#C4B5FD' : '#FCA5A5' }};border-radius:10px;padding:14px">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                                <strong style="font-size:13.5px;color:#0F172A">📱 UPI Payment (QR)</strong>
+                                <span style="font-size:11px;font-weight:800;padding:2px 8px;border-radius:6px;background:{{ ($settings['payment_upi_active'] ?? '1') !== '0' ? '#EDE9FE' : '#FEE2E2' }};color:{{ ($settings['payment_upi_active'] ?? '1') !== '0' ? '#5B21B6' : '#991B1B' }}">
+                                    {{ ($settings['payment_upi_active'] ?? '1') !== '0' ? '● ACTIVE (ON)' : '○ DISABLED (OFF)' }}
+                                </span>
+                            </div>
+                            <p style="font-size:11.5px;color:#64748B;margin:0 0 10px;line-height:1.4">
+                                Direct PhonePe QR code scanning and app-to-app UPI transfer with zero gateway fee.
+                            </p>
+                            <select name="payment_upi_active" style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:12.5px;font-weight:700">
+                                <option value="1" {{ ($settings['payment_upi_active'] ?? '1') !== '0' ? 'selected' : '' }}>🟢 Enabled (ON) — Show on Checkout</option>
+                                <option value="0" {{ ($settings['payment_upi_active'] ?? '1') === '0' ? 'selected' : '' }}>🔴 Disabled (OFF) — Hide on Checkout</option>
+                            </select>
+                        </div>
+
                         <!-- Razorpay Online Toggle -->
                         <div style="background:#fff;border:1.5px solid {{ ($settings['payment_razorpay_active'] ?? '1') !== '0' ? '#86EFAC' : '#FCA5A5' }};border-radius:10px;padding:14px">
                             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-                                <strong style="font-size:13.5px;color:#0F172A">⚡ Online Payment (Razorpay)</strong>
+                                <strong style="font-size:13.5px;color:#0F172A">⚡ Razorpay Online</strong>
                                 <span style="font-size:11px;font-weight:800;padding:2px 8px;border-radius:6px;background:{{ ($settings['payment_razorpay_active'] ?? '1') !== '0' ? '#DCFCE7' : '#FEE2E2' }};color:{{ ($settings['payment_razorpay_active'] ?? '1') !== '0' ? '#166534' : '#991B1B' }}">
                                     {{ ($settings['payment_razorpay_active'] ?? '1') !== '0' ? '● ACTIVE (ON)' : '○ DISABLED (OFF)' }}
                                 </span>
                             </div>
                             <p style="font-size:11.5px;color:#64748B;margin:0 0 10px;line-height:1.4">
-                                Accept instant online payments via UPI (Google Pay, PhonePe, Paytm), Debit/Credit Cards, and NetBanking.
+                                Accept online cards, netbanking, and wallets via Razorpay gateway.
                             </p>
                             <select name="payment_razorpay_active" style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:12.5px;font-weight:700">
                                 <option value="1" {{ ($settings['payment_razorpay_active'] ?? '1') !== '0' ? 'selected' : '' }}>🟢 Enabled (ON) — Show on Checkout</option>
@@ -85,7 +102,7 @@
                                 </span>
                             </div>
                             <p style="font-size:11.5px;color:#64748B;margin:0 0 10px;line-height:1.4">
-                                Allow customers to pay in cash or via rider UPI upon package delivery at their doorstep.
+                                Allow customers to pay in cash or rider UPI upon delivery.
                             </p>
                             <select name="payment_cod_active" style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:12.5px;font-weight:700">
                                 <option value="1" {{ ($settings['payment_cod_active'] ?? '1') !== '0' ? 'selected' : '' }}>🟢 Enabled (ON) — Show on Checkout</option>

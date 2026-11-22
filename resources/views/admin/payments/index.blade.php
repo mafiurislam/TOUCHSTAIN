@@ -29,13 +29,36 @@
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
             <div>
                 <h2 style="font-size:16px;font-weight:800;color:#0F172A;margin:0">🎛️ Payment Methods Control Panel</h2>
-                <p style="font-size:12px;color:var(--text-muted);margin:2px 0 0">Turn online payments (Razorpay) or Cash on Delivery ON or OFF. Disabled methods are instantly hidden from checkout.</p>
+                <p style="font-size:12px;color:var(--text-muted);margin:2px 0 0">Turn UPI Payment, Razorpay, or Cash on Delivery ON or OFF. Disabled methods are instantly hidden from checkout.</p>
             </div>
             <a href="{{ route('admin.settings') }}" class="btn-secondary" style="padding:6px 14px;font-size:12px">⚙️ All Store Settings</a>
         </div>
 
-        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:16px">
-            <!-- 1. Razorpay Gateway Card -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px">
+            <!-- 1. Direct UPI Payment Card (New Feature) -->
+            <div style="background:{{ $isUpiActive ? '#FAF5FF' : '#FEF2F2' }};border:1.5px solid {{ $isUpiActive ? '#C4B5FD' : '#FCA5A5' }};border-radius:12px;padding:16px;display:flex;justify-content:space-between;align-items:center;gap:14px">
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px">
+                        <span style="font-size:20px">📱</span>
+                        <strong style="font-size:14.5px;color:#0F172A">UPI Payment</strong>
+                    </div>
+                    <div style="font-size:12px;color:{{ $isUpiActive ? '#5B21B6' : '#991B1B' }};font-weight:700;margin-top:4px">
+                        {{ $isUpiActive ? '● Status: ENABLED (ON)' : '○ Status: DISABLED (OFF)' }}
+                    </div>
+                    <div style="font-size:11px;color:#64748B;margin-top:2px">PhonePe, GPay, Paytm, QR</div>
+                </div>
+
+                <form action="{{ route('admin.payments.toggle-method') }}" method="POST" style="margin:0">
+                    @csrf
+                    <input type="hidden" name="method" value="upi">
+                    <input type="hidden" name="status" value="{{ $isUpiActive ? '0' : '1' }}">
+                    <button type="submit" class="btn-theme" style="padding:7px 16px;font-size:12px;background:{{ $isUpiActive ? '#DC2626' : '#5B21B6' }};border-color:{{ $isUpiActive ? '#DC2626' : '#5B21B6' }}">
+                        {{ $isUpiActive ? '🔴 Turn OFF' : '🟢 Turn ON' }}
+                    </button>
+                </form>
+            </div>
+
+            <!-- 2. Razorpay Gateway Card -->
             <div style="background:{{ $isRazorpayActive ? '#F0FDF4' : '#FEF2F2' }};border:1.5px solid {{ $isRazorpayActive ? '#86EFAC' : '#FCA5A5' }};border-radius:12px;padding:16px;display:flex;justify-content:space-between;align-items:center;gap:14px">
                 <div>
                     <div style="display:flex;align-items:center;gap:8px">
@@ -45,7 +68,7 @@
                     <div style="font-size:12px;color:{{ $isRazorpayActive ? '#166534' : '#991B1B' }};font-weight:700;margin-top:4px">
                         {{ $isRazorpayActive ? '● Status: ENABLED (ON)' : '○ Status: DISABLED (OFF)' }}
                     </div>
-                    <div style="font-size:11px;color:#64748B;margin-top:2px">UPI, Cards, NetBanking, Wallets</div>
+                    <div style="font-size:11px;color:#64748B;margin-top:2px">Cards, NetBanking, Wallets</div>
                 </div>
 
                 <form action="{{ route('admin.payments.toggle-method') }}" method="POST" style="margin:0">
@@ -58,7 +81,7 @@
                 </form>
             </div>
 
-            <!-- 2. Cash on Delivery (COD) Card -->
+            <!-- 3. Cash on Delivery (COD) Card -->
             <div style="background:{{ $isCodActive ? '#F0FDF4' : '#FEF2F2' }};border:1.5px solid {{ $isCodActive ? '#86EFAC' : '#FCA5A5' }};border-radius:12px;padding:16px;display:flex;justify-content:space-between;align-items:center;gap:14px">
                 <div>
                     <div style="display:flex;align-items:center;gap:8px">
@@ -68,7 +91,7 @@
                     <div style="font-size:12px;color:{{ $isCodActive ? '#166534' : '#991B1B' }};font-weight:700;margin-top:4px">
                         {{ $isCodActive ? '● Status: ENABLED (ON)' : '○ Status: DISABLED (OFF)' }}
                     </div>
-                    <div style="font-size:11px;color:#64748B;margin-top:2px">Pay cash or rider UPI upon delivery</div>
+                    <div style="font-size:11px;color:#64748B;margin-top:2px">Pay cash upon delivery</div>
                 </div>
 
                 <form action="{{ route('admin.payments.toggle-method') }}" method="POST" style="margin:0">
@@ -80,6 +103,63 @@
                     </button>
                 </form>
             </div>
+        </div>
+
+        <!-- Dedicated UPI & QR Code Settings Form (Requested Feature) -->
+        <div style="margin-top:20px;padding-top:20px;border-top:1.5px dashed #E2E8F0">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+                <div style="display:flex;align-items:center;gap:10px">
+                    <span style="font-size:22px">📷</span>
+                    <div>
+                        <h3 style="margin:0;font-size:14.5px;font-weight:800;color:#0F172A">UPI QR Code &amp; Payee Management</h3>
+                        <p style="margin:2px 0 0;font-size:12px;color:#64748B">Change your UPI QR image anytime, edit UPI ID (VPA), or payee name. Updates instantly reflect on customer checkout.</p>
+                    </div>
+                </div>
+                
+                <form action="{{ route('admin.payments.delete-upi-qr') }}" method="POST" onsubmit="return confirm('Reset custom QR image back to default PhonePe QR?');" style="margin:0">
+                    @csrf
+                    <button type="submit" class="btn-secondary" style="padding:6px 12px;font-size:11.5px;color:#DC2626;border-color:#FCA5A5">
+                        🗑️ Reset QR to Default PhonePe
+                    </button>
+                </form>
+            </div>
+
+            <form action="{{ route('admin.payments.update-upi') }}" method="POST" enctype="multipart/form-data" style="margin:0">
+                @csrf
+                <div style="display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:16px;align-items:center;background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:12px;padding:16px">
+                    <!-- Current QR Preview -->
+                    <div style="text-align:center">
+                        <div style="background:#fff;border:1px solid #CBD5E1;border-radius:8px;padding:4px;display:inline-block">
+                            <img src="{{ asset('storage/' . ($upiQrImage ?? 'payment/upi_phonepe_qr.jpg')) }}?v={{ time() }}" alt="Current QR" style="width:72px;height:72px;object-fit:contain;display:block">
+                        </div>
+                        <span style="display:block;font-size:10px;font-weight:700;color:#059669;margin-top:3px">Active QR</span>
+                    </div>
+
+                    <!-- UPI ID Input -->
+                    <div>
+                        <label style="font-size:12px;font-weight:700;display:block;margin-bottom:4px;color:#334155">UPI ID (VPA) *</label>
+                        <input type="text" name="upi_id" value="{{ $upiId ?? '7039214465-3@ybl' }}" required placeholder="e.g. 7039214465-3@ybl" style="width:100%;padding:8px 10px;border:1.5px solid #CBD5E1;border-radius:8px;font-size:13px;font-weight:700;box-sizing:border-box">
+                    </div>
+
+                    <!-- Payee Name Input -->
+                    <div>
+                        <label style="font-size:12px;font-weight:700;display:block;margin-bottom:4px;color:#334155">Payee Name *</label>
+                        <input type="text" name="upi_name" value="{{ $upiName ?? 'Naushad Ali Meher Ali' }}" required placeholder="Account Holder Name" style="width:100%;padding:8px 10px;border:1.5px solid #CBD5E1;border-radius:8px;font-size:13px;font-weight:700;box-sizing:border-box">
+                    </div>
+
+                    <!-- Upload New QR Image File -->
+                    <div>
+                        <label style="font-size:12px;font-weight:700;display:block;margin-bottom:4px;color:#334155">Upload New QR Image</label>
+                        <input type="file" name="qr_image" accept="image/*" style="width:100%;padding:6px;font-size:11.5px;border:1.5px solid #CBD5E1;border-radius:8px;background:#fff;box-sizing:border-box">
+                    </div>
+                </div>
+
+                <div style="display:flex;justify-content:flex-end;margin-top:12px">
+                    <button type="submit" class="btn-theme" style="padding:9px 20px;font-size:13px;font-weight:700;background:#5B21B6;border-color:#5B21B6">
+                        💾 Save UPI &amp; QR Settings
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 

@@ -35,16 +35,30 @@ class PaymentController extends Controller
 
         $isRazorpayActive = Setting::getValue('payment_razorpay_active', '1') !== '0';
         $isCodActive = Setting::getValue('payment_cod_active', '1') !== '0';
+        $isUpiActive = Setting::getValue('payment_upi_active', '1') !== '0';
+        $upiId = Setting::getValue('payment_upi_id', '7039214465-3@ybl');
+        $upiName = Setting::getValue('payment_upi_name', 'Naushad Ali Meher Ali');
+        $upiQrImage = Setting::getValue('payment_upi_qr_image', 'payment/upi_phonepe_qr.jpg');
 
-        return view('admin.payments.index', compact('transfers', 'bankAccount', 'stats', 'isRazorpayActive', 'isCodActive'));
+        return view('admin.payments.index', compact(
+            'transfers',
+            'bankAccount',
+            'stats',
+            'isRazorpayActive',
+            'isCodActive',
+            'isUpiActive',
+            'upiId',
+            'upiName',
+            'upiQrImage'
+        ));
     }
 
     /**
-     * Quick Toggle for Payment Methods (Razorpay / Cash on Delivery)
+     * Quick Toggle for Payment Methods (Razorpay / Cash on Delivery / UPI)
      */
     public function toggleMethod(Request $request)
     {
-        $method = $request->input('method'); // 'razorpay' or 'cod'
+        $method = $request->input('method'); // 'razorpay', 'cod', or 'upi'
         $status = $request->input('status'); // '1' or '0'
 
         if ($method === 'razorpay') {
@@ -53,6 +67,9 @@ class PaymentController extends Controller
         } elseif ($method === 'cod') {
             Setting::setValue('payment_cod_active', $status ? '1' : '0');
             $label = 'Cash on Delivery (COD)';
+        } elseif ($method === 'upi') {
+            Setting::setValue('payment_upi_active', $status ? '1' : '0');
+            $label = 'Direct UPI Payment (PhonePe / GPay / QR)';
         } else {
             return back()->with('error', 'Invalid payment method specified.');
         }
@@ -61,6 +78,50 @@ class PaymentController extends Controller
         AuditLog::record('Payments', 'Toggle Payment Method', "{$label} set to {$stateText}");
 
         return back()->with('success', "✓ {$label} is now {$stateText} on checkout!");
+    }
+
+    /**
+     * Update UPI Settings & Upload New QR Image (Admin Dashboard Control)
+     */
+    public function updateUpiSettings(Request $request)
+    {
+        $request->validate([
+            'upi_id' => 'required|string|max:100',
+            'upi_name' => 'required|string|max:150',
+            'qr_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+        ]);
+
+        $upiId = trim((string)$request->input('upi_id'));
+        $upiName = trim((string)$request->input('upi_name'));
+
+        Setting::setValue('payment_upi_id', $upiId);
+        Setting::setValue('payment_upi_name', $upiName);
+
+        if ($request->hasFile('qr_image')) {
+            $file = $request->file('qr_image');
+            $destDir = public_path('storage/payment');
+            if (!file_exists($destDir)) {
+                mkdir($destDir, 0755, true);
+            }
+            $filename = 'upi_qr_' . time() . '.' . $file->getClientOriginalExtension();
+            $file->move($destDir, $filename);
+            Setting::setValue('payment_upi_qr_image', 'payment/' . $filename);
+        }
+
+        AuditLog::record('Payments', 'Update UPI Settings', "Updated UPI ID ({$upiId}) and Merchant QR Code image");
+
+        return back()->with('success', '✓ UPI Payment details and QR Code updated successfully!');
+    }
+
+    /**
+     * Delete / Reset Custom QR to default PhonePe QR
+     */
+    public function deleteUpiQr(Request $request)
+    {
+        Setting::setValue('payment_upi_qr_image', 'payment/upi_phonepe_qr.jpg');
+        AuditLog::record('Payments', 'Reset UPI QR', "Reset custom QR code back to default PhonePe QR");
+
+        return back()->with('success', '✓ Custom QR Code removed. Reset back to official default PhonePe QR!');
     }
 
     /**

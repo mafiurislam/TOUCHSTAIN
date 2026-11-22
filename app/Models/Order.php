@@ -67,7 +67,12 @@ class Order extends Model
 
     public function isRazorpay(): bool
     {
-        return in_array(strtolower($this->payment_method), ['razorpay', 'online', 'online_payment']);
+        return in_array(strtolower($this->payment_method ?? ''), ['razorpay', 'online', 'online_payment']);
+    }
+
+    public function isUpi(): bool
+    {
+        return in_array(strtolower($this->payment_method ?? ''), ['upi', 'upi_qr', 'upi_payment']);
     }
 
     public function isBankTransfer(): bool
