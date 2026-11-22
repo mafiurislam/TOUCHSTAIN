@@ -1806,35 +1806,32 @@ class FrontController extends Controller
      */
     public function storeReview(Request $request, $id)
     {
-        if (!Auth::check()) {
-            if ($request->wantsJson() || $request->ajax()) {
-                return response()->json(['status' => false, 'require_auth' => true, 'message' => 'Please login or register to write a review.'], 401);
-            }
-            return redirect('/login')->with('error', 'Please login or register to write a review.');
-        }
-
         $product = Product::findOrFail($id);
         $rating = max(1, min(5, (int)$request->input('rating', 5)));
         $comment = trim((string)$request->input('comment', ''));
 
+        if ($comment === '') {
+            return back()->with('error', 'Please write your review comment before submitting.');
+        }
+
+        $userId = Auth::id() ?: null;
+        $customerName = trim((string)$request->input('customer_name', ''));
+        if (empty($customerName)) {
+            $customerName = Auth::check() && Auth::user()->name ? Auth::user()->name : 'Verified Customer';
+        }
+
         Review::create([
             'product_id' => $product->id,
-            'user_id' => Auth::id(),
+            'user_id' => $userId,
+            'customer_name' => $customerName,
             'rating' => $rating,
-            'comment' => $comment ?: 'Great product!',
-        ]);
-
-        // Recompute average rating on Product
-        $avg = round((float)Review::where('product_id', $product->id)->avg('rating'), 1);
-        $cnt = Review::where('product_id', $product->id)->count();
-        $product->update([
-            'rating' => [['average' => (string)$avg, 'product_id' => $product->id, 'count' => $cnt]],
+            'comment' => $comment,
         ]);
 
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json(['status' => true, 'message' => 'Thank you! Your review has been published.']);
         }
-        return back()->with('success', 'Thank you! Your review has been published.');
+        return back()->with('success', 'Thank you! Your review has been submitted and published.');
     }
 
     public function wallet()

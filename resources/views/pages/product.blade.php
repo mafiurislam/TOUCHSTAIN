@@ -658,9 +658,14 @@
 
                 <h1 class="prod-title">{{ $product->name }}</h1>
 
+                @php
+                    $revCount = isset($reviews) ? $reviews->count() : 0;
+                    $avgScore = $revCount > 0 ? round($reviews->avg('rating'), 1) : 4.8;
+                    $starScore = (int)round($avgScore);
+                @endphp
                 <div class="rating-row">
-                    <span class="stars">★★★★★</span>
-                    <span class="rating-text">4.8 Rating • {{ $product->popularity_count ?: 12 }} Verified Purchases</span>
+                    <span class="stars" style="color:#F59E0B">{{ str_repeat('★', min(5, max(1, $starScore))) }}{{ str_repeat('☆', max(0, 5 - min(5, max(1, $starScore)))) }}</span>
+                    <span class="rating-text">{{ $avgScore }} Rating ({{ $revCount }} {{ $revCount === 1 ? 'Customer Review' : 'Customer Reviews' }}) • {{ $product->popularity_count ?: 12 }} Verified Purchases</span>
                 </div>
 
                 <div class="prod-detail-price">
@@ -794,45 +799,98 @@
         </div>
     </div>
 
-    <!-- Customer Ratings & Reviews (SQLite) -->
-    <section class="section-block prod-reviews-section">
-        <h2 style="font-size:18px;font-weight:800;margin-bottom:16px">⭐ Customer Ratings &amp; Reviews ({{ isset($reviews) ? $reviews->count() : 0 }})</h2>
-
-        <form action="{{ url('/product/' . $product->id . '/review') }}" method="POST" class="prod-review-form">
-            @csrf
-            <div class="prod-review-grid">
-                <div class="review-rating-col">
-                    <label>Your Rating</label>
-                    <select name="rating" class="form-control">
-                        <option value="5">★★★★★ (5 - Excellent)</option>
-                        <option value="4">★★★★☆ (4 - Very Good)</option>
-                        <option value="3">★★★☆☆ (3 - Good)</option>
-                        <option value="2">★★☆☆☆ (2 - Fair)</option>
-                        <option value="1">★☆☆☆☆ (1 - Poor)</option>
-                    </select>
-                </div>
-                <div class="review-comment-col">
-                    <label>Write a Review</label>
-                    <input type="text" name="comment" class="form-control" placeholder="Share your experience with this product..." required>
-                </div>
-                <button type="submit" class="btn-primary btn-submit-review">Submit Review</button>
+    <!-- Customer Ratings & Reviews -->
+    <section class="section-block prod-reviews-section" style="margin-top:36px;background:#fff;border:1.5px solid var(--border,#E2E8F0);border-radius:16px;padding:24px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #F1F5F9">
+            <div>
+                <h2 style="font-size:19px;font-weight:800;color:#0F172A;margin:0 0 4px">⭐ Customer Ratings &amp; Reviews ({{ isset($reviews) ? $reviews->count() : 0 }})</h2>
+                <p style="font-size:13px;color:#64748B;margin:0">যাঁরা এই প্রোডাক্টটি ব্যবহার করেছেন তাঁদের বাস্তব অভিজ্ঞতা ও রিভিউ</p>
             </div>
-        </form>
+            @if(isset($reviews) && $reviews->count() > 0)
+                <div style="display:flex;align-items:center;gap:8px;background:#FEF3C7;padding:6px 14px;border-radius:20px;border:1px solid #FDE68A">
+                    <span style="font-size:16px;font-weight:800;color:#92400E">★ {{ round($reviews->avg('rating'), 1) }} / 5.0</span>
+                    <span style="font-size:12px;color:#B45309">({{ $reviews->count() }} ratings)</span>
+                </div>
+            @endif
+        </div>
 
+        @if(session('success'))
+            <div style="background:#DCFCE7;border:1px solid #86EFAC;color:#166534;padding:12px 16px;border-radius:10px;margin-bottom:18px;font-size:13.5px;font-weight:600">
+                ✓ {{ session('success') }}
+            </div>
+        @endif
+        @if(session('error'))
+            <div style="background:#FEE2E2;border:1px solid #FCA5A5;color:#991B1B;padding:12px 16px;border-radius:10px;margin-bottom:18px;font-size:13.5px;font-weight:600">
+                ⚠️ {{ session('error') }}
+            </div>
+        @endif
+
+        <!-- Write a Review Form -->
+        <div style="background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:14px;padding:20px;margin-bottom:28px">
+            <h3 style="font-size:15px;font-weight:800;color:#0F172A;margin:0 0 6px">✍️ Write a Review / আপনার রিভিউ লিখুন</h3>
+            <p style="font-size:12.5px;color:#64748B;margin:0 0 16px">প্রোডাক্টটি আপনার কেমন লেগেছে? আপনার সৎ মতামত অন্যান্য ক্রেতাদের সাহায্য করবে।</p>
+
+            <form action="{{ url('/product/' . $product->id . '/review') }}" method="POST">
+                @csrf
+                <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:14px;margin-bottom:14px">
+                    <div>
+                        <label style="display:block;font-size:12.5px;font-weight:700;color:#1E293B;margin-bottom:6px">Your Name / আপনার নাম *</label>
+                        <input type="text" name="customer_name" class="form-control" value="{{ auth()->check() ? auth()->user()->name : old('customer_name') }}" placeholder="e.g. Rahul Sharma" required style="width:100%;padding:9px 12px;border:1.5px solid #CBD5E1;border-radius:8px;font-size:13px;box-sizing:border-box">
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:12.5px;font-weight:700;color:#1E293B;margin-bottom:6px">Your Rating / রেটিং সিলেক্ট করুন *</label>
+                        <select name="rating" class="form-control" style="width:100%;padding:9px 12px;border:1.5px solid #CBD5E1;border-radius:8px;font-size:13px;font-weight:700;color:#D97706;box-sizing:border-box">
+                            <option value="5" selected>★★★★★ (5 - Excellent / চমৎকার)</option>
+                            <option value="4">★★★★☆ (4 - Very Good / খুব ভালো)</option>
+                            <option value="3">★★★☆☆ (3 - Good / ভালো)</option>
+                            <option value="2">★★☆☆☆ (2 - Fair / মোটামুটি)</option>
+                            <option value="1">★☆☆☆☆ (1 - Poor / সন্তোষজনক নয়)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:16px">
+                    <label style="display:block;font-size:12.5px;font-weight:700;color:#1E293B;margin-bottom:6px">Review Comment / রিভিউ মন্তব্য *</label>
+                    <textarea name="comment" rows="3" class="form-control" placeholder="দাগ দূর করতে কেমন কাজ করেছে? আপনার অভিজ্ঞতা বিস্তারিত লিখুন..." required style="width:100%;padding:10px 12px;border:1.5px solid #CBD5E1;border-radius:8px;font-size:13px;box-sizing:border-box;font-family:inherit"></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary" style="background:#01684B;color:#fff;border:none;padding:10px 24px;border-radius:8px;font-size:13.5px;font-weight:700;cursor:pointer">
+                    ⭐ Submit Review / রিভিউ জমা দিন
+                </button>
+            </form>
+        </div>
+
+        <!-- Customer Reviews List -->
+        <h3 style="font-size:15px;font-weight:800;color:#0F172A;margin:0 0 14px">💬 Customer Reviews ({{ isset($reviews) ? $reviews->count() : 0 }})</h3>
         @if(isset($reviews) && $reviews->count() > 0)
-            <div style="display:grid;gap:12px">
+            <div style="display:grid;gap:14px">
                 @foreach($reviews as $rev)
-                    <div style="padding:14px;border:1px solid var(--border, #E2E8F0);border-radius:10px;background:#FFFFFF">
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-                            <strong style="font-size:13.5px">{{ $rev->user->name ?? 'Verified Customer' }}</strong>
-                            <span style="color:#F59E0B;font-size:13px">{{ str_repeat('★', (int)$rev->rating) }}{{ str_repeat('☆', max(0, 5 - (int)$rev->rating)) }}</span>
+                    <div style="padding:16px;border:1.5px solid #E2E8F0;border-radius:12px;background:#FFFFFF;transition:box-shadow 0.2s">
+                        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+                            <div style="display:flex;align-items:center;gap:8px">
+                                <span style="width:32px;height:32px;background:#EFF6FF;color:#2563EB;font-weight:800;font-size:13px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid #BFDBFE">
+                                    {{ strtoupper(substr($rev->reviewer_name, 0, 1)) }}
+                                </span>
+                                <div>
+                                    <strong style="font-size:14px;color:#0F172A">{{ $rev->reviewer_name }}</strong>
+                                    <span style="font-size:11px;font-weight:700;color:#059669;background:#DCFCE7;padding:2px 7px;border-radius:4px;margin-left:6px;border:1px solid #BBF7D0">✓ Verified Customer</span>
+                                </div>
+                            </div>
+                            <div style="text-align:right">
+                                <span style="color:#F59E0B;font-size:14px;letter-spacing:1px">{{ str_repeat('★', (int)$rev->rating) }}{{ str_repeat('☆', max(0, 5 - (int)$rev->rating)) }}</span>
+                                <span style="font-size:11.5px;color:#94A3B8;display:block;margin-top:2px">{{ $rev->created_at ? $rev->created_at->format('d M, Y') : 'Recent' }}</span>
+                            </div>
                         </div>
-                        <p style="font-size:13px;color:var(--text-secondary, #475569);margin:0">{{ $rev->comment }}</p>
+                        <p style="font-size:13.5px;color:#334155;margin:0;line-height:1.55">{{ $rev->comment }}</p>
                     </div>
                 @endforeach
             </div>
         @else
-            <p style="font-size:13px;color:var(--text-muted, #94A3B8);margin:0">No reviews yet. Be the first to review {{ $product->name }}!</p>
+            <div style="text-align:center;padding:32px 20px;background:#F8FAFC;border:1.5px dashed #CBD5E1;border-radius:12px">
+                <span style="font-size:32px;display:block;margin-bottom:8px">⭐</span>
+                <strong style="font-size:14.5px;color:#334155;display:block;margin-bottom:4px">এখনও কোনো রিভিউ দেওয়া হয়নি</strong>
+                <p style="font-size:12.5px;color:#64748B;margin:0">আপনি এই প্রোডাক্টটি ক্রয় করে থাকলে সবার প্রথমে আপনার মূল্যবান রিভিউ ও রেটিং দিন!</p>
+            </div>
         @endif
     </section>
 

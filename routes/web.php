@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\DeliveryController;
+use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Api\ShiprocketWebhookController;
 use App\Http\Middleware\AdminAuthMiddleware;
 
@@ -165,6 +166,10 @@ Route::prefix('admin')->middleware([AdminAuthMiddleware::class])->group(function
     Route::post('/customers/{id}/toggle-status', [CustomerController::class, 'toggleStatus'])->name('admin.customers.toggle-status');
     Route::post('/customers/{id}/delete', [CustomerController::class, 'destroy'])->name('admin.customers.delete');
     Route::get('/customers/export/csv', [CustomerController::class, 'exportCsv'])->name('admin.customers.export');
+
+    // Customer Reviews Management
+    Route::get('/reviews', [ReviewController::class, 'index'])->name('admin.reviews');
+    Route::post('/reviews/{id}/delete', [ReviewController::class, 'destroy'])->name('admin.reviews.delete');
 
     // Bulk Price Sheet System
     Route::get('/price-sheet', [PriceSheetController::class, 'index'])->name('admin.price-sheet');

@@ -103,6 +103,17 @@ class Product extends Model
         return $this->image_url;
     }
 
+    public function getAverageRatingAttribute(): float
+    {
+        $avg = $this->reviews()->avg('rating');
+        return $avg ? round((float)$avg, 1) : 4.8;
+    }
+
+    public function getReviewsCountAttribute(): int
+    {
+        return $this->reviews()->count();
+    }
+
     public function getSellingPriceAttribute(): float
     {
         return round((float) $this->price, 2);

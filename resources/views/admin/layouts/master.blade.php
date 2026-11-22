@@ -434,6 +434,19 @@
                 </span>
             </a>
 
+            <a href="{{ route('admin.reviews') }}" class="nav-link {{ request()->is('admin/reviews*') ? 'active' : '' }}">
+                <span class="nav-link-left">
+                    <span>⭐</span>
+                    <span>Customer Reviews</span>
+                </span>
+                @php
+                    $revCountBadge = \App\Models\Review::count();
+                @endphp
+                @if($revCountBadge > 0)
+                    <span class="nav-badge" style="background:#F59E0B">{{ $revCountBadge }}</span>
+                @endif
+            </a>
+
             <a href="{{ route('admin.coupons') }}" class="nav-link {{ request()->is('admin/coupons*') ? 'active' : '' }}">
                 <span class="nav-link-left">
                     <span>🎟️</span>
