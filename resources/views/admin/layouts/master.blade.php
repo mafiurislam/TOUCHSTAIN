@@ -663,6 +663,20 @@
                 </div>
             @endif
 
+            @if(isset($errors) && $errors->any())
+                <div style="background:#FEE2E2;border:1px solid #FCA5A5;color:#991B1B;padding:14px 18px;border-radius:12px;font-weight:600;font-size:13.5px;margin-bottom:22px;display:flex;align-items:flex-start;justify-content:space-between">
+                    <div>
+                        <strong style="display:block;margin-bottom:4px">⚠️ Please check the form errors:</strong>
+                        <ul style="margin:0;padding-left:18px;font-weight:500;font-size:13px">
+                            @foreach($errors->all() as $err)
+                                <li>{{ $err }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <button type="button" onclick="this.parentElement.remove()" style="border:none;background:none;cursor:pointer;font-weight:800;color:#991B1B;font-size:16px">&times;</button>
+                </div>
+            @endif
+
             @if(session('warning'))
                 <div style="background:#FEF3C7;border:1px solid #FCD34D;color:#92400E;padding:14px 18px;border-radius:12px;font-weight:700;font-size:13.5px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between">
                     <div>⚠️ {{ session('warning') }}</div>

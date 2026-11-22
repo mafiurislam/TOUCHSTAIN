@@ -191,6 +191,7 @@ Route::prefix('admin')->middleware([AdminAuthMiddleware::class])->group(function
     // Marketing & Coupons
     Route::get('/coupons', [MarketingController::class, 'coupons'])->name('admin.coupons');
     Route::post('/coupons', [MarketingController::class, 'storeCoupon'])->name('admin.coupons.store');
+    Route::post('/coupons/{id}/toggle-status', [MarketingController::class, 'toggleCouponStatus'])->name('admin.coupons.toggle');
     Route::post('/coupons/{id}/delete', [MarketingController::class, 'destroyCoupon'])->name('admin.coupons.delete');
 
     // Website CMS, Banners, Live Demo Videos & Enquiries
