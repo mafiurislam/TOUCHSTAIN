@@ -615,16 +615,35 @@
         <div class="product-detail-grid">
             <!-- Left: Gallery -->
             <div class="prod-gallery-main">
-                <div class="main-img-stage">
+                <div class="main-img-stage" id="gallery-stage" style="position:relative">
                     <img id="prod-main-img" src="{{ $mainImg }}" alt="{{ $product->name }}" onerror="this.src='{{ asset('assets/image/placeholder.png') }}'">
+                    @if($product->video)
+                        <video id="prod-main-video" controls playsinline poster="{{ $product->video_thumbnail ? $product->video_thumbnail_url : $mainImg }}" style="display:none;max-height:330px;max-width:100%;width:auto;border-radius:10px;outline:none">
+                            <source src="{{ $product->video_url }}">
+                            Your browser does not support the video tag.
+                        </video>
+                        <button type="button" onclick="switchGalleryToVideo(document.querySelector('.video-thumb-box'))" class="watch-video-badge-btn" style="position:absolute;top:14px;right:14px;display:flex;align-items:center;gap:6px;background:rgba(15,23,42,0.85);color:#fff;border:none;border-radius:20px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;backdrop-filter:blur(4px);box-shadow:0 2px 8px rgba(0,0,0,0.25);transition:all 0.2s">
+                            <span style="color:#38BDF8">▶</span> Watch Video
+                        </button>
+                    @endif
                 </div>
-                <div class="thumb-row">
+                <div class="thumb-row" id="gallery-thumb-row">
                     @foreach($images as $idx => $img)
                         @php $tUrl = $img ? asset('storage/product/' . $img) : asset('assets/image/placeholder.png'); @endphp
-                        <div class="thumb-box {{ $idx === 0 ? 'active' : '' }}" onclick="document.getElementById('prod-main-img').src='{{ $tUrl }}'">
+                        <div class="thumb-box gallery-thumb-item {{ $idx === 0 ? 'active' : '' }}" onclick="switchGalleryToImage('{{ $tUrl }}', this)">
                             <img src="{{ $tUrl }}" alt="Thumbnail">
                         </div>
                     @endforeach
+
+                    @if($product->video)
+                        <div class="thumb-box gallery-thumb-item video-thumb-box" onclick="switchGalleryToVideo(this)" title="Play Product Video" style="position:relative;background:#0F172A;border-color:#3B82F6;overflow:hidden">
+                            <img src="{{ $product->video_thumbnail ? $product->video_thumbnail_url : $mainImg }}" alt="Video Poster" style="opacity:0.65;width:100%;height:100%;object-fit:cover">
+                            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;pointer-events:none">
+                                <span style="font-size:16px;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.8));color:#38BDF8">▶</span>
+                                <span style="font-size:9px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;background:rgba(0,0,0,0.65);padding:1px 4px;border-radius:3px;margin-top:2px">VIDEO</span>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -726,6 +745,44 @@
                             if (totalEl) totalEl.textContent = '₹' + total;
                             if (formulaEl) formulaEl.textContent = '(' + next + ' × ₹' + UNIT_PRICE.toFixed(2) + ')';
                             if (buyBtn) buyBtn.innerHTML = '⚡ Buy Now (₹' + total + ')';
+                        };
+
+                        window.switchGalleryToImage = function (url, el) {
+                            const mainImg = document.getElementById('prod-main-img');
+                            const mainVideo = document.getElementById('prod-main-video');
+                            const watchBadge = document.querySelector('.watch-video-badge-btn');
+                            if (mainVideo) {
+                                try { mainVideo.pause(); } catch (e) {}
+                                mainVideo.style.display = 'none';
+                            }
+                            if (mainImg) {
+                                mainImg.style.display = 'block';
+                                mainImg.src = url;
+                            }
+                            if (watchBadge) {
+                                watchBadge.style.display = 'flex';
+                            }
+                            document.querySelectorAll('.gallery-thumb-item').forEach(b => b.classList.remove('active'));
+                            if (el) el.classList.add('active');
+                        };
+
+                        window.switchGalleryToVideo = function (el) {
+                            const mainImg = document.getElementById('prod-main-img');
+                            const mainVideo = document.getElementById('prod-main-video');
+                            const watchBadge = document.querySelector('.watch-video-badge-btn');
+                            if (mainImg) {
+                                mainImg.style.display = 'none';
+                            }
+                            if (watchBadge) {
+                                watchBadge.style.display = 'none';
+                            }
+                            if (mainVideo) {
+                                mainVideo.style.display = 'block';
+                                try { mainVideo.play(); } catch (e) {}
+                            }
+                            document.querySelectorAll('.gallery-thumb-item').forEach(b => b.classList.remove('active'));
+                            const targetEl = el || document.querySelector('.video-thumb-box');
+                            if (targetEl) targetEl.classList.add('active');
                         };
                     })();
                 </script>

@@ -215,6 +215,53 @@
                         </small>
                         <div id="createImagesPreviewGrid" class="img-gallery-grid" style="margin-top:12px;display:none"></div>
                     </div>
+
+                    <!-- Product Short Video (Max 1 Video) -->
+                    <div style="margin-top:20px;background:#F8FAFC;border:1.5px solid var(--border);border-radius:12px;padding:16px">
+                        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+                            <div style="display:flex;align-items:center;gap:8px">
+                                <span style="font-weight:800;font-size:13.5px;color:#0F172A">🎥 Product Short Video (অনলি ১টি ছোট ভিডিও - Optional)</span>
+                                <span class="status-badge" style="background:#F1F5F9;color:#64748B">Optional / ঐচ্ছিক</span>
+                            </div>
+                            <span style="font-size:12px;color:#64748B">
+                                MP4, WebM, MOV (গ্যালারির জন্য ১টি শর্ট ভিডিও আপলোড করতে পারবেন)
+                            </span>
+                        </div>
+
+                        <!-- Video & Thumbnail Upload Inputs -->
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:14px">
+                            <!-- Video File Input -->
+                            <div style="border:1.5px dashed #CBD5E1;border-radius:10px;padding:12px 14px;background:#fff">
+                                <label for="video" style="font-weight:700;font-size:12.5px;color:#1E293B;display:block;margin-bottom:6px">
+                                    📹 Upload Video / ভিডিও সিলেক্ট করুন
+                                </label>
+                                <input type="file" name="video" id="video" accept="video/mp4,video/webm,video/ogg,video/quicktime,video/m4v" style="width:100%;font-size:12.5px" onchange="previewSelectedVideo(event)">
+                                <small style="color:var(--text-muted);font-size:11.5px;display:block;margin-top:6px">
+                                    অনলি ১টি ছোট ভিডিও (MP4, WebM, MOV - সর্বোচ্চ 50MB)
+                                </small>
+                                <div id="selectedVideoPreview" style="display:none;margin-top:10px">
+                                    <div style="width:100%;max-width:220px;height:120px;background:#000;border-radius:8px;overflow:hidden">
+                                        <video id="selectedVideoEl" controls style="width:100%;height:100%;object-fit:cover"></video>
+                                    </div>
+                                    <span id="selectedVideoName" style="font-size:11.5px;color:#2563EB;display:block;margin-top:4px;word-break:break-all"></span>
+                                </div>
+                            </div>
+
+                            <!-- Video Thumbnail / Poster Input -->
+                            <div style="border:1.5px dashed #CBD5E1;border-radius:10px;padding:12px 14px;background:#fff">
+                                <label for="video_thumbnail" style="font-weight:700;font-size:12.5px;color:#1E293B;display:block;margin-bottom:6px">
+                                    🖼️ Video Thumbnail / কভার থাম্বনেইল (Optional / ঐচ্ছিক)
+                                </label>
+                                <input type="file" name="video_thumbnail" id="video_thumbnail" accept="image/*" style="width:100%;font-size:12.5px" onchange="previewSelectedVideoThumbnail(event)">
+                                <small style="color:var(--text-muted);font-size:11.5px;display:block;margin-top:6px">
+                                    ভিডিওর উপরে প্রদর্শনের জন্য থাম্বনেইল ছবি (না দিলে প্রোডাক্টের ছবি দেখাবে)
+                                </small>
+                                <div id="selectedVThumbPreview" style="display:none;margin-top:10px">
+                                    <img id="selectedVThumbImg" src="" alt="Thumbnail" style="max-height:80px;border-radius:6px;border:1px solid #CBD5E1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group" style="grid-column: 1 / -1">
@@ -331,6 +378,29 @@
             renderCreateImagesPreview();
         }
     });
+
+    // Video Live Preview
+    function previewSelectedVideo(event) {
+        const file = event.target.files && event.target.files[0];
+        const preview = document.getElementById('selectedVideoPreview');
+        const videoEl = document.getElementById('selectedVideoEl');
+        const nameEl = document.getElementById('selectedVideoName');
+        if (file && preview && videoEl) {
+            videoEl.src = URL.createObjectURL(file);
+            if (nameEl) nameEl.textContent = '✓ Selected: ' + file.name + ' (' + (file.size / (1024 * 1024)).toFixed(2) + ' MB)';
+            preview.style.display = 'block';
+        }
+    }
+
+    function previewSelectedVideoThumbnail(event) {
+        const file = event.target.files && event.target.files[0];
+        const preview = document.getElementById('selectedVThumbPreview');
+        const imgEl = document.getElementById('selectedVThumbImg');
+        if (file && preview && imgEl) {
+            imgEl.src = URL.createObjectURL(file);
+            preview.style.display = 'block';
+        }
+    }
 </script>
 @endpush
 @endsection

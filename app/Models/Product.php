@@ -81,6 +81,28 @@ class Product extends Model
         return asset('storage/product/' . $first);
     }
 
+    public function getVideoUrlAttribute(): ?string
+    {
+        if (!$this->video) {
+            return null;
+        }
+        if (str_starts_with($this->video, 'http://') || str_starts_with($this->video, 'https://')) {
+            return $this->video;
+        }
+        return asset('storage/product/videos/' . ltrim($this->video, '/'));
+    }
+
+    public function getVideoThumbnailUrlAttribute(): ?string
+    {
+        if ($this->video_thumbnail) {
+            if (str_starts_with($this->video_thumbnail, 'http://') || str_starts_with($this->video_thumbnail, 'https://')) {
+                return $this->video_thumbnail;
+            }
+            return asset('storage/product/' . ltrim($this->video_thumbnail, '/'));
+        }
+        return $this->image_url;
+    }
+
     public function getSellingPriceAttribute(): float
     {
         return round((float) $this->price, 2);

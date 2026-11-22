@@ -34,28 +34,30 @@
 
                         <!-- Mega Dropdown Menu -->
                         <div class="gf-cat-dropdown" id="header-cat-mega-menu">
-                            @foreach($parentCategories as $cat)
-                                <div class="gf-cat-item">
-                                    <a href="{{ url('/categories?cat=' . $cat->id) }}" class="gf-cat-row">
-                                        <img src="{{ asset('storage/category/' . $cat->image) }}" alt="{{ $cat->name }}" onerror="this.src='{{ asset('assets/image/placeholder.png') }}'">
-                                        <span>{{ $cat->name }}</span>
+                            @if(isset($parentCategories) && $parentCategories)
+                                @foreach($parentCategories as $cat)
+                                    <div class="gf-cat-item">
+                                        <a href="{{ url('/categories?cat=' . $cat->id) }}" class="gf-cat-row">
+                                            <img src="{{ asset('storage/category/' . $cat->image) }}" alt="{{ $cat->name }}" onerror="this.src='{{ asset('assets/image/placeholder.png') }}'">
+                                            <span>{{ $cat->name }}</span>
+                                            @if($cat->children && $cat->children->count() > 0)
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto"><path d="M9 18l6-6-6-6"/></svg>
+                                            @endif
+                                        </a>
                                         @if($cat->children && $cat->children->count() > 0)
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto"><path d="M9 18l6-6-6-6"/></svg>
+                                            <div class="gf-subcat-flyout">
+                                                <div class="gf-subcat-title">{{ $cat->name }}</div>
+                                                @foreach($cat->children as $sub)
+                                                    <a href="{{ url('/categories?cat=' . $cat->id . '&sub=' . $sub->id) }}" class="gf-subcat-link">
+                                                        <span>{{ $sub->name }}</span>
+                                                        <span class="gf-subcat-count">{{ $sub->products_count ?? 0 }}</span>
+                                                    </a>
+                                                @endforeach
+                                            </div>
                                         @endif
-                                    </a>
-                                    @if($cat->children && $cat->children->count() > 0)
-                                        <div class="gf-subcat-flyout">
-                                            <div class="gf-subcat-title">{{ $cat->name }}</div>
-                                            @foreach($cat->children as $sub)
-                                                <a href="{{ url('/categories?cat=' . $cat->id . '&sub=' . $sub->id) }}" class="gf-subcat-link">
-                                                    <span>{{ $sub->name }}</span>
-                                                    <span class="gf-subcat-count">{{ $sub->products_count ?? 0 }}</span>
-                                                </a>
-                                            @endforeach
-                                        </div>
-                                    @endif
-                                </div>
-                            @endforeach
+                                    </div>
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                 </nav>

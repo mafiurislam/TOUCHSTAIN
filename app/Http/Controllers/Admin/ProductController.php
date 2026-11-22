@@ -81,6 +81,8 @@ class ProductController extends Controller
             'sku' => 'nullable|string|unique:products,sku',
             'barcode' => 'nullable|string',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'video' => 'nullable|file|mimes:mp4,webm,ogg,mov,m4v,avi,mkv|max:102400',
+            'video_thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
 
         $imagesList = [];
@@ -94,6 +96,20 @@ class ProductController extends Controller
         }
         if (empty($imagesList)) {
             $imagesList = ['place_holder.png'];
+        }
+
+        $videoFilename = null;
+        if ($request->hasFile('video')) {
+            $vfile = $request->file('video');
+            $videoFilename = date('Y-m-d') . '-video-' . uniqid() . '.' . $vfile->getClientOriginalExtension();
+            $this->saveUploadedProductVideo($vfile, $videoFilename);
+        }
+
+        $videoThumbFilename = null;
+        if ($request->hasFile('video_thumbnail')) {
+            $vtfile = $request->file('video_thumbnail');
+            $videoThumbFilename = date('Y-m-d') . '-vthumb-' . uniqid() . '.' . $vtfile->getClientOriginalExtension();
+            $this->saveUploadedProductImage($vtfile, $videoThumbFilename);
         }
 
         $price = (float)$validated['price'];
@@ -122,6 +138,8 @@ class ProductController extends Controller
             'sku' => $sku,
             'barcode' => $validated['barcode'] ?? '890' . rand(100000000, 999999999),
             'image' => $imagesList,
+            'video' => $videoFilename,
+            'video_thumbnail' => $videoThumbFilename,
             'is_featured' => $request->boolean('is_featured'),
             'is_best_seller' => $request->boolean('is_best_seller'),
             'is_new_arrival' => $request->boolean('is_new_arrival'),
@@ -180,6 +198,8 @@ class ProductController extends Controller
             'sku' => 'nullable|string|unique:products,sku,' . $product->id,
             'barcode' => 'nullable|string',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'video' => 'nullable|file|mimes:mp4,webm,ogg,mov,m4v,avi,mkv|max:102400',
+            'video_thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
 
         $imagesList = is_array($product->image) ? $product->image : [];
@@ -197,6 +217,39 @@ class ProductController extends Controller
                 $this->saveUploadedProductImage($file, $filename);
                 $imagesList[] = $filename;
             }
+        }
+
+        // Handle video removal & upload
+        $videoFilename = $product->video;
+        $videoThumbFilename = $product->video_thumbnail;
+
+        if ($request->boolean('remove_video')) {
+            if ($product->video) {
+                $this->deleteProductVideoFile($product->video);
+            }
+            $videoFilename = null;
+            if ($product->video_thumbnail) {
+                $this->deleteProductImageFileIfUnused($product->video_thumbnail, $product->id);
+            }
+            $videoThumbFilename = null;
+        }
+
+        if ($request->hasFile('video')) {
+            if ($product->video) {
+                $this->deleteProductVideoFile($product->video);
+            }
+            $vfile = $request->file('video');
+            $videoFilename = date('Y-m-d') . '-video-' . uniqid() . '.' . $vfile->getClientOriginalExtension();
+            $this->saveUploadedProductVideo($vfile, $videoFilename);
+        }
+
+        if ($request->hasFile('video_thumbnail')) {
+            if ($product->video_thumbnail) {
+                $this->deleteProductImageFileIfUnused($product->video_thumbnail, $product->id);
+            }
+            $vtfile = $request->file('video_thumbnail');
+            $videoThumbFilename = date('Y-m-d') . '-vthumb-' . uniqid() . '.' . $vtfile->getClientOriginalExtension();
+            $this->saveUploadedProductImage($vtfile, $videoThumbFilename);
         }
 
         $oldStock = (int)$product->total_stock;
@@ -225,6 +278,8 @@ class ProductController extends Controller
             'sku' => $validated['sku'] ?? $product->sku,
             'barcode' => $validated['barcode'] ?? $product->barcode,
             'image' => $imagesList,
+            'video' => $videoFilename,
+            'video_thumbnail' => $videoThumbFilename,
             'is_featured' => $request->boolean('is_featured'),
             'is_best_seller' => $request->boolean('is_best_seller'),
             'is_new_arrival' => $request->boolean('is_new_arrival'),
@@ -300,6 +355,40 @@ class ProductController extends Controller
     }
 
     /**
+     * Delete the product video and thumbnail
+     */
+    public function deleteVideo(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+
+        if ($product->video) {
+            $this->deleteProductVideoFile($product->video);
+        }
+        if ($product->video_thumbnail) {
+            $this->deleteProductImageFileIfUnused($product->video_thumbnail, $product->id);
+        }
+
+        $product->update([
+            'video' => null,
+            'video_thumbnail' => null,
+        ]);
+
+        try {
+            AuditLog::record('Products', 'Delete Product Video', "Removed video from product [#{$product->id}] {$product->name}");
+        } catch (\Throwable $e) {
+        }
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Product video removed successfully.',
+            ]);
+        }
+
+        return back()->with('success', "Product video removed successfully.");
+    }
+
+    /**
      * Save uploaded product image to public/storage/product and mirror to storage/app/public/product and storage/product.
      */
     protected function saveUploadedProductImage($file, string $filename): void
@@ -346,6 +435,47 @@ class ProductController extends Controller
             public_path('storage/product/' . $filename),
             storage_path('app/public/product/' . $filename),
             base_path('storage/product/' . $filename),
+        ] as $fullPath) {
+            if (is_file($fullPath)) {
+                @unlink($fullPath);
+            }
+        }
+    }
+
+    /**
+     * Save uploaded product video to public/storage/product/videos and mirror.
+     */
+    protected function saveUploadedProductVideo($file, string $filename): void
+    {
+        $primaryDir = public_path('storage/product/videos');
+        if (!is_dir($primaryDir)) {
+            @mkdir($primaryDir, 0755, true);
+        }
+        $file->move($primaryDir, $filename);
+        $primaryFull = $primaryDir . DIRECTORY_SEPARATOR . $filename;
+
+        foreach ([storage_path('app/public/product/videos'), base_path('storage/product/videos')] as $mirrorDir) {
+            if (realpath($mirrorDir) !== realpath($primaryDir)) {
+                if (!is_dir($mirrorDir)) {
+                    @mkdir($mirrorDir, 0755, true);
+                }
+                @copy($primaryFull, $mirrorDir . DIRECTORY_SEPARATOR . $filename);
+            }
+        }
+    }
+
+    /**
+     * Delete physical video file.
+     */
+    protected function deleteProductVideoFile(?string $filename): void
+    {
+        if (!$filename || str_starts_with($filename, 'http')) {
+            return;
+        }
+        foreach ([
+            public_path('storage/product/videos/' . $filename),
+            storage_path('app/public/product/videos/' . $filename),
+            base_path('storage/product/videos/' . $filename),
         ] as $fullPath) {
             if (is_file($fullPath)) {
                 @unlink($fullPath);
