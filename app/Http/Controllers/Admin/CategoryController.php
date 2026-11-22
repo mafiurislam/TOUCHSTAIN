@@ -7,6 +7,7 @@ use App\Models\AuditLog;
 use App\Models\Brand;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller
@@ -16,8 +17,18 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::where('parent_id', 0)->with('children')->orderBy('priority')->get();
-        $allParents = Category::where('parent_id', 0)->get();
+        Category::ensureColumns();
+
+        $orderCol = Schema::hasColumn('categories', 'priority') ? 'priority' : (Schema::hasColumn('categories', 'position') ? 'position' : 'id');
+
+        $categories = Category::where('parent_id', 0)
+            ->with(['children' => function ($q) use ($orderCol) {
+                $q->orderBy($orderCol);
+            }])
+            ->orderBy($orderCol)
+            ->get();
+
+        $allParents = Category::where('parent_id', 0)->orderBy('name')->get();
 
         return view('admin.categories.index', compact('categories', 'allParents'));
     }
@@ -27,29 +38,53 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        Category::ensureColumns();
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'parent_id' => 'required|integer',
             'priority' => 'nullable|integer',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:3072',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
+        ], [
+            'name.required' => 'Category name is required.',
         ]);
 
         $imageName = 'default-cat.png';
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $imageName = 'cat-' . time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('storage/category'), $imageName);
+            $imageName = 'cat-' . time() . '-' . Str::random(6) . '.' . $file->getClientOriginalExtension();
+            $dest = public_path('storage/category');
+            if (!file_exists($dest)) {
+                @mkdir($dest, 0755, true);
+            }
+            $file->move($dest, $imageName);
         }
 
-        $category = Category::create([
-            'name' => $validated['name'],
+        $priorityVal = (int)($validated['priority'] ?? 0);
+        $slugVal = Str::slug($validated['name']) ?: ('cat-' . time());
+
+        $catData = [
+            'name' => trim($validated['name']),
+            'slug' => $slugVal,
             'parent_id' => (int)$validated['parent_id'],
-            'priority' => (int)($validated['priority'] ?? 0),
             'image' => $imageName,
             'status' => 1,
-        ]);
+        ];
 
-        AuditLog::record('Categories', 'Create Category', "Created category [#{$category->id}] {$category->name}");
+        if (Schema::hasColumn('categories', 'priority')) {
+            $catData['priority'] = $priorityVal;
+        }
+        if (Schema::hasColumn('categories', 'position')) {
+            $catData['position'] = $priorityVal;
+        }
+
+        $category = Category::create($catData);
+
+        try {
+            AuditLog::record('Categories', 'Create Category', "Created category [#{$category->id}] {$category->name}");
+        } catch (\Throwable $e) {
+            // Ignore audit log error
+        }
 
         return back()->with('success', "Category '{$category->name}' created successfully!");
     }
@@ -59,30 +94,50 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
+        Category::ensureColumns();
         $category = Category::findOrFail($id);
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'parent_id' => 'required|integer',
             'priority' => 'nullable|integer',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:3072',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
         ]);
 
+        $priorityVal = (int)($validated['priority'] ?? $category->priority ?? $category->position ?? 0);
+        $slugVal = Str::slug($validated['name']) ?: ('cat-' . time());
+
         $updateData = [
-            'name' => $validated['name'],
+            'name' => trim($validated['name']),
+            'slug' => $slugVal,
             'parent_id' => (int)$validated['parent_id'],
-            'priority' => (int)($validated['priority'] ?? $category->priority),
         ];
+
+        if (Schema::hasColumn('categories', 'priority')) {
+            $updateData['priority'] = $priorityVal;
+        }
+        if (Schema::hasColumn('categories', 'position')) {
+            $updateData['position'] = $priorityVal;
+        }
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $imageName = 'cat-' . time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('storage/category'), $imageName);
+            $imageName = 'cat-' . time() . '-' . Str::random(6) . '.' . $file->getClientOriginalExtension();
+            $dest = public_path('storage/category');
+            if (!file_exists($dest)) {
+                @mkdir($dest, 0755, true);
+            }
+            $file->move($dest, $imageName);
             $updateData['image'] = $imageName;
         }
 
         $category->update($updateData);
-        AuditLog::record('Categories', 'Update Category', "Updated category [#{$id}] {$category->name}");
+
+        try {
+            AuditLog::record('Categories', 'Update Category', "Updated category [#{$id}] {$category->name}");
+        } catch (\Throwable $e) {
+            // Ignore audit log error
+        }
 
         return back()->with('success', "Category '{$category->name}' updated successfully!");
     }
@@ -98,7 +153,11 @@ class CategoryController extends Controller
         Category::where('parent_id', $id)->delete();
         $category->delete();
 
-        AuditLog::record('Categories', 'Delete Category', "Deleted category [#{$id}] {$name}");
+        try {
+            AuditLog::record('Categories', 'Delete Category', "Deleted category [#{$id}] {$name}");
+        } catch (\Throwable $e) {
+            // Ignore audit log error
+        }
 
         return back()->with('success', "Category '{$name}' deleted successfully.");
     }
@@ -119,24 +178,32 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:3072',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:5120',
         ]);
 
         $img = null;
         if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $img = 'brand-' . time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('storage/brand'), $img);
+            $img = 'brand-' . time() . '-' . Str::random(6) . '.' . $file->getClientOriginalExtension();
+            $dest = public_path('storage/brand');
+            if (!file_exists($dest)) {
+                @mkdir($dest, 0755, true);
+            }
+            $file->move($dest, $img);
         }
 
         $brand = Brand::create([
-            'name' => $validated['name'],
+            'name' => trim($validated['name']),
             'slug' => Str::slug($validated['name']),
             'image' => $img,
             'status' => true,
         ]);
 
-        AuditLog::record('Brands', 'Create Brand', "Created brand [#{$brand->id}] {$brand->name}");
+        try {
+            AuditLog::record('Brands', 'Create Brand', "Created brand [#{$brand->id}] {$brand->name}");
+        } catch (\Throwable $e) {
+            // Ignore audit log error
+        }
 
         return back()->with('success', "Brand '{$brand->name}' created successfully!");
     }
@@ -150,7 +217,11 @@ class CategoryController extends Controller
         $name = $brand->name;
         $brand->delete();
 
-        AuditLog::record('Brands', 'Delete Brand', "Deleted brand [#{$id}] {$name}");
+        try {
+            AuditLog::record('Brands', 'Delete Brand', "Deleted brand [#{$id}] {$name}");
+        } catch (\Throwable $e) {
+            // Ignore audit log error
+        }
 
         return back()->with('success', "Brand '{$name}' deleted successfully.");
     }
