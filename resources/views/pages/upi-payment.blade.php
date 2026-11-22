@@ -65,29 +65,57 @@
                 </div>
             </div>
 
-            <!-- Payment Confirmation Form (Enter UTR) -->
-            <div style="background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:16px;padding:20px;margin-bottom:20px">
-                <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-                    <span style="font-size:22px">✅</span>
+            <!-- Payment Confirmation Form (Upload Payment Slip / Screenshot) -->
+            <div style="background:#F8FAFC;border:1.5px solid #E2E8F0;border-radius:16px;padding:22px;margin-bottom:20px">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+                    <span style="font-size:24px">🧾</span>
                     <div>
-                        <h4 style="margin:0;font-size:14.5px;font-weight:800;color:#0F172A">Step 2: Confirm Payment After Transfer</h4>
-                        <p style="margin:2px 0 0;font-size:12px;color:#64748B">Enter your 12-digit UPI Reference / UTR Number to verify and lock in your order</p>
+                        <h4 style="margin:0;font-size:15px;font-weight:800;color:#0F172A">Step 2: Upload Payment Receipt / Screenshot</h4>
+                        <p style="margin:2px 0 0;font-size:12.5px;color:#64748B">পেমেন্ট করার পর ট্রানজাকশন স্লিপ বা স্ক্রিনশট আপলোড করে কনফার্ম করুন</p>
                     </div>
                 </div>
 
-                <form action="{{ route('order.upi-payment.confirm', $order->id) }}" method="POST">
+                <form action="{{ route('order.upi-payment.confirm', $order->id) }}" method="POST" enctype="multipart/form-data" id="upi-confirm-form" onsubmit="handleUpiConfirmSubmit(event)">
                     @csrf
-                    <div style="margin-bottom:14px">
-                        <label style="font-size:12px;font-weight:700;display:block;margin-bottom:6px;color:#334155">
-                            UPI Transaction / UTR Number *
-                        </label>
-                        <input type="text" name="utr_number" required placeholder="e.g. 432587654321 (12 digits from PhonePe / GPay receipt)" style="width:100%;padding:12px 14px;border:1.5px solid #CBD5E1;border-radius:10px;font-size:14px;font-family:monospace;font-weight:700;box-sizing:border-box">
-                        <span style="display:block;font-size:11px;color:#64748B;margin-top:4px">
-                            💡 You can find the 12-digit UTR in your payment receipt on PhonePe, Google Pay, or Paytm.
-                        </span>
+                    <div style="margin-bottom:16px">
+                        <!-- Click / Drag & Drop Upload Card -->
+                        <div id="drop-zone" onclick="document.getElementById('receipt-input').click()" style="border:2px dashed #CBD5E1;border-radius:14px;padding:24px 16px;text-align:center;background:#fff;cursor:pointer;transition:all 0.2s">
+                            <div style="width:50px;height:50px;border-radius:50%;background:#EDE9FE;color:#5B21B6;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:24px">
+                                📁
+                            </div>
+                            <strong style="display:block;font-size:14.5px;color:#1E293B;margin-bottom:4px">
+                                Upload Payment Slip / Screenshot
+                            </strong>
+                            <p style="font-size:12px;color:#64748B;margin:0 0 12px;line-height:1.4">
+                                PhonePe, Google Pay, বা Paytm পেমেন্ট সম্পন্ন করার পর প্রাপ্ত রসিদ বা স্ক্রিনশটটি এখানে আপলোড করুন (JPG, PNG, WEBP, PDF)
+                            </p>
+                            <span class="btn-secondary" style="display:inline-block;padding:8px 20px;font-size:12.5px;font-weight:700;border-radius:8px">
+                                📷 Choose File / ফটো সিলেক্ট করুন
+                            </span>
+                        </div>
+
+                        <!-- Hidden File Input -->
+                        <input type="file" name="payment_screenshot" id="receipt-input" accept="image/*,.pdf" required style="display:none" onchange="previewReceiptFile(event)">
+
+                        <!-- Live File Preview Box -->
+                        <div id="receipt-preview-box" style="display:none;margin-top:12px;background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:12px;padding:12px 16px;align-items:center;justify-content:space-between">
+                            <div style="display:flex;align-items:center;gap:12px">
+                                <img id="receipt-preview-img" src="" alt="Slip Preview" style="width:48px;height:48px;object-fit:cover;border-radius:8px;border:1px solid #BBF7D0;display:none">
+                                <div id="receipt-pdf-icon" style="width:48px;height:48px;background:#DCFCE7;border-radius:8px;display:none;align-items:center;justify-content:center;font-size:24px">
+                                    📄
+                                </div>
+                                <div>
+                                    <strong id="receipt-filename" style="font-size:13px;color:#166534;display:block">receipt.png</strong>
+                                    <span id="receipt-filesize" style="font-size:11.5px;color:#4B5563">120 KB &bull; Ready to submit</span>
+                                </div>
+                            </div>
+                            <button type="button" onclick="clearReceiptFile()" style="background:#FEE2E2;border:none;color:#991B1B;padding:6px 12px;border-radius:6px;font-size:11.5px;font-weight:700;cursor:pointer">
+                                ✕ Remove
+                            </button>
+                        </div>
                     </div>
 
-                    <button type="submit" class="btn-theme" style="width:100%;padding:14px;font-size:15px;font-weight:800;background:#059669;border-color:#059669;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:8px">
+                    <button type="submit" id="btn-submit-confirm" class="btn-theme" style="width:100%;padding:15px;font-size:15.5px;font-weight:800;background:#059669;border-color:#059669;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(5,150,105,0.3)">
                         <span>✓ Confirm Payment &amp; Finalize Order</span>
                     </button>
                 </form>
@@ -126,6 +154,64 @@ function copyUpiId() {
     }).catch(err => {
         alert('UPI ID: ' + upiId);
     });
+}
+
+function previewReceiptFile(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    const previewBox = document.getElementById('receipt-preview-box');
+    const previewImg = document.getElementById('receipt-preview-img');
+    const pdfIcon = document.getElementById('receipt-pdf-icon');
+    const nameEl = document.getElementById('receipt-filename');
+    const sizeEl = document.getElementById('receipt-filesize');
+    const dropZone = document.getElementById('drop-zone');
+
+    nameEl.textContent = file.name;
+    sizeEl.textContent = (file.size / 1024).toFixed(1) + ' KB • Ready to submit';
+
+    if (file.type && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            previewImg.style.display = 'block';
+            pdfIcon.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    } else {
+        previewImg.style.display = 'none';
+        pdfIcon.style.display = 'flex';
+    }
+
+    previewBox.style.display = 'flex';
+    dropZone.style.borderColor = '#10B981';
+    dropZone.style.background = '#F0FDF4';
+}
+
+function clearReceiptFile() {
+    const input = document.getElementById('receipt-input');
+    const previewBox = document.getElementById('receipt-preview-box');
+    const dropZone = document.getElementById('drop-zone');
+    if (input) input.value = '';
+    if (previewBox) previewBox.style.display = 'none';
+    if (dropZone) {
+        dropZone.style.borderColor = '#CBD5E1';
+        dropZone.style.background = '#fff';
+    }
+}
+
+function handleUpiConfirmSubmit(event) {
+    const input = document.getElementById('receipt-input');
+    if (!input || !input.files || input.files.length === 0) {
+        event.preventDefault();
+        alert('অনুগ্রহ করে পেমেন্ট করার পর প্রাপ্ত স্লিপ বা স্ক্রিনশটটি আপলোড করুন।');
+        return false;
+    }
+    const btn = document.getElementById('btn-submit-confirm');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '⏳ Uploading Slip &amp; Confirming Order...';
+    }
 }
 </script>
 @endsection

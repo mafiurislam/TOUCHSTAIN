@@ -1094,9 +1094,7 @@ class FrontController extends Controller
             BankTransfer::create([
                 'order_id' => $order->id,
                 'user_id' => $user->id,
-                'bank_account_id' => 1,
                 'amount' => $totalAmount,
-                'payment_method' => 'upi',
                 'status' => 'verification_pending',
             ]);
         } catch (\Throwable $e) {}
@@ -1153,21 +1151,37 @@ class FrontController extends Controller
     }
 
     /**
-     * Confirm UPI Payment by Customer (Submit UTR / Ref Number)
+     * Confirm UPI Payment by Customer (Upload Payment Slip / Screenshot)
      */
     public function confirmUpiPayment(Request $request, $id)
     {
         $order = Order::findOrFail($id);
-        $utr = trim((string)$request->input('utr_number', ''));
 
+        $screenshotPath = null;
+        if ($request->hasFile('payment_screenshot')) {
+            $file = $request->file('payment_screenshot');
+            if ($file->isValid()) {
+                $ext = $file->getClientOriginalExtension() ?: 'jpg';
+                $filename = 'upi_receipt_order_' . $order->id . '_' . time() . '_' . Str::random(8) . '.' . $ext;
+                $destDir = public_path('storage/payment_receipts');
+                if (!file_exists($destDir)) {
+                    mkdir($destDir, 0755, true);
+                }
+                $file->move($destDir, $filename);
+                $screenshotPath = 'payment_receipts/' . $filename;
+            }
+        }
+
+        $utr = trim((string)$request->input('utr_number', ''));
         if ($utr === '') {
-            $utr = 'UPI-' . strtoupper(substr(md5(time() . $order->id), 0, 10));
+            $utr = 'UPI-SLIP-' . $order->id . '-' . strtoupper(substr(md5(time() . $order->id), 0, 6));
         }
 
         $order->update([
             'payment_status' => 'paid',
             'order_status' => 'confirmed',
             'utr_number' => $utr,
+            'payment_screenshot' => $screenshotPath ?: $order->payment_screenshot,
             'transaction_date' => now()->format('Y-m-d'),
         ]);
 
@@ -1176,19 +1190,20 @@ class FrontController extends Controller
         if ($transfer) {
             $transfer->update([
                 'utr_number' => $utr,
+                'screenshot_path' => $screenshotPath ?: $transfer->screenshot_path,
                 'status' => 'payment_confirmed',
                 'approved_at' => now(),
             ]);
         }
 
         try {
-            AuditLog::record('Payments', 'UPI Payment Confirmed', "Order #{$order->id} payment confirmed via UPI UTR {$utr}");
+            AuditLog::record('Payments', 'UPI Slip Uploaded', "Order #{$order->id} confirmed with payment receipt image");
         } catch (\Throwable $e) {}
 
         // Trigger auto-shipment if active
         $this->triggerShiprocketAutoDispatch($order);
 
-        return redirect('/order-success?id=' . $order->id)->with('success', '✓ Payment confirmed successfully! Order placed.');
+        return redirect('/order-success?id=' . $order->id)->with('success', '✓ Payment receipt uploaded successfully! Order confirmed.');
     }
 
     public function submitBankTransfer(Request $request)

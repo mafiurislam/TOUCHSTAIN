@@ -325,6 +325,13 @@
                                 {{ strtoupper($order->payment_status) }}
                             </span>
                         </div>
+                        @if($order->payment_screenshot)
+                            <div style="margin-top:8px">
+                                <a href="{{ asset('storage/' . $order->payment_screenshot) }}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:#EDE9FE;border:1px solid #C4B5FD;color:#5B21B6;padding:5px 12px;border-radius:6px;font-size:11.5px;font-weight:800;text-decoration:none">
+                                    <span>🧾 View Customer Payment Slip &rarr;</span>
+                                </a>
+                            </div>
+                        @endif
                     </div>
                 </div>
 

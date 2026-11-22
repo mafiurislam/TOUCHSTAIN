@@ -199,7 +199,14 @@
                             </td>
                             <td style="font-weight:800;font-size:14px">₹{{ number_format($tr->amount, 2) }}</td>
                             <td>
-                                @if($tr->utr_number)
+                                @if($tr->screenshot_path || ($tr->order && $tr->order->payment_screenshot))
+                                    @php
+                                        $slipPath = $tr->screenshot_path ?: $tr->order->payment_screenshot;
+                                    @endphp
+                                    <a href="{{ asset('storage/' . $slipPath) }}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;background:#EDE9FE;border:1px solid #DDD6FE;color:#5B21B6;padding:3px 8px;border-radius:6px;font-size:11.5px;font-weight:800;text-decoration:none">
+                                        🧾 View Slip
+                                    </a>
+                                @elseif($tr->utr_number)
                                     <code style="background:#EFF6FF;color:#1E40AF;padding:3px 8px;border-radius:6px;font-weight:800;font-size:12px">{{ $tr->utr_number }}</code>
                                 @else
                                     <span style="color:#94A3B8;font-size:12px">COD</span>
